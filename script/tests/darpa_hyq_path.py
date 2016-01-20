@@ -46,13 +46,13 @@ r.loadObstacleModel (packageName, "darpa", "planning")
 r(q_init)
 #~ ps.solve ()
 t = ps.solve ()
-
-#~ print t;
 if isinstance(t, list):
-	t = t[0]* 3600000 + t[1] * 60000 + t[2] * 1000 + t[3]
+  t = t[len(t)-1]
+
 f = open('log.txt', 'a')
 f.write("path computation " + str(t) + "\n")
 f.close()
+r.displayRoadmap("rm",white,0.01,1,green)
 
 
 from hpp.gepetto import PathPlayer
@@ -64,6 +64,8 @@ pp = PathPlayer (rbprmBuilder.client.basic, r)
 #~ pp (2)
 #~ pp (0)
 
-#~ pp (1)
+pp (1)
+
+# r.client.gui.removeFromGroup("rm",r.sceneName)
 #~ pp.toFile(1, "/home/stonneau/dev/hpp/src/hpp-rbprm-corba/script/paths/stair.path")
-r (q_init)
+

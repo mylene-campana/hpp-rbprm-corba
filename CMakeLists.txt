@@ -91,6 +91,9 @@ install(FILES
   data/urdf/darpa.urdf
   data/urdf/car.urdf
   #~ data/urdf/scene2.urdf
+  data/urdf/robot_test/robot_test_lleg_rom.urdf
+  data/urdf/robot_test/robot_test_rleg_rom.urdf
+  data/urdf/robot_test/robot_test_trunk.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -121,6 +124,9 @@ install(FILES
   data/srdf/darpa.srdf
   data/srdf/car.srdf
   #~ data/srdf/scene2.srdf
+  data/srdf/robot_test/robot_test_lleg_rom.srdf
+  data/srdf/robot_test/robot_test_rleg_rom.srdf
+  data/srdf/robot_test/robot_test_trunk.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
   )
 install(FILES
@@ -165,6 +171,14 @@ install(FILES
 	data/meshes/hyq/hyq_lhleg_rom.stl
 	data/meshes/hyq/hyq_lfleg_rom.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/hyq
+  )
+
+install(FILES
+	data/meshes/robot_test/robot_trunk_view.stl
+	data/meshes/robot_test/robot_trunk.stl
+	data/meshes/robot_test/robot_lleg_rom.stl
+	data/meshes/robot_test/robot_rleg_rom.stl
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/robot_test
   )
   
 install(DIRECTORY data/hyq_description

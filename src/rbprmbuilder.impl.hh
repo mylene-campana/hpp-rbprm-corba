@@ -56,7 +56,7 @@ namespace hpp {
         {
             hpp::model::RbPrmDevicePtr_t robotcast = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
             hpp::rbprm::RbPrmValidationPtr_t validation(hpp::rbprm::RbPrmValidation::create(robotcast, romFilter_, normalFilter_));
-            hpp::core::DiscretizedCollisionCheckingPtr_t collisionChecking = hpp::rbprm::RbPrmPathValidation::create(robot,val);
+            hpp::rbprm::RbPrmPathValidationPtr_t collisionChecking = hpp::rbprm::RbPrmPathValidation::create(robot,val);
             collisionChecking->add (validation);
             return collisionChecking;
         }

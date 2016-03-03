@@ -29,7 +29,7 @@
 # include <hpp/core/discretized-collision-checking.hh>
 # include <hpp/core/straight-path.hh>
 # include <hpp/rbprm/rbprm-path-validation.hh>
-
+# include <hpp/core/config-validations.hh>
 namespace hpp {
   namespace rbprm {
     namespace impl {
@@ -58,6 +58,8 @@ namespace hpp {
             hpp::rbprm::RbPrmValidationPtr_t validation(hpp::rbprm::RbPrmValidation::create(robotcast, romFilter_, normalFilter_));
             hpp::rbprm::RbPrmPathValidationPtr_t collisionChecking = hpp::rbprm::RbPrmPathValidation::create(robot,val);
             collisionChecking->add (validation);
+            problemSolver_->problem()->configValidation(core::ConfigValidations::create ());
+            problemSolver_->problem()->configValidations()->add(validation);
             return collisionChecking;
         }
 

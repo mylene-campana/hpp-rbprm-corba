@@ -172,6 +172,8 @@ install(FILES
 	data/meshes/car.stl
 	data/meshes/ground_bigStep.stl
 	data/meshes/ground_jump_easy.stl
+	data/meshes/ground_jump_easyStart.stl
+	data/meshes/ground_jump_easyGoal.stl
 	data/meshes/ground_jump_bar.stl
 	data/meshes/ground_jump_med.stl
 	data/meshes/ground_with_bridge.stl

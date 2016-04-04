@@ -123,14 +123,19 @@ namespace hpp {
         virtual void saveComputedStates(const char* filepath) throw (hpp::Error);
         virtual hpp::floatSeqSeq* GetOctreeBoxes(const char* limbName, const hpp::floatSeq& configuration) throw (hpp::Error);
         virtual hpp::floatSeq* getOctreeTransform(const char* limbName, const hpp::floatSeq& configuration) throw (hpp::Error);
-        public:
+      public:
         void SetProblemSolver (hpp::core::ProblemSolverPtr_t problemSolver);
 
-        private:
+	virtual hpp::floatSeq* rbShoot () throw (hpp::Error);
+	virtual hpp::floatSeq* projectOnObstacle (const hpp::floatSeq& dofArray,
+						  const double dist)
+	  throw (hpp::Error);
+	virtual hpp::floatSeq* setOrientation (const hpp::floatSeq& dofArray)
+	  throw (hpp::Error);
+
+      private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
         core::ProblemSolverPtr_t problemSolver_;
-
-        private:
         model::T_Rom romDevices_;
         rbprm::RbPrmFullBodyPtr_t fullBody_;
         bool romLoaded_;

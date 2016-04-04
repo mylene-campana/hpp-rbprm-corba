@@ -206,6 +206,20 @@ module hpp
     /// \return size 7 position + quaternion of the octree root
     floatSeq getOctreeTransform(in string limbname, in floatSeq dofArray) raises (Error);
 
+    /// Shoot and return a configuration with RBPRM-shooter
+    floatSeq rbShoot () raises (Error);
+
+    /// Project given configuration on the nearest obstacle, completing
+    /// the 'direction' data of the configuration with the plane normal
+    /// \param dist is the shift distance to move the robot away from the
+    /// obstacle.
+    floatSeq projectOnObstacle (in floatSeq dofArray,
+				in double dist) raises (Error);
+
+    /// Return a configuration whose orientation part respect the
+    /// given normale and theta (see hpp::core::setOrientation)
+    floatSeq setOrientation (in floatSeq dofArray) raises (Error);
+
   }; // interface Robot
   }; // module rbprm
   }; // module corbaserver

@@ -100,6 +100,11 @@ install(FILES
 	data/urdf/ground_jump_bar.urdf
 	data/urdf/ground_jump_med.urdf
 	data/urdf/ground_with_bridge.urdf
+  data/urdf/skeleton/skeleton.urdf
+  data/urdf/skeleton/RHandSphere.urdf
+  data/urdf/skeleton/LHandSphere.urdf
+  data/urdf/skeleton/RFootSphere.urdf
+  data/urdf/skeleton/LFootSphere.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -138,6 +143,11 @@ install(FILES
 	data/srdf/ground_jump_bar.srdf
 	data/srdf/ground_jump_med.srdf
 	data/srdf/ground_with_bridge.srdf
+  data/srdf/skeleton/skeleton.srdf
+  data/srdf/skeleton/RHandSphere.srdf
+  data/srdf/skeleton/LHandSphere.srdf
+  data/srdf/skeleton/RFootSphere.srdf
+  data/srdf/skeleton/LFootSphere.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
   )
 install(FILES
@@ -173,7 +183,7 @@ install(FILES
 	data/meshes/ground_bigStep.stl
 	data/meshes/ground_jump_easy.stl
 	data/meshes/ground_jump_easyStart.stl
-	data/meshes/ground_jump_easyStart2.stl
+	#data/meshes/ground_jump_easyStart2.stl
 	data/meshes/ground_jump_easyGoal.stl
 	data/meshes/ground_jump_bar.stl
 	data/meshes/ground_jump_med.stl
@@ -199,7 +209,12 @@ install(FILES
 	data/meshes/robot_test/Rleg_rom.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/robot_test
   )
-  
+
+install(DIRECTORY
+	data/meshes/skeleton
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
+  )
+
 install(DIRECTORY data/hyq_description
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/../
   )

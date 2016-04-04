@@ -21,6 +21,7 @@
 #include <hpp/rbprm/planner/steering-dynamic.hh>
 #include <hpp/rbprm/planner/steering-method-parabola.hh>
 #include <hpp/rbprm/planner/dynamic-planner.hh>
+#include <hpp/rbprm/planner/prm-planner.hh>
 
 typedef hpp::rbprm::Server RbprmServer;
 typedef hpp::corbaServer::Server CorbaServer;
@@ -33,6 +34,7 @@ int main (int argc, char* argv [])
 
 
     problemSolver->addPathPlannerType("RRTdynamic",hpp::rbprm::DynamicPlanner::createWithRoadmap);
+    problemSolver->addPathPlannerType("PRMplanner",hpp::rbprm::PrmPlanner::createWithRoadmap);
 
 
     CorbaServer corbaServer (problemSolver, argc,

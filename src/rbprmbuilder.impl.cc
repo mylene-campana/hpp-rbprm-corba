@@ -17,6 +17,7 @@
 
 //#include <hpp/fcl/math/transform.h>
 #include <hpp/util/debug.hh>
+#include <hpp/model/configuration.hh>
 #include "rbprmbuilder.impl.hh"
 #include "hpp/rbprm/rbprm-device.hh"
 #include "hpp/rbprm/rbprm-validation.hh"
@@ -25,11 +26,14 @@
 #include "hpp/model/urdf/util.hh"
 #include <fstream>
 
+#include <hpp/core/parabola/parabola-library.hh>
+#include "hpp/rbprm/projection-shooter.hh"
 
 
 namespace hpp {
   namespace rbprm {
     namespace impl {
+      using model::displayConfig;
 
     RbprmBuilder::RbprmBuilder ()
     : POA_hpp::corbaserver::rbprm::RbprmBuilder()
@@ -634,8 +638,79 @@ namespace hpp {
         problemSolver->addConfigurationShooterType("RbprmShooter",
                                                    boost::bind(&BindShooter::create, boost::ref(bindShooter_), _1));
         problemSolver->addPathValidationType("RbprmPathValidation",
-                                                   boost::bind(&BindShooter::createPathValidation, boost::ref(bindShooter_), _1, _2));
+					     boost::bind(&BindShooter::createPathValidation, boost::ref(bindShooter_), _1, _2));
     }
+
+      // --------------------------------------------------------------------
+      
+      hpp::floatSeq* RbprmBuilder::rbShoot () throw (hpp::Error)
+      {
+	core::Configuration_t q_proj;
+	core::DevicePtr_t robot = problemSolver_->robot ();
+	model::RbPrmDevicePtr_t rbRobot = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
+	std::vector<std::string> filter = bindShooter_.romFilter_;
+	const std::map<std::string, rbprm::NormalFilter>& normalFilter = bindShooter_.normalFilter_;
+	rbprm::RbPrmShooterPtr_t shooter  = 
+	  rbprm::RbPrmShooter::create (rbRobot, problemSolver_->problem ()->collisionObstacles(), filter, normalFilter);
+	q_proj = *(shooter->shoot ());
+	hppDout (info, "q_proj: " << displayConfig (q_proj));
+
+	hpp::floatSeq *dofArray_out = 0x0;
+	dofArray_out = new hpp::floatSeq();
+	dofArray_out->length (robot->configSize ());
+	for(std::size_t i=0; i<robot->configSize (); i++)
+	  (*dofArray_out)[i] = q_proj (i);
+	return dofArray_out;
+      }
+
+      // --------------------------------------------------------------------
+
+      // TODO: use ROM while shifting toward obstacle
+      hpp::floatSeq* RbprmBuilder::projectOnObstacle
+      (const hpp::floatSeq& dofArray, const double dist) throw (hpp::Error)
+      {
+	core::DevicePtr_t robot = problemSolver_->robot ();
+	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
+	core::Configuration_t q_proj;
+	model::RbPrmDevicePtr_t rbRobot = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
+	std::vector<std::string> filter = bindShooter_.romFilter_;
+	const std::map<std::string, rbprm::NormalFilter>& normalFilter = bindShooter_.normalFilter_;
+	rbprm::ProjectionShooterPtr_t shooter  = 
+	  rbprm::ProjectionShooter::create(robot, *(problemSolver_->problem()),
+					   dist, rbRobot, filter, 
+					   normalFilter);
+	q_proj = shooter->project (q);
+	hppDout (info, "q_proj: " << displayConfig (q_proj));
+
+	// Try to rotate the robot manually according to surface normal info
+	// a priori non-needed if orientation in projection-shooter
+	// orientation done before proj to correct the distance
+	//q_proj = hpp::core::setOrientation (robot, q_proj);
+
+	hpp::floatSeq *dofArray_out = 0x0;
+	dofArray_out = new hpp::floatSeq();
+	dofArray_out->length (robot->configSize ());
+	for(std::size_t i=0; i<robot->configSize (); i++)
+	  (*dofArray_out)[i] = q_proj (i);
+	return dofArray_out;
+      }
+
+      // --------------------------------------------------------------------
+      
+      hpp::floatSeq* RbprmBuilder::setOrientation(const hpp::floatSeq& dofArray)
+        throw (hpp::Error)
+      {
+	core::DevicePtr_t robot = problemSolver_->robot ();
+	core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (),
+						     dofArray);
+	q = core::setOrientation (robot, q);
+	hpp::floatSeq *dofArray_out = 0x0;
+	dofArray_out = new hpp::floatSeq();
+	dofArray_out->length (robot->configSize ());
+	for(std::size_t i=0; i<robot->configSize (); i++)
+	  (*dofArray_out)[i] = q (i);
+	return dofArray_out;
+      }
 
     } // namespace impl
   } // namespace rbprm

@@ -15,7 +15,6 @@
 // hpp-manipulation-corba.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-//#include <hpp/fcl/math/transform.h>
 #include <hpp/util/debug.hh>
 #include <hpp/model/configuration.hh>
 #include "rbprmbuilder.impl.hh"
@@ -26,7 +25,7 @@
 #include "hpp/model/urdf/util.hh"
 #include <fstream>
 
-#include <hpp/core/parabola/parabola-library.hh>
+#include <hpp/rbprm/parabola-library.hh>
 #include "hpp/rbprm/projection-shooter.hh"
 
 
@@ -685,7 +684,7 @@ namespace hpp {
 	// Try to rotate the robot manually according to surface normal info
 	// a priori non-needed if orientation in projection-shooter
 	// orientation done before proj to correct the distance
-	//q_proj = hpp::core::setOrientation (robot, q_proj);
+	//q_proj = rbprm::setOrientation (robot, q_proj);
 
 	hpp::floatSeq *dofArray_out = 0x0;
 	dofArray_out = new hpp::floatSeq();
@@ -703,7 +702,7 @@ namespace hpp {
 	core::DevicePtr_t robot = problemSolver_->robot ();
 	core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (),
 						     dofArray);
-	q = core::setOrientation (robot, q);
+	q = rbprm::setOrientation (robot, q);
 	hpp::floatSeq *dofArray_out = 0x0;
 	dofArray_out = new hpp::floatSeq();
 	dofArray_out->length (robot->configSize ());

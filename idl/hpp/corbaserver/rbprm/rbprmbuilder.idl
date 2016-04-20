@@ -206,7 +206,7 @@ module hpp
     /// \return size 7 position + quaternion of the octree root
     floatSeq getOctreeTransform(in string limbname, in floatSeq dofArray) raises (Error);
 
-    /// Shoot and return a configuration with RBPRM-shooter
+    /// Shoot and return a configuration with the RBPRM-shooter rbShooter_
     floatSeq rbShoot () raises (Error);
 
     /// Project given configuration on the nearest obstacle, completing
@@ -219,6 +219,16 @@ module hpp
     /// Return a configuration whose orientation part respect the
     /// given normale and theta (see hpp::core::setOrientation)
     floatSeq setOrientation (in floatSeq dofArray) raises (Error);
+	
+    /// Set create instance of RBprmShooter from BindShooter_ as a rbShooter_ attribute
+    /// This allows to shoot different configurations from the same shooter (and not 
+    /// create the shooter each time we shoot)
+    void setRbShooter () raises (Error);
+	
+    /// test if trunk is collision-free and roms are in collision
+    void isRbprmValid (in floatSeq dofArray, out boolean trunkValidity,
+		       out boolean romValidity, out string report)
+      raises (Error);
 
   }; // interface Robot
   }; // module rbprm

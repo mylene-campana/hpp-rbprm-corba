@@ -132,6 +132,11 @@ namespace hpp {
 	  throw (hpp::Error);
 	virtual hpp::floatSeq* setOrientation (const hpp::floatSeq& dofArray)
 	  throw (hpp::Error);
+	void setRbShooter () throw (hpp::Error);
+	void isRbprmValid (const hpp::floatSeq& dofArray,
+			   CORBA::Boolean& trunkValidity,
+			   CORBA::Boolean& romValidity,
+			   CORBA::String_out report) throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -144,6 +149,7 @@ namespace hpp {
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;
+	    rbprm::RbPrmShooterPtr_t rbShooter_;
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

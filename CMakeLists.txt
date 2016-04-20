@@ -101,10 +101,14 @@ install(FILES
 	data/urdf/ground_jump_med.urdf
 	data/urdf/ground_with_bridge.urdf
   data/urdf/skeleton/skeleton.urdf
+  data/urdf/skeleton/skeleton_trunk_flexible.urdf
   data/urdf/skeleton/RHandSphere.urdf
   data/urdf/skeleton/LHandSphere.urdf
   data/urdf/skeleton/RFootSphere.urdf
   data/urdf/skeleton/LFootSphere.urdf
+  data/urdf/cave.urdf
+  data/urdf/desert.urdf
+  data/urdf/high_plateforms.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -144,10 +148,14 @@ install(FILES
 	data/srdf/ground_jump_med.srdf
 	data/srdf/ground_with_bridge.srdf
   data/srdf/skeleton/skeleton.srdf
+  data/srdf/skeleton/skeleton_trunk_flexible.srdf
   data/srdf/skeleton/RHandSphere.srdf
   data/srdf/skeleton/LHandSphere.srdf
   data/srdf/skeleton/RFootSphere.srdf
   data/srdf/skeleton/LFootSphere.srdf
+  data/srdf/cave.srdf
+  data/srdf/desert.srdf
+  data/srdf/high_plateforms.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
   )
 install(FILES
@@ -188,6 +196,12 @@ install(FILES
 	data/meshes/ground_jump_bar.stl
 	data/meshes/ground_jump_med.stl
 	data/meshes/ground_with_bridge.stl
+	data/meshes/cave.dae
+	data/meshes/desert.dae
+	data/meshes/high_plateforms.dae	
+	data/meshes/cave.stl
+	data/meshes/desert.stl
+	data/meshes/high_plateforms.stl	
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
 install(FILES

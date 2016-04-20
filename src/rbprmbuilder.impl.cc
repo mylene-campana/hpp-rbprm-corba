@@ -641,25 +641,39 @@ namespace hpp {
     }
 
       // --------------------------------------------------------------------
-      
+  
+      void RbprmBuilder::setRbShooter () throw (hpp::Error)
+      {
+	try {
+	  core::Configuration_t q_proj;
+	  core::DevicePtr_t robot = problemSolver_->robot ();
+	  rbShooter_ = bindShooter_.create (robot);
+	} catch (const std::exception& exc) {
+	  throw hpp::Error (exc.what ());
+	}
+      }
+
+      // --------------------------------------------------------------------
+    
       hpp::floatSeq* RbprmBuilder::rbShoot () throw (hpp::Error)
       {
-	core::Configuration_t q_proj;
-	core::DevicePtr_t robot = problemSolver_->robot ();
-	model::RbPrmDevicePtr_t rbRobot = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
-	std::vector<std::string> filter = bindShooter_.romFilter_;
-	const std::map<std::string, rbprm::NormalFilter>& normalFilter = bindShooter_.normalFilter_;
-	rbprm::RbPrmShooterPtr_t shooter  = 
-	  rbprm::RbPrmShooter::create (rbRobot, problemSolver_->problem ()->collisionObstacles(), filter, normalFilter);
-	q_proj = *(shooter->shoot ());
-	hppDout (info, "q_proj: " << displayConfig (q_proj));
+	try {
+	  if (!rbShooter_)
+	    throw std::runtime_error ("rb shooter was not set");
+	  core::Configuration_t q_proj;
+	  core::DevicePtr_t robot = problemSolver_->robot ();
+	  q_proj = *(rbShooter_->shoot ());
+	  hppDout (info, "q_proj: " << displayConfig (q_proj));
 
-	hpp::floatSeq *dofArray_out = 0x0;
-	dofArray_out = new hpp::floatSeq();
-	dofArray_out->length (robot->configSize ());
-	for(std::size_t i=0; i<robot->configSize (); i++)
-	  (*dofArray_out)[i] = q_proj (i);
-	return dofArray_out;
+	  hpp::floatSeq *dofArray_out = 0x0;
+	  dofArray_out = new hpp::floatSeq();
+	  dofArray_out->length (robot->configSize ());
+	  for(std::size_t i=0; i<robot->configSize (); i++)
+	    (*dofArray_out)[i] = q_proj (i);
+	  return dofArray_out;
+	} catch (const std::exception& exc) {
+	  throw hpp::Error (exc.what ());
+	}
       }
 
       // --------------------------------------------------------------------
@@ -709,6 +723,39 @@ namespace hpp {
 	for(std::size_t i=0; i<robot->configSize (); i++)
 	  (*dofArray_out)[i] = q (i);
 	return dofArray_out;
+      }
+	  
+      // --------------------------------------------------------------------
+	  
+      void RbprmBuilder::isRbprmValid (const hpp::floatSeq& dofArray,
+				       CORBA::Boolean& trunkValidity,
+				       CORBA::Boolean& romValidity,
+				       CORBA::String_out report)
+	throw (hpp::Error) {
+	try {
+	  core::DevicePtr_t robot = problemSolver_->robot ();
+	  model::RbPrmDevicePtr_t rbRobot = boost::static_pointer_cast<model::RbPrmDevice>(robot);
+	  const std::vector<std::string>& filter = bindShooter_.romFilter_;
+	  const std::map<std::string, rbprm::NormalFilter>& normalFilters = 
+	    bindShooter_.normalFilter_;
+	  core::ValidationReportPtr_t valReport;
+	  rbprm::RbPrmValidationPtr_t validator = rbprm::RbPrmValidation::create
+	    (rbRobot, filter, normalFilters);
+	  core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (),
+						      dofArray);
+	  CORBA::Boolean trunkValidity = validator->trunkValidation_->validate(q, valReport);
+	  CORBA::Boolean romValidity = validator->validateRoms(q, filter, valReport);
+
+	  if(trunkValidity && romValidity) {
+	    report = CORBA::string_dup ("");
+	  }
+	  else {
+	    std::ostringstream oss; oss << *valReport;
+	    report = CORBA::string_dup(oss.str ().c_str ());
+	  }
+	} catch (const std::exception& exc) {
+	  throw hpp::Error (exc.what ());
+	}
       }
 
     } // namespace impl

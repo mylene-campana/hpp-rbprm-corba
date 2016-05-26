@@ -106,6 +106,9 @@ install(FILES
   data/urdf/skeleton/LHandSphere.urdf
   data/urdf/skeleton/RFootSphere.urdf
   data/urdf/skeleton/LFootSphere.urdf
+  data/urdf/ant/ant.urdf
+  data/urdf/ant/ant_trunk.urdf
+  data/urdf/ant/ant_test_urdf.urdf
   data/urdf/cave.urdf
   data/urdf/desert.urdf
   data/urdf/high_plateforms.urdf
@@ -153,6 +156,9 @@ install(FILES
   data/srdf/skeleton/LHandSphere.srdf
   data/srdf/skeleton/RFootSphere.srdf
   data/srdf/skeleton/LFootSphere.srdf
+  data/srdf/ant/ant.srdf
+  data/srdf/ant/ant_trunk.srdf
+  data/srdf/ant/ant_test_urdf.srdf
   data/srdf/cave.srdf
   data/srdf/desert.srdf
   data/srdf/high_plateforms.srdf
@@ -226,6 +232,11 @@ install(FILES
 
 install(DIRECTORY
 	data/meshes/skeleton
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
+  )
+
+install(DIRECTORY
+	data/meshes/ant
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
   )
 

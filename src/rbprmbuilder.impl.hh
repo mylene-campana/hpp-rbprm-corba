@@ -137,8 +137,14 @@ namespace hpp {
 			   CORBA::Boolean& trunkValidity,
 			   CORBA::Boolean& romValidity,
 			   CORBA::String_out report) throw (hpp::Error);
+	void interpolateBallisticPath (CORBA::UShort pathId) throw (hpp::Error);
+	hpp::floatSeqSeq* generateWaypointContacts (CORBA::UShort pathId)
+	  throw (hpp::Error);
+	virtual hpp::floatSeq* fillConfiguration (const hpp::floatSeq& dofArray,
+						  const CORBA::UShort fullSize)
+	  throw (hpp::Error);
 
-      private:
+	private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
         core::ProblemSolverPtr_t problemSolver_;
         model::T_Rom romDevices_;

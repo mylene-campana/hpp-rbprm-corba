@@ -230,6 +230,19 @@ module hpp
 		       out boolean romValidity, out string report)
       raises (Error);
 
+    /// Add to ProblemSolver list of paths a new path resulting from: a 
+    /// parabola path for the robot trunk and an interpolation between start 
+    /// and goal states for the limbs
+    void interpolateBallisticPath (in unsigned short pathId) raises (Error);
+
+    /// Generate contact on the waypoint-configurations of the given path
+    floatSeqSeq generateWaypointContacts (in unsigned short pathId)
+      raises (Error);
+
+    /// 
+    floatSeq fillConfiguration (in floatSeq dofArray,
+				in unsigned short fullSize) raises (Error);
+
   }; // interface Robot
   }; // module rbprm
   }; // module corbaserver

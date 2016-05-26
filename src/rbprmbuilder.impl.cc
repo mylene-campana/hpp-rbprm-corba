@@ -25,7 +25,9 @@
 #include "hpp/model/urdf/util.hh"
 #include <fstream>
 
-#include <hpp/rbprm/parabola-library.hh>
+#include <hpp/rbprm/fullbodyBallistic/parabola-library.hh>
+#include <hpp/rbprm/fullbodyBallistic/ballistic-path.hh>
+#include <hpp/rbprm/fullbodyBallistic/ballistic-interpolation.hh>
 #include "hpp/rbprm/projection-shooter.hh"
 
 
@@ -200,7 +202,7 @@ namespace hpp {
         }
         std::size_t deviceDim = robot->configSize ();
         // Fill dof vector with dof array.
-        model::Configuration_t config; config.resize (configDim);
+        model::Configuration_t config (configDim);// config.resize (configDim);
         for (std::size_t iDof = 0; iDof < configDim; iDof++) {
             config [iDof] = dofArray[iDof];
         }
@@ -738,24 +740,167 @@ namespace hpp {
 	  const std::vector<std::string>& filter = bindShooter_.romFilter_;
 	  const std::map<std::string, rbprm::NormalFilter>& normalFilters = 
 	    bindShooter_.normalFilter_;
-	  core::ValidationReportPtr_t valReport;
+	  core::ValidationReportPtr_t valReport, unusedreport, valReport2;
 	  rbprm::RbPrmValidationPtr_t validator = rbprm::RbPrmValidation::create
 	    (rbRobot, filter, normalFilters);
 	  core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (),
 						      dofArray);
-	  CORBA::Boolean trunkValidity = validator->trunkValidation_->validate(q, valReport);
-	  CORBA::Boolean romValidity = validator->validateRoms(q, filter, valReport);
+	  trunkValidity = validator->trunkValidation_->validate(q, valReport);
+	  romValidity = validator->validateRoms(q, filter, valReport);
+	  CORBA::Boolean romValidity3 = validator->validateRoms(q, filter, valReport);
+	  CORBA::Boolean romValidity2 = validator->validate(q, unusedreport, filter);
+	  CORBA::Boolean romValidity4 = validator->validateRoms(q, valReport2);
+	  report = CORBA::string_dup ("");
 
-	  if(trunkValidity && romValidity) {
-	    report = CORBA::string_dup ("");
+	  for(int i = 0; i < filter.size (); i++) {
+	    hppDout (info, "bindShooter_.romFilter_= " << bindShooter_.romFilter_ [i]);
+	    hppDout (info, "filter= " << filter [i]);
 	  }
-	  else {
-	    std::ostringstream oss; oss << *valReport;
+
+	  if(!trunkValidity || !romValidity) {
+	    hppDout (info, "config is not RB-valid");
+	    hppDout (info, "trunkValidity= " << trunkValidity);
+	    hppDout (info, "romValidity= " << romValidity);
+	    hppDout (info, "romValidity2= " << romValidity2);
+	    hppDout (info, "romValidity3= " << romValidity3);
+	    hppDout (info, "romValidity4= " << romValidity4);
+	    std::ostringstream oss;
+	    oss << *valReport;
+	    report = CORBA::string_dup(oss.str ().c_str ());
+	    oss << *valReport2;
 	    report = CORBA::string_dup(oss.str ().c_str ());
 	  }
 	} catch (const std::exception& exc) {
 	  throw hpp::Error (exc.what ());
 	}
+      }
+
+      // --------------------------------------------------------------------
+
+      void RbprmBuilder::interpolateBallisticPath (CORBA::UShort pathId)
+	throw (hpp::Error){
+        try {
+	  std::size_t pid = (std::size_t) pathId;
+	  if(startState_.configuration_.rows() == 0)
+	    {
+	      throw std::runtime_error ("Start state not initialized, can not interpolate ");
+	    }
+	  if(endState_.configuration_.rows() == 0)
+	    {
+	      throw std::runtime_error ("End state not initialized, can not interpolate ");
+	    }
+
+	  if(problemSolver_->paths().size() <= pid)
+	    {
+	      throw std::runtime_error ("No path computed, cannot interpolate ");
+	    }
+
+	  hpp::rbprm::BallisticInterpolationPtr_t interpolator = 
+	    rbprm::BallisticInterpolation::create(fullBody_, startState_,
+						  endState_,
+						  problemSolver_->paths()[pid]);
+	  core::PathVectorPtr_t newPath = interpolator->InterpolateFullPath(problemSolver_->collisionObstacles());
+	  std::size_t newPathId = problemSolver_->addPath (newPath);
+	  hppDout (info, "newPath Id is: " << newPathId);
+	}
+	catch(std::runtime_error& e)
+	  {
+	    throw Error(e.what());
+	  }
+      }
+
+      // --------------------------------------------------------------------
+
+      hpp::floatSeqSeq* RbprmBuilder::generateWaypointContacts
+      (CORBA::UShort pathId) throw (hpp::Error){
+        try {
+	  std::size_t pid = (std::size_t) pathId;
+	  if(problemSolver_->paths().size() <= pid) {
+	    throw std::runtime_error ("No path computed");
+	  }
+
+	  core::DevicePtr_t robot = problemSolver_->robot ();
+	  const CORBA::ULong configSize = robot->configSize(); // with ECS
+	  const CORBA::ULong ecsSize = robot->extraConfigSpace ().dimension ();
+	  core::PathVectorPtr_t path = problemSolver_->paths () [pid];
+	  std::size_t num_subpaths  = (*path).numberPaths ();
+	  std::size_t num_waypoints  = num_subpaths - 1;
+	  bool success;
+	  hpp::floatSeqSeq *configSequence;
+	  configSequence = new hpp::floatSeqSeq ();
+	  configSequence->length ((CORBA::ULong) num_waypoints);
+
+	  for (std::size_t i = 1; i < num_subpaths; i++) {
+	    core::PathPtr_t subpath = (*path).pathAtRank (i); // trunk-size!!
+	    const std::size_t trunkSize = subpath->initial ().size ();
+	    hppDout (info, "trunkSize: " << trunkSize);
+	    model::Configuration_t q1 (configSize);
+	    hppDout (info, "waypoint before fill: " << displayConfig(subpath->initial ()));
+	    for (std::size_t j = 0; j < configSize - ecsSize; j++) {
+	      if (j < trunkSize)
+		q1 [j] = subpath->initial () [j];
+	      else
+		q1 [j] = 0;
+	    }
+	    for (std::size_t k = 0; k < ecsSize; k++)
+	      q1 [configSize - ecsSize + k] = subpath->initial () [trunkSize - ecsSize + k];
+	    hppDout (info, "waypoint before contacts: " << displayConfig(q1));
+	    fcl::Vec3f dir;
+	    dir [0] = 0; dir [1] = 0; dir [2] = 1;
+	    rbprm::State state =
+	      rbprm::ComputeContacts(fullBody_, q1,
+				     problemSolver_->collisionObstacles(), dir);
+	    model::Configuration_t q = state.configuration_;
+	    hppDout (info, "waypoint after contacts: " << displayConfig(q));
+	    hpp::floatSeq* dofArray;
+	    dofArray = new hpp::floatSeq ();
+	    dofArray->length (configSize);
+	    for (std::size_t j = 0; j < robot->configSize(); j++) {
+	      dofArray [j] = q (j);
+	      hppDout (info, "q [j]: " << q (j));
+	    }
+	    if (i - 1 < num_waypoints)
+	      (*configSequence) [(CORBA::ULong) i - 1] = *dofArray;
+	    hppDout (info, "i: " << (CORBA::ULong) i);
+	    //hppDout (info, "*dofArray: " << *dofArray);
+	  }
+	  return configSequence;
+	}
+	catch(std::runtime_error& e)
+	  {
+	    throw Error(e.what());
+	  }
+      }
+
+      // --------------------------------------------------------------------
+
+      hpp::floatSeq* RbprmBuilder::fillConfiguration
+      (const hpp::floatSeq& dofArray, const CORBA::UShort fullSize)
+	throw (hpp::Error)
+      {
+	core::DevicePtr_t robot = problemSolver_->robot ();
+	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
+	std::size_t trunkSize = q.size ();
+	std::size_t ecsSize = robot->extraConfigSpace ().dimension ();
+	core::Configuration_t result (fullSize);
+	hppDout (info, "original config= " << displayConfig (q));
+	for (std::size_t j = 0; j < fullSize - ecsSize; j++) {
+	  if (j < trunkSize)
+	    result [j] = q [j];
+	  else
+	    result [j] = 0;
+	}
+	// copy extra-configs at the end of the config
+	for (std::size_t k = 0; k < ecsSize; k++)
+	  result [fullSize - ecsSize + k] = q [trunkSize - ecsSize + k];
+	hppDout (info, "filled config= " << displayConfig (result));
+	
+	hpp::floatSeq *dofArray_out = 0x0;
+	dofArray_out = new hpp::floatSeq();
+	dofArray_out->length (robot->configSize ());
+	for(std::size_t i=0; i<robot->configSize (); i++)
+	  (*dofArray_out)[i] = result (i);
+	return dofArray_out;
       }
 
     } // namespace impl

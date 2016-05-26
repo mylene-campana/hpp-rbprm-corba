@@ -23,7 +23,8 @@ rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 urdfName = 'hrp2_trunk_flexible'
-urdfNameRoms =  ['hrp2_larm_rom','hrp2_rarm_rom','hrp2_lleg_rom','hrp2_rleg_rom']
+#urdfNameRoms =  ['hrp2_larm_rom','hrp2_rarm_rom','hrp2_lleg_rom','hrp2_rleg_rom']
+urdfNameRoms =  ['hrp2_lleg_rom','hrp2_rleg_rom']
 urdfSuffix = ""
 srdfSuffix = ""
 
@@ -64,7 +65,7 @@ r.loadObstacleModel ("hpp-rbprm-corba","high_plateforms","high_plateforms")
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config  # Mylène
 #q11[0:4] = [3, 1, 0.5, 0, 0, 0, 1] # groundcrouch
-q11[0:7] = [6.3, 0, 0.4, 0, 0, 0, 1] # scene_jump_harder
+q11[0:7] = [6.3, 0, 0.3, 0, 0, 0, 1] # scene_jump_harder
 r(q11)
 
 rbprmBuilder.isConfigValid(q11)
@@ -76,7 +77,7 @@ q = rbprmBuilder.client.rbprm.rbprm.rbShoot ()
 r(q)
 rbprmBuilder.client.rbprm.rbprm.isRbprmValid (q)
 
-
+q11 [robot.rankInConfiguration ['LForearm']] = -2; r(q11)
 q22 = q11[::]
 #q22[0:3] = [-3.0, -1, 0.5, 0, 0, 0, 1] # groundcrouch
 q22[0:7] = [-7.3, -2, 7.8, 0, 0, 0, 1] # scene_jump_harder

@@ -185,6 +185,19 @@ class FullBody (object):
     # \param pathId Id of the path to compute from
     def interpolateConfigs(self, configs):
 		return self.client.rbprm.rbprm.interpolateConfigs(configs)
+
+	## Given start and goal states
+    def interpolateBallisticPath(self, pathId = 0):
+		return self.client.rbprm.rbprm.interpolateBallisticPath(pathId)
+
+    ## Transforms path waypoint-configurations in contact-configurations
+    def generateWaypointContacts(self, pathId = 0):
+		return self.client.rbprm.rbprm.generateWaypointContacts(pathId)
+
+	## Given start and goal states, keep parabola for trunk and 
+    # interpolate limbs. Returns sampled configs along the new path.
+    #def interpolateBalliticConfigs(self, configs):
+		#return self.client.rbprm.rbprm.interpolateBalliticConfigs(configs)  !! TODO !!
 		
 	## Create octree nodes representation for a given limb
 	#

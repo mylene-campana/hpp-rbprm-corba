@@ -135,8 +135,9 @@ class FullBody (object):
 	#
     # \param configuration the initial robot configuration
     # \param direction a 3d vector specifying the desired direction of motion
-    def generateContacts(self, configuration, direction):
-		return self.client.rbprm.rbprm.generateContacts(configuration, direction)
+    # \param noStability enable or disable stable contact computation
+    def generateContacts(self, configuration, direction, noStability):
+		return self.client.rbprm.rbprm.generateContacts(configuration, direction, noStability)
 		
 	## Retrieves the contact candidates configurations given a configuration and a limb
 	#

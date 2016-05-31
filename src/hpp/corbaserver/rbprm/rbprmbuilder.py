@@ -305,3 +305,15 @@ class Builder (object):
     def getJacobianCenterOfMass (self):
         return self.client.basic.robot.getJacobianCenterOfMass ()
     ##\}
+
+    def isRbprmValid (self, config, trunkValidity, romValidity, report):
+        return self.client.rbprm.rbprm.isRbprmValid (config, trunkValidity, romValidity, report)
+
+    def rbShoot (self):
+        return self.client.rbprm.rbprm.rbShoot ()
+    
+    def setRbShooter (self):
+        return self.client.rbprm.rbprm.setRbShooter ()
+
+    def setNumberFilterMatch (self, nbFilterMatch):
+        return self.client.rbprm.rbprm.setNumberFilterMatch (nbFilterMatch)

@@ -40,22 +40,32 @@ namespace hpp {
         BindShooter(const std::size_t shootLimit = 10000,
                     const std::size_t displacementLimit = 1000)
             : shootLimit_(shootLimit)
-            , displacementLimit_(displacementLimit) {}
+            , displacementLimit_(displacementLimit), nbFilterMatch_ (0)
+      {}
 
         hpp::rbprm::RbPrmShooterPtr_t create (const hpp::model::DevicePtr_t& robot)
         {
-            hpp::model::RbPrmDevicePtr_t robotcast = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
-            rbprm::RbPrmShooterPtr_t shooter = hpp::rbprm::RbPrmShooter::create
-                    (robotcast,problemSolver_->problem ()->collisionObstacles(),romFilter_,normalFilter_,shootLimit_,displacementLimit_);
+	  hppDout (info, "create bindshooter");
+	  std::size_t effectiveNbFilterMatch (nbFilterMatch_);
+	  if (nbFilterMatch_ == 0)
+	    effectiveNbFilterMatch = romFilter_.size ();
+	  hppDout (info, "effectiveNbFilterMatch= " << effectiveNbFilterMatch);
+	  hpp::model::RbPrmDevicePtr_t robotcast = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
+	  rbprm::RbPrmShooterPtr_t shooter = hpp::rbprm::RbPrmShooter::create
+	    (robotcast,problemSolver_->problem ()->collisionObstacles(),romFilter_,normalFilter_,shootLimit_,displacementLimit_,effectiveNbFilterMatch);
             if(!so3Bounds_.empty())
                 shooter->BoundSO3(so3Bounds_);
             return shooter;
         }
 
-        hpp::core::PathValidationPtr_t createPathValidation (const hpp::model::DevicePtr_t& robot, const hpp::model::value_type& val)
-        {
+      hpp::core::PathValidationPtr_t createPathValidation (const hpp::model::DevicePtr_t& robot, const hpp::model::value_type& val)
+      {
+	std::size_t effectiveNbFilterMatch (nbFilterMatch_);
+	if (nbFilterMatch_ == 0)
+	  effectiveNbFilterMatch = romFilter_.size ();
+	hppDout (info, "effectiveNbFilterMatch= " << effectiveNbFilterMatch);
             hpp::model::RbPrmDevicePtr_t robotcast = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
-            hpp::rbprm::RbPrmValidationPtr_t validation(hpp::rbprm::RbPrmValidation::create(robotcast, romFilter_, normalFilter_));
+            hpp::rbprm::RbPrmValidationPtr_t validation(hpp::rbprm::RbPrmValidation::create(robotcast, romFilter_, normalFilter_,effectiveNbFilterMatch));
             hpp::rbprm::RbPrmPathValidationPtr_t collisionChecking = hpp::rbprm::RbPrmPathValidation::create(robot,val);
             collisionChecking->add (validation);
             problemSolver_->problem()->configValidation(core::ConfigValidations::create ());
@@ -69,6 +79,7 @@ namespace hpp {
         std::size_t shootLimit_;
         std::size_t displacementLimit_;
         std::vector<double> so3Bounds_;
+        std::size_t nbFilterMatch_;
     };
 
       class RbprmBuilder : public virtual POA_hpp::corbaserver::rbprm::RbprmBuilder
@@ -107,7 +118,9 @@ namespace hpp {
         virtual hpp::floatSeq* getSamplePosition(const char* limb, unsigned short sampleId) throw (hpp::Error);
 
         virtual hpp::floatSeq* generateContacts(const hpp::floatSeq& configuration,
-                                                const hpp::floatSeq& direction) throw (hpp::Error);
+                                                const hpp::floatSeq& direction,
+						const bool noStability = false)
+	  throw (hpp::Error);
 
         virtual hpp::floatSeq* getContactSamplesIds(const char* limb,
                                                    const hpp::floatSeq& configuration,
@@ -143,8 +156,10 @@ namespace hpp {
 	virtual hpp::floatSeq* fillConfiguration (const hpp::floatSeq& dofArray,
 						  const CORBA::UShort fullSize)
 	  throw (hpp::Error);
+	void setNumberFilterMatch (const CORBA::UShort nbFilterMatch)
+	  throw (hpp::Error);
 
-	private:
+      private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
         core::ProblemSolverPtr_t problemSolver_;
         model::T_Rom romDevices_;
@@ -155,7 +170,7 @@ namespace hpp {
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;
-	    rbprm::RbPrmShooterPtr_t rbShooter_;
+	rbprm::RbPrmShooterPtr_t rbShooter_;
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

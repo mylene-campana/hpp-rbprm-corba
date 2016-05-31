@@ -132,7 +132,7 @@ module hpp
     /// \param dofArray initial configuration of the robot
     /// \param direction desired direction of motion for the robot
     /// \return transformed configuration for which all possible contacts have been created
-    floatSeq generateContacts(in floatSeq dofArray, in floatSeq direction) raises (Error);
+    floatSeq generateContacts(in floatSeq dofArray, in floatSeq direction, in boolean noStability) raises (Error);
 
     /// Given a configuration and a limb, returns the id of all samples potentially in contact with the
     /// environment, ordered by their efficiency
@@ -239,9 +239,12 @@ module hpp
     floatSeqSeq generateWaypointContacts (in unsigned short pathId)
       raises (Error);
 
-    /// 
+    /// fill a trunk-sized configuration into a fullbody-sized one
     floatSeq fillConfiguration (in floatSeq dofArray,
 				in unsigned short fullSize) raises (Error);
+
+    /// set the number of filters that must match for RoM validation
+    void setNumberFilterMatch (in unsigned short nbFilterMatch) raises (Error);
 
   }; // interface Robot
   }; // module rbprm

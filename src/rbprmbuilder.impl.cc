@@ -36,6 +36,18 @@ namespace hpp {
     namespace impl {
       using model::displayConfig;
 
+      hpp::floatSeq* vectorToFloatseq (const hpp::core::vector_t& input)
+      {
+	CORBA::ULong size = (CORBA::ULong) input.size ();
+	hpp::floatSeq* q_ptr = new hpp::floatSeq ();
+	q_ptr->length (size);
+
+	for (std::size_t i=0; i<size; ++i) {
+	  (*q_ptr) [(CORBA::ULong)i] = input [i];
+	}
+	return q_ptr;
+      }
+
     RbprmBuilder::RbprmBuilder ()
     : POA_hpp::corbaserver::rbprm::RbprmBuilder()
     , romLoaded_(false)
@@ -280,7 +292,7 @@ namespace hpp {
 
     }
 
-    hpp::floatSeq* RbprmBuilder::generateContacts(const hpp::floatSeq& configuration, const hpp::floatSeq& direction) throw (hpp::Error)
+      hpp::floatSeq* RbprmBuilder::generateContacts(const hpp::floatSeq& configuration, const hpp::floatSeq& direction, const bool noStability) throw (hpp::Error)
     {
         if(!fullBodyLoaded_)
             throw Error ("No full body robot was loaded");
@@ -291,6 +303,7 @@ namespace hpp {
             {
                 dir[i] = direction[i];
             }
+	    fullBody_->noStability_ = noStability;
             model::Configuration_t config = dofArrayToConfig (fullBody_->device_, configuration);
             rbprm::State state = rbprm::ComputeContacts(fullBody_,config,
                                             problemSolver_->collisionObstacles(), dir);
@@ -821,15 +834,15 @@ namespace hpp {
 
 	  core::DevicePtr_t robot = problemSolver_->robot ();
 	  const CORBA::ULong configSize = robot->configSize(); // with ECS
+	  hppDout (info, "robot configSize: " << configSize);
 	  const CORBA::ULong ecsSize = robot->extraConfigSpace ().dimension ();
 	  core::PathVectorPtr_t path = problemSolver_->paths () [pid];
 	  std::size_t num_subpaths  = (*path).numberPaths ();
 	  std::size_t num_waypoints  = num_subpaths - 1;
 	  bool success;
-	  hpp::floatSeqSeq *configSequence;
-	  configSequence = new hpp::floatSeqSeq ();
-	  configSequence->length ((CORBA::ULong) num_waypoints);
-
+	  std::vector<core::Configuration_t> configs;
+	  fullBody_->noStability_ = true; // disable stability for waypoints
+	  
 	  for (std::size_t i = 1; i < num_subpaths; i++) {
 	    core::PathPtr_t subpath = (*path).pathAtRank (i); // trunk-size!!
 	    const std::size_t trunkSize = subpath->initial ().size ();
@@ -852,17 +865,19 @@ namespace hpp {
 				     problemSolver_->collisionObstacles(), dir);
 	    model::Configuration_t q = state.configuration_;
 	    hppDout (info, "waypoint after contacts: " << displayConfig(q));
-	    hpp::floatSeq* dofArray;
-	    dofArray = new hpp::floatSeq ();
-	    dofArray->length (configSize);
-	    for (std::size_t j = 0; j < robot->configSize(); j++) {
-	      dofArray [j] = q (j);
-	      hppDout (info, "q [j]: " << q (j));
-	    }
-	    if (i - 1 < num_waypoints)
-	      (*configSequence) [(CORBA::ULong) i - 1] = *dofArray;
-	    hppDout (info, "i: " << (CORBA::ULong) i);
-	    //hppDout (info, "*dofArray: " << *dofArray);
+	    configs.push_back (q);
+	  }
+	  hppDout (info, "configs.size = " << configs.size ());
+	  
+	  hpp::floatSeq* dofArray;
+	  dofArray = new hpp::floatSeq ();
+	  dofArray->length (configSize);
+	  hpp::floatSeqSeq *configSequence;
+	  configSequence = new hpp::floatSeqSeq ();
+	  configSequence->length ((CORBA::ULong) configs.size ());
+	  for (std::size_t i = 0; i < configs.size (); i++) {
+	    dofArray = vectorToFloatseq (configs [i]);
+	    (*configSequence) [(CORBA::ULong) i] = *dofArray;
 	  }
 	  return configSequence;
 	}
@@ -901,6 +916,14 @@ namespace hpp {
 	for(std::size_t i=0; i<robot->configSize (); i++)
 	  (*dofArray_out)[i] = result (i);
 	return dofArray_out;
+      }
+
+      // --------------------------------------------------------------------
+
+      void RbprmBuilder::setNumberFilterMatch
+      (const CORBA::UShort nbFilterMatch) throw (hpp::Error) {
+	bindShooter_.nbFilterMatch_ = nbFilterMatch;
+	problemSolver_->problem ()->configValidations ()->selectFirst ()->setSizeParameter (nbFilterMatch);
       }
 
     } // namespace impl

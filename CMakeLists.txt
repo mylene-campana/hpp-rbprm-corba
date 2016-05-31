@@ -108,7 +108,12 @@ install(FILES
   data/urdf/skeleton/LFootSphere.urdf
   data/urdf/ant/ant.urdf
   data/urdf/ant/ant_trunk.urdf
-  data/urdf/ant/ant_test_urdf.urdf
+  data/urdf/ant/LFFootSphere.urdf
+  data/urdf/ant/LMFootSphere.urdf
+  data/urdf/ant/LBFootSphere.urdf
+  data/urdf/ant/RFFootSphere.urdf
+  data/urdf/ant/RMFootSphere.urdf
+  data/urdf/ant/RBFootSphere.urdf
   data/urdf/cave.urdf
   data/urdf/desert.urdf
   data/urdf/high_plateforms.urdf
@@ -158,7 +163,12 @@ install(FILES
   data/srdf/skeleton/LFootSphere.srdf
   data/srdf/ant/ant.srdf
   data/srdf/ant/ant_trunk.srdf
-  data/srdf/ant/ant_test_urdf.srdf
+  data/srdf/ant/LFFootSphere.srdf
+  data/srdf/ant/LMFootSphere.srdf
+  data/srdf/ant/LBFootSphere.srdf
+  data/srdf/ant/RFFootSphere.srdf
+  data/srdf/ant/RMFootSphere.srdf
+  data/srdf/ant/RBFootSphere.srdf
   data/srdf/cave.srdf
   data/srdf/desert.srdf
   data/srdf/high_plateforms.srdf

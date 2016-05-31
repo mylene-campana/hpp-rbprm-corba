@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot name="articulated_ant">
+
+<!-- Disable collision pairs of inner links -->
+<!-- trunk -->
+<disable_collisions link1="Thorax" link2="Abdomen" />
+<disable_collisions link1="Thorax" link2="Head" />
+<disable_collisions link1="Head" link2="LAntena" />
+<disable_collisions link1="Head" link2="RAntena" />
+<disable_collisions link1="LAntena" link2="LAntenaFoot" />
+<disable_collisions link1="RAntena" link2="RAntenaFoot" />
+
+<!-- Left side -->
+<disable_collisions link1="Thorax" link2="LFThigh" />
+<disable_collisions link1="LFThigh" link2="LFShank" />
+<disable_collisions link1="LFShank" link2="LFFoot" />
+
+<disable_collisions link1="Thorax" link2="LMThigh" />
+<disable_collisions link1="LMThigh" link2="LMShank" />
+<disable_collisions link1="LMShank" link2="LMFoot" />
+
+<disable_collisions link1="Thorax" link2="LBThigh" />
+<disable_collisions link1="LBThigh" link2="LBShank" />
+<disable_collisions link1="LBShank" link2="LBFoot" />
+
+<!-- Right side -->
+<disable_collisions link1="Thorax" link2="RFThigh" />
+<disable_collisions link1="RFThigh" link2="RFShank" />
+<disable_collisions link1="RFShank" link2="RFFoot" />
+
+<disable_collisions link1="Thorax" link2="RMThigh" />
+<disable_collisions link1="RMThigh" link2="RMShank" />
+<disable_collisions link1="RMShank" link2="RMFoot" />
+
+<disable_collisions link1="Thorax" link2="RBThigh" />
+<disable_collisions link1="RBThigh" link2="RBShank" />
+<disable_collisions link1="RBShank" link2="RBFoot" />
+
+<!-- spheres -->
+<disable_collisions link1="LFFoot" link2="LFFootSphere" />
+<disable_collisions link1="LMFoot" link2="LMFootSphere" />
+<disable_collisions link1="LBFoot" link2="LBFootSphere" />
+<disable_collisions link1="RFFoot" link2="RFFootSphere" />
+<disable_collisions link1="RMFoot" link2="RMFootSphere" />
+<disable_collisions link1="RBFoot" link2="RBFootSphere" />
+
+</robot>

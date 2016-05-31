@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="skeleton_trunk_flexible">
+
+<!-- Disable collision pairs of inner links -->
+<!-- torso -->
+<disable_collisions link1="Pelvis" link2="Sacrum" />
+<disable_collisions link1="Sacrum" link2="L5" />
+<disable_collisions link1="L5" link2="L4" />
+<disable_collisions link1="L4" link2="L3" />
+<disable_collisions link1="L3" link2="L2" />
+<disable_collisions link1="L2" link2="L1" />
+<disable_collisions link1="L1" link2="Thorax" />
+<disable_collisions link1="Thorax" link2="Skull" />
+
+
+</robot>

@@ -1,0 +1,1216 @@
+<?xml version="1.0"?>
+<robot name="articulated_ant">
+
+  <material name="Blue"> <!-- for spheres -->
+    <color rgba="0 0 1 0.5"/>
+  </material>
+  <material name="White">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="Gray">
+    <color rgba="0.6 0.6 0.6 1"/>
+  </material>
+  <material name="Green">
+    <color rgba="0 0.9 0 0.4"/>
+  </material>
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Thorax"/>
+      <origin rpy="0 0 0" xyz="0.001 -0.0382 -0.1982"/>
+   </joint>
+
+  <link name="Thorax">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Thorax.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Thorax_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <!--<joint name="thorax_foot_rom_joint" type="fixed">
+      <parent link="Thorax"/>
+      <child link="thorax_foot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="thorax_foot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/rbfoot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+   <link name="ThoraxAbdomen_J1"/>
+   <link name="ThoraxAbdomen_J2"/>
+   <link name="Abdomen">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Abdomen.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Abdomen_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="ThoraxHead_J1"/>
+   <link name="ThoraxHead_J2"/>
+   <link name="Head">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="4.2276"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Skull.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Skull_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="HeadLAntena_J1"/>
+   <link name="HeadLAntena_J2"/>
+   <link name="LAntena">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntena.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntena.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="HeadLAntenaFoot_J1"/>
+   <link name="HeadLAntenaFoot_J2"/>
+   <link name="LAntenaFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntenaFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntenaFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="HeadRAntena_J1"/>
+   <link name="HeadRAntena_J2"/>
+   <link name="RAntena">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntena.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntena.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="HeadRAntenaFoot_J1"/>
+   <link name="HeadRAntenaFoot_J2"/>
+   <link name="RAntenaFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntenaFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntenaFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <!-- L = left, R = right, F = front, M = middle, B = back -->
+   <link name="ThoraxLFThigh_J1"/>
+   <link name="ThoraxLFThigh_J2"/>
+   <link name="LFThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LFThigh.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LFThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLFShank_J1"/>
+   <link name="ThoraxLFShank_J2"/>
+   <link name="LFShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LFShank.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LFShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLFFoot_J1"/>
+   <link name="ThoraxLFFoot_J2"/>
+   <link name="LFFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LFFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LFFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLMThigh_J1"/>
+   <link name="ThoraxLMThigh_J2"/>
+   <link name="LMThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LMThigh.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LMThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLMShank_J1"/>
+   <link name="ThoraxLMShank_J2"/>
+   <link name="LMShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LMShank.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LMShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLMFoot_J1"/>
+   <link name="ThoraxLMFoot_J2"/>
+   <link name="LMFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LMFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LMFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLBThigh_J1"/>
+   <link name="ThoraxLBThigh_J2"/>
+   <link name="LBThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LBThigh.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LBThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLBShank_J1"/>
+   <link name="ThoraxLBShank_J2"/>
+   <link name="LBShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LBShank.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LBShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxLBFoot_J1"/>
+   <link name="ThoraxLBFoot_J2"/>
+   <link name="LBFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LBFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LBFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+      <link name="ThoraxRFThigh_J1"/>
+   <link name="ThoraxRFThigh_J2"/>
+   <link name="RFThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RFThigh.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RFThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRFShank_J1"/>
+   <link name="ThoraxRFShank_J2"/>
+   <link name="RFShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RFShank.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RFShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRFFoot_J1"/>
+   <link name="ThoraxRFFoot_J2"/>
+   <link name="RFFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RFFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RFFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRMThigh_J1"/>
+   <link name="ThoraxRMThigh_J2"/>
+   <link name="RMThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RMThigh.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RMThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRMShank_J1"/>
+   <link name="ThoraxRMShank_J2"/>
+   <link name="RMShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RMShank.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RMShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRMFoot_J1"/>
+   <link name="ThoraxRMFoot_J2"/>
+   <link name="RMFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RMFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RMFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRBThigh_J1"/>
+   <link name="ThoraxRBThigh_J2"/>
+   <link name="RBThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RBThigh.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RBThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRBShank_J1"/>
+   <link name="ThoraxRBShank_J2"/>
+   <link name="RBShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RBShank.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RBShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThoraxRBFoot_J1"/>
+   <link name="ThoraxRBFoot_J2"/>
+   <link name="RBFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RBFoot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RBFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <!-- end-effector spheres -->
+  <link name="LFFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+  <link name="LMFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+  <link name="LBFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+  <link name="RFFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+  <link name="RMFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+  <link name="RBFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+
+   <!-- JOINTS -->
+  <joint name="ThoraxAbdomen_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxAbdomen_J1"/>
+      <origin rpy="0 0 0" xyz="0 0.15853 0.19806"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxAbdomen_J2" type="revolute">
+      <parent link="ThoraxAbdomen_J1"/>
+      <child link="ThoraxAbdomen_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="Abdomen" type="revolute">
+      <parent link="ThoraxAbdomen_J1"/>
+      <child link="Abdomen"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxHead_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxHead_J1"/>
+      <origin rpy="0 0 0" xyz="0 -0.06471 0.21279"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxHead_J2" type="revolute">
+      <parent link="ThoraxHead_J1"/>
+      <child link="ThoraxHead_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="Head" type="revolute">
+      <parent link="ThoraxHead_J2"/>
+      <child link="Head"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   
+   <joint name="HeadLAntena_J1" type="revolute">
+      <parent link="Head"/>
+      <child link="HeadLAntena_J1"/>
+      <origin rpy="0 0 0" xyz="0.0176 -0.1027 0.0225"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="HeadLAntena_J2" type="revolute">
+      <parent link="HeadLAntena_J1"/>
+      <child link="HeadLAntena_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="LAntena" type="revolute">
+      <parent link="HeadLAntena_J2"/>
+      <child link="LAntena"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="HeadLAntenaFoot_J1" type="revolute">
+      <parent link="LAntena"/>
+      <child link="HeadLAntenaFoot_J1"/>
+      <origin rpy="0 0 0" xyz="0.0267 -0.0198 0.1006"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="HeadLAntenaFoot_J2" type="revolute">
+      <parent link="HeadLAntenaFoot_J1"/>
+      <child link="HeadLAntenaFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="LAntenaFoot" type="revolute">
+      <parent link="HeadLAntenaFoot_J2"/>
+      <child link="LAntenaFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   
+   <joint name="HeadRAntena_J1" type="revolute">
+      <parent link="Head"/>
+      <child link="HeadRAntena_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0168 -0.1029 0.0226"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="HeadRAntena_J2" type="revolute">
+      <parent link="HeadRAntena_J1"/>
+      <child link="HeadRAntena_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="RAntena" type="revolute">
+      <parent link="HeadRAntena_J2"/>
+      <child link="RAntena"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="HeadRAntenaFoot_J1" type="revolute">
+      <parent link="RAntena"/>
+      <child link="HeadRAntenaFoot_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0279 -0.0202 0.1006"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="HeadRAntenaFoot_J2" type="revolute">
+      <parent link="HeadRAntenaFoot_J1"/>
+      <child link="HeadRAntenaFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+   <joint name="RAntenaFoot" type="revolute">
+      <parent link="HeadRAntenaFoot_J2"/>
+      <child link="RAntenaFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   
+   <!-- left side -->
+   <joint name="ThoraxLFThigh_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxLFThigh_J1"/>
+      <origin rpy="0 0 0" xyz="0.0743 -0.0223 0.1894"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLFThigh_J2" type="revolute">
+      <parent link="ThoraxLFThigh_J1"/>
+      <child link="ThoraxLFThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LFThigh" type="revolute">
+      <parent link="ThoraxLFThigh_J2"/>
+      <child link="LFThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLFShank_J1" type="fixed">
+      <parent link="LFThigh"/>
+      <child link="ThoraxLFShank_J1"/>
+      <origin rpy="0 0 0" xyz="0.1217 -0.0662 0.0268"/>
+      <!--<axis xyz="1 0 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="ThoraxLFShank_J2" type="revolute">
+      <parent link="ThoraxLFShank_J1"/>
+      <child link="ThoraxLFShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LFShank" type="revolute">
+      <parent link="ThoraxLFShank_J2"/>
+      <child link="LFShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLFFoot_J1" type="revolute">
+      <parent link="LFShank"/>
+      <child link="ThoraxLFFoot_J1"/>
+      <origin rpy="0 0 0" xyz="0.0349 -0.0208 -0.0839"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLFFoot_J2" type="fixed">
+      <parent link="ThoraxLFFoot_J1"/>
+      <child link="ThoraxLFFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <!--<axis xyz="0 1 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="LFFoot" type="revolute">
+      <parent link="ThoraxLFFoot_J2"/>
+      <child link="LFFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   
+   <joint name="ThoraxLMThigh_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxLMThigh_J1"/>
+      <origin rpy="0 0 0" xyz="0.07469 0.03933 0.19123"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLMThigh_J2" type="revolute">
+      <parent link="ThoraxLMThigh_J1"/>
+      <child link="ThoraxLMThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LMThigh" type="revolute">
+      <parent link="ThoraxLMThigh_J2"/>
+      <child link="LMThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLMShank_J1" type="fixed">
+      <parent link="LMThigh"/>
+      <child link="ThoraxLMShank_J1"/>
+      <origin rpy="0 0 0" xyz="0.1391 0.0483 0.0267"/>
+      <!--<axis xyz="1 0 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="ThoraxLMShank_J2" type="revolute">
+      <parent link="ThoraxLMShank_J1"/>
+      <child link="ThoraxLMShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LMShank" type="revolute">
+      <parent link="ThoraxLMShank_J2"/>
+      <child link="LMShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLMFoot_J1" type="revolute">
+      <parent link="LMShank"/>
+      <child link="ThoraxLMFoot_J1"/>
+      <origin rpy="0 0 0" xyz="0.0420 0.0142 -0.0892"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLMFoot_J2" type="fixed">
+      <parent link="ThoraxLMFoot_J1"/>
+      <child link="ThoraxLMFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <!--<axis xyz="0 1 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="LMFoot" type="revolute">
+      <parent link="ThoraxLMFoot_J2"/>
+      <child link="LMFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   
+   <joint name="ThoraxLBThigh_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxLBThigh_J1"/>
+      <origin rpy="0 0 0" xyz="0.06238 0.08879 0.18588"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLBThigh_J2" type="revolute">
+      <parent link="ThoraxLBThigh_J1"/>
+      <child link="ThoraxLBThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LBThigh" type="revolute">
+      <parent link="ThoraxLBThigh_J2"/>
+      <child link="LBThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLBShank_J1" type="fixed">
+      <parent link="LBThigh"/>
+      <child link="ThoraxLBShank_J1"/>
+      <origin rpy="0 0 0" xyz="0.1238 0.1183 0.0330"/>
+      <!--<axis xyz="1 0 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="ThoraxLBShank_J2" type="revolute">
+      <parent link="ThoraxLBShank_J1"/>
+      <child link="ThoraxLBShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LBShank" type="revolute">
+      <parent link="ThoraxLBShank_J2"/>
+      <child link="LBShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLBFoot_J1" type="revolute">
+      <parent link="LBShank"/>
+      <child link="ThoraxLBFoot_J1"/>
+      <origin rpy="0 0 0" xyz="0.0387 0.0341 -0.0900"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxLBFoot_J2" type="fixed">
+      <parent link="ThoraxLBFoot_J1"/>
+      <child link="ThoraxLBFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <!--<axis xyz="0 1 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="LBFoot" type="revolute">
+      <parent link="ThoraxLBFoot_J2"/>
+      <child link="LBFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   
+   <!-- right side -->
+   <joint name="ThoraxRFThigh_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxRFThigh_J1"/>
+      <origin rpy="0 0 0" xyz="-0.07030 -0.02046 0.18987"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRFThigh_J2" type="revolute">
+      <parent link="ThoraxRFThigh_J1"/>
+      <child link="ThoraxRFThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RFThigh" type="revolute">
+      <parent link="ThoraxRFThigh_J2"/>
+      <child link="RFThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRFShank_J1" type="fixed">
+      <parent link="RFThigh"/>
+      <child link="ThoraxRFShank_J1"/>
+      <origin rpy="0 0 0" xyz="-0.1258 -0.0680 0.0258"/>
+      <!--<axis xyz="1 0 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="ThoraxRFShank_J2" type="revolute">
+      <parent link="ThoraxRFShank_J1"/>
+      <child link="ThoraxRFShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RFShank" type="revolute">
+      <parent link="ThoraxRFShank_J2"/>
+      <child link="RFShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRFFoot_J1" type="revolute">
+      <parent link="RFShank"/>
+      <child link="ThoraxRFFoot_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0347 -0.0205 -0.0847"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRFFoot_J2" type="fixed">
+      <parent link="ThoraxRFFoot_J1"/>
+      <child link="ThoraxRFFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <!--<axis xyz="0 1 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="RFFoot" type="revolute">
+      <parent link="ThoraxRFFoot_J2"/>
+      <child link="RFFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   
+   <joint name="ThoraxRMThigh_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxRMThigh_J1"/>
+      <origin rpy="0 0 0" xyz="-0.07457 0.03980 0.19130"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRMThigh_J2" type="revolute">
+      <parent link="ThoraxRMThigh_J1"/>
+      <child link="ThoraxRMThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RMThigh" type="revolute">
+      <parent link="ThoraxRMThigh_J2"/>
+      <child link="RMThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRMShank_J1" type="fixed">
+      <parent link="RMThigh"/>
+      <child link="ThoraxRMShank_J1"/>
+      <origin rpy="0 0 0" xyz="-0.1387 0.0501 0.0266"/>
+      <!--<axis xyz="1 0 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="ThoraxRMShank_J2" type="revolute">
+      <parent link="ThoraxRMShank_J1"/>
+      <child link="ThoraxRMShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RMShank" type="revolute">
+      <parent link="ThoraxRMShank_J2"/>
+      <child link="RMShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRMFoot_J1" type="revolute">
+      <parent link="RMShank"/>
+      <child link="ThoraxRMFoot_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0427 0.0128 -0.0895"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRMFoot_J2" type="fixed">
+      <parent link="ThoraxRMFoot_J1"/>
+      <child link="ThoraxRMFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <!--<axis xyz="0 1 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="RMFoot" type="revolute">
+      <parent link="ThoraxRMFoot_J2"/>
+      <child link="RMFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   
+   <joint name="ThoraxRBThigh_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxRBThigh_J1"/>
+      <origin rpy="0 0 0" xyz="-0.06230 0.08906 0.18543"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRBThigh_J2" type="revolute">
+      <parent link="ThoraxRBThigh_J1"/>
+      <child link="ThoraxRBThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RBThigh" type="revolute">
+      <parent link="ThoraxRBThigh_J2"/>
+      <child link="RBThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRBShank_J1" type="fixed">
+      <parent link="RBThigh"/>
+      <child link="ThoraxRBShank_J1"/>
+      <origin rpy="0 0 0" xyz="-0.1239 0.1180 0.0334"/>
+      <!--<axis xyz="1 0 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="ThoraxRBShank_J2" type="revolute">
+      <parent link="ThoraxRBShank_J1"/>
+      <child link="ThoraxRBShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RBShank" type="revolute">
+      <parent link="ThoraxRBShank_J2"/>
+      <child link="RBShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRBFoot_J1" type="revolute">
+      <parent link="RBShank"/>
+      <child link="ThoraxRBFoot_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0385 0.0344 -0.0907"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxRBFoot_J2" type="fixed">
+      <parent link="ThoraxRBFoot_J1"/>
+      <child link="ThoraxRBFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <!--<axis xyz="0 1 0"/>-->
+      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+   </joint>
+   <joint name="RBFoot" type="revolute">
+      <parent link="ThoraxRBFoot_J2"/>
+      <child link="RBFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+
+ <!-- end-effector spheres -->
+  <joint name="LFFootSphere" type="fixed">
+      <parent link="LFFoot"/>
+      <child link="LFFootSphere"/>
+      <origin rpy="0 0 0" xyz="0.0724 -0.0430 -0.118"/> <!-- z - 0.002 -->
+  </joint>
+  <joint name="LMFootSphere" type="fixed">
+      <parent link="LMFoot"/>
+      <child link="LMFootSphere"/>
+      <origin rpy="0 0 0" xyz="0.0925 0.0314 -0.1266"/>
+  </joint>
+  <joint name="LBFootSphere" type="fixed">
+      <parent link="LBFoot"/>
+      <child link="LBFootSphere"/>
+      <origin rpy="0 0 0" xyz="0.0840 0.0771 -0.1303"/>
+  </joint>
+  <joint name="RFFootSphere" type="fixed">
+      <parent link="RFFoot"/>
+      <child link="RFFootSphere"/>
+      <origin rpy="0 0 0" xyz="-0.0729 -0.0412 -0.1177"/>
+  </joint>
+  <joint name="RMFootSphere" type="fixed">
+      <parent link="RMFoot"/>
+      <child link="RMFootSphere"/>
+      <origin rpy="0 0 0" xyz="-0.0923 0.0307 -0.1263"/>
+  </joint>
+  <joint name="RBFootSphere" type="fixed">
+      <parent link="RBFoot"/>
+      <child link="RBFootSphere"/>
+      <origin rpy="0 0 0" xyz="-0.0852 0.0768 -0.1296"/>
+  </joint>
+</robot>

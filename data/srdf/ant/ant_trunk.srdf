@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot name="ant_trunk">
+
+<!-- Disable collision pairs of inner links -->
+<!-- trunk -->
+<disable_collisions link1="Thorax" link2="Abdomen" />
+<disable_collisions link1="Thorax" link2="Head" />
+<disable_collisions link1="Head" link2="LAntena" />
+<disable_collisions link1="Head" link2="RAntena" />
+<disable_collisions link1="LAntena" link2="LAntenaFoot" />
+<disable_collisions link1="RAntena" link2="RAntenaFoot" />
+
+</robot>

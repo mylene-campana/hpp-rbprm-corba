@@ -1,0 +1,415 @@
+<?xml version="1.0"?>
+<robot name="skeleton_trunk_flexible">
+  <material name="White"> <!-- for bones -->
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="Green"> <!-- for bones -->
+    <color rgba="0 1 0.1 0.2"/>
+  </material>
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Pelvis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="Pelvis">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="8.4552"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/Pelvis_view.dae"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/pelvis_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+
+ <!--<joint name="pelvis_rfoot_rom_joint" type="fixed">
+      <parent link="Pelvis"/>
+      <child link="pelvis_rfoot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="pelvis_rfoot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/rfoot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+  <!--<joint name="pelvis_lfoot_rom_joint" type="fixed">
+      <parent link="Pelvis"/>
+      <child link="pelvis_lfoot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="pelvis_lfoot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/lfoot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+
+   <link name="PelvisSacrum_J1"/>
+   <link name="PelvisSacrum_J2"/>
+   <link name="Sacrum">
+      <inertial>
+         <origin rpy="0 0 0" xyz="-0.0255 0 0.028333"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="-0.0255 0 0.028333" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/Sacrum.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+   </link>
+   <link name="SacrumL5_J1"/>
+   <link name="SacrumL5_J2"/>
+   <link name="L5">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0.0075556 0 0.013222"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0.0075556 0 0.013222" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/L5.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+   </link>
+   <link name="L5L4_J1"/>
+   <link name="L5L4_J2"/>
+   <link name="L4">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0.0056667 0 0.016056"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0.0056667 0 0.016056" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/L4.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+   </link>
+   <link name="L4L3_J1"/>
+   <link name="L4L3_J2"/>
+   <link name="L3">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0.00094444 0 0.017"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0.00094444 0 0.017" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/L3.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+   </link>
+   <link name="L3L2_J1"/>
+   <link name="L3L2_J2"/>
+   <link name="L2">
+      <inertial>
+         <origin rpy="0 0 0" xyz="-0.00094444 0 0.015111"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="-0.00094444 0 0.015111" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/L2.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+   </link>
+   <link name="L2L1_J1"/>
+   <link name="L2L1_J2"/>
+   <link name="L1">
+      <inertial>
+         <origin rpy="0 0 0" xyz="-0.0028333 0 0.015111"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="-0.0028333 0 0.015111" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/L1.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+   </link>
+   <link name="L1Thorax_J1"/>
+   <link name="L1Thorax_J2"/>
+   <link name="Thorax">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0.035889 0 0.14072"/>
+         <mass value="19.8372"/>
+         <inertia ixx="-0.16485" ixy="0.25777" ixz="0.0015499" iyy="0.20309" iyz="-0.0061998" izz="-0.18263"/>
+      </inertial>
+      <visual>
+         <origin xyz="0.035889 0 0.14072" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/Thorax_view.dae"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0.035889 0 0.14072" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/thorax_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+
+  <!--<joint name="thorax_rhand_rom_joint" type="fixed">
+      <parent link="Thorax"/>
+      <child link="thorax_rhand_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="thorax_rhand_rom">
+      <visual>
+         <origin xyz="0.034 0.006 0.14" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/rhand_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+  <!--<joint name="thorax_lhand_rom_joint" type="fixed">
+      <parent link="Thorax"/>
+      <child link="thorax_lhand_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="thorax_lhand_rom">
+      <visual>
+         <origin xyz="0.034 -0.006 0.14" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/lhand_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+   <link name="ThoraxSkull_J1"/>
+   <link name="ThoraxSkull_J2"/>
+   <link name="Skull">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="4.2276"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/Skull_view.dae"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/skull_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <joint name="PelvisSacrum_J1" type="revolute">
+      <parent link="Pelvis"/>
+      <child link="PelvisSacrum_J1"/>
+      <origin rpy="0 0 0" xyz="-0.010389 0 0.018889"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="PelvisSacrum_J2" type="revolute">
+      <parent link="PelvisSacrum_J1"/>
+      <child link="PelvisSacrum_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="Sacrum" type="revolute">
+      <parent link="PelvisSacrum_J2"/>
+      <child link="Sacrum"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.1" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="SacrumL5_J1" type="revolute">
+      <parent link="Sacrum"/>
+      <child link="SacrumL5_J1"/>
+      <origin rpy="0 0 0" xyz="0.015111 0 0.023611"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="SacrumL5_J2" type="revolute">
+      <parent link="SacrumL5_J1"/>
+      <child link="SacrumL5_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L5" type="revolute">
+      <parent link="SacrumL5_J2"/>
+      <child link="L5"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L5L4_J1" type="revolute">
+      <parent link="L5"/>
+      <child link="L5L4_J1"/>
+      <origin rpy="0 0 0" xyz="0.0066111 0 0.030222"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L5L4_J2" type="revolute">
+      <parent link="L5L4_J1"/>
+      <child link="L5L4_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L4" type="revolute">
+      <parent link="L5L4_J2"/>
+      <child link="L4"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L4L3_J1" type="revolute">
+      <parent link="L4"/>
+      <child link="L4L3_J1"/>
+      <origin rpy="0 0 0" xyz="0 0 0.032111"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L4L3_J2" type="revolute">
+      <parent link="L4L3_J1"/>
+      <child link="L4L3_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L3" type="revolute">
+      <parent link="L4L3_J2"/>
+      <child link="L3"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L3L2_J1" type="revolute">
+      <parent link="L3"/>
+      <child link="L3L2_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0056667 0 0.031167"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L3L2_J2" type="revolute">
+      <parent link="L3L2_J1"/>
+      <child link="L3L2_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L2" type="revolute">
+      <parent link="L3L2_J2"/>
+      <child link="L2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L2L1_J1" type="revolute">
+      <parent link="L2"/>
+      <child link="L2L1_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0094444 0 0.027389"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L2L1_J2" type="revolute">
+      <parent link="L2L1_J1"/>
+      <child link="L2L1_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L1" type="revolute">
+      <parent link="L2L1_J2"/>
+      <child link="L1"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="L1Thorax_J1" type="revolute">
+      <parent link="L1"/>
+      <child link="L1Thorax_J1"/>
+      <origin rpy="0 0 0" xyz="-0.011333 0 0.029278"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="L1Thorax_J2" type="revolute">
+      <parent link="L1Thorax_J1"/>
+      <child link="L1Thorax_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.5" upper="1.5" velocity="1.0"/>
+   </joint>
+   <joint name="Thorax" type="revolute">
+      <parent link="L1Thorax_J2"/>
+      <child link="Thorax"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.5" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxSkull_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="ThoraxSkull_J1"/>
+      <origin rpy="0 0 0" xyz="0.0037778 0 0.42122"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxSkull_J2" type="revolute">
+      <parent link="ThoraxSkull_J1"/>
+      <child link="ThoraxSkull_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.4" upper="1.4" velocity="1.0"/>
+   </joint>
+   <joint name="Skull" type="revolute">
+      <parent link="ThoraxSkull_J2"/>
+      <child link="Skull"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-1.1" upper="0.4" velocity="1.0"/>
+   </joint>
+</robot>

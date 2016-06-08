@@ -244,7 +244,7 @@
       </collision>
    </link>
 
-   <joint name="PelvisSacrum_J1" type="revolute">
+   <joint name="A_PelvisSacrum_J1" type="revolute"> <!-- A_ added for order while parsing with ROS -->
       <parent link="Pelvis"/>
       <child link="PelvisSacrum_J1"/>
       <origin rpy="0 0 0" xyz="-0.010389 0 0.018889"/>
@@ -391,7 +391,7 @@
       <axis xyz="0 1 0"/>
       <limit effort="0" lower="-0.5" upper="0.6" velocity="1.0"/>
    </joint>
-   <joint name="ThoraxSkull_J1" type="revolute">
+   <joint name="A_ThoraxSkull_J1" type="revolute"> <!-- A_ added for order while parsing with ROS -->
       <parent link="Thorax"/>
       <child link="ThoraxSkull_J1"/>
       <origin rpy="0 0 0" xyz="0.0037778 0 0.42122"/>

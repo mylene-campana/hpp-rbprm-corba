@@ -309,6 +309,9 @@ class Builder (object):
     def isRbprmValid (self, config, trunkValidity, romValidity, report):
         return self.client.rbprm.rbprm.isRbprmValid (config, trunkValidity, romValidity, report)
 
+    def setOrientation (self, config):
+        return self.client.rbprm.rbprm.setOrientation (config)
+
     def rbShoot (self):
         return self.client.rbprm.rbprm.rbShoot ()
     
@@ -317,3 +320,6 @@ class Builder (object):
 
     def setNumberFilterMatch (self, nbFilterMatch):
         return self.client.rbprm.rbprm.setNumberFilterMatch (nbFilterMatch)
+
+    def getsubPathsV0Vimp (self, Vquery, pathId):
+        return self.client.rbprm.rbprm.getsubPathsV0Vimp (Vquery, pathId)

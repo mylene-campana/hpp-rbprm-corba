@@ -82,6 +82,7 @@ namespace hpp {
         std::size_t nbFilterMatch_;
     };
 
+      // -----------------------------------------------------------------
       class RbprmBuilder : public virtual POA_hpp::corbaserver::rbprm::RbprmBuilder
       {
         public:
@@ -157,6 +158,9 @@ namespace hpp {
 						  const CORBA::UShort fullSize)
 	  throw (hpp::Error);
 	void setNumberFilterMatch (const CORBA::UShort nbFilterMatch)
+	  throw (hpp::Error);
+	hpp::floatSeqSeq* getsubPathsV0Vimp (const char* Vquery,
+					     CORBA::UShort pathId)
 	  throw (hpp::Error);
 
       private:

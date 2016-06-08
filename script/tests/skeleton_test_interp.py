@@ -37,8 +37,8 @@ r = tp.Viewer (ps); gui = r.client.gui
 
 #~ AFTER loading obstacles
 
-x = 0.01 # contact surface width
-y = 0.01 # contact surface length
+x = 0.03 # contact surface width
+y = 0.08 # contact surface length
 
 nbSamples = 8000
 #~ AFTER loading obstacles
@@ -73,25 +73,18 @@ q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
 
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, [0,0,1]); r (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, [-1,0,0], False); r (q_init_test)
 
 
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, [0,0,1]); r (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, [0,0,1], False); r (q_goal_test)
 
 
 fullBody.setStartState(q_init_test,[rLegId,lLegId])
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
 
-fullBody.generateWaypointContacts(tp.solutionPathId)
-
-[-1.55719,0.845334,0.600855,0.992593,0.00423725,0.0740776,0.0961943,-0.230936,0.949657,-1.43268,0.296132,0.882572,-0.247241,0.0171693,-0.0825482,-0.0419792,-0.0108934,-0.0483608,0.0234773,-0.0109934,0.034957,0.0572652,-0.0578159,0.0612876,-0.0424992,-0.00586502,0.1,-0.0344698,0.1,0.1,-0.1,0,0,0.6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.118115,0.571518,-1.59635,0.875772,0.54584,-0.151522,0,0,0,0]
-
-qt = [2.458539, 0.726329, 0.626443, 0.9946358490305908, -0.03129096926045146, 0.04766404686503832, -0.08630493440345526, 0.1388, -0.0846, 0.2457, -0.0162, 0.08825, 0.09928, -0.032699, -0.02511, -0.004535, -0.0950, 0.0301, 0.00442, 0.03061, 0.00062, -0.08391, 0.00844, 0.08017, 0.07035, 0.07338, -0.5080, -0.3888, -0.0634, 1.1029, -0.1095, 0.0, -0.0, 1.0, 0.0]
-
-r(qt)
-fullBody.setCurrentConfig (qt); qtt = fullBody.generateContacts(qt, [math.sqrt(2)/2.0,0,math.sqrt(2)/2.0]); r (qtt)
+#fullBody.generateWaypointContacts(tp.solutionPathId)
 
 fullBody.interpolateBallisticPath(tp.solutionPathId)
 
@@ -154,5 +147,7 @@ for t in FrameRange:
 
 r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform ()
 
+cl = tp.rbprmBuilder.client.basic
+plotJointFrame (r, cl, q_init_test, "RFootSphere", 0.15)
 
 

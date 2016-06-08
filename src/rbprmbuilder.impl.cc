@@ -20,7 +20,7 @@
 #include "rbprmbuilder.impl.hh"
 #include "hpp/rbprm/rbprm-device.hh"
 #include "hpp/rbprm/rbprm-validation.hh"
-#include "hpp/rbprm/rbprm-path-interpolation.hh"
+#include "hpp/rbprm/interpolation/rbprm-path-interpolation.hh"
 #include "hpp/rbprm/stability/stability.hh"
 #include "hpp/model/urdf/util.hh"
 #include <fstream>
@@ -29,6 +29,7 @@
 #include <hpp/rbprm/fullbodyBallistic/ballistic-path.hh>
 #include <hpp/rbprm/fullbodyBallistic/ballistic-interpolation.hh>
 #include "hpp/rbprm/projection-shooter.hh"
+#include "hpp/rbprm/planner/parabola-path.hh"
 
 
 namespace hpp {
@@ -349,7 +350,7 @@ namespace hpp {
             for(model::ObjectVector_t::const_iterator oit = problemSolver_->collisionObstacles().begin();
                 oit != problemSolver_->collisionObstacles().end(); ++oit, ++i)
             {
-                sampling::GetCandidates(limb->sampleContainer_, transform, transform, *oit, dir, reports[i]);
+                sampling::GetCandidates(limb->sampleContainer_, transform, *oit, dir, reports[i]);
             }
             for(std::vector<sampling::T_OctreeReport>::const_iterator cit = reports.begin();
                 cit != reports.end(); ++cit)
@@ -463,7 +464,7 @@ namespace hpp {
             {
                 throw std::runtime_error ("End state not initialized, can not interpolate ");
             }
-            hpp::rbprm::RbPrmInterpolationPtr_t interpolator = rbprm::RbPrmInterpolation::create(fullBody_,startState_,endState_);
+            hpp::rbprm::interpolation::RbPrmInterpolationPtr_t interpolator = rbprm::interpolation::RbPrmInterpolation::create(fullBody_,startState_,endState_);
             std::vector<model::Configuration_t> configurations = doubleDofArrayToConfig(fullBody_->device_, configs);
             lastStatesComputed_ = interpolator->Interpolate(problemSolver_->collisionObstacles(),configurations,robustnessTreshold);
             hpp::floatSeqSeq *res;
@@ -514,7 +515,7 @@ namespace hpp {
             throw std::runtime_error ("No path computed, cannot interpolate ");
         }
 
-        hpp::rbprm::RbPrmInterpolationPtr_t interpolator = rbprm::RbPrmInterpolation::create(fullBody_,startState_,endState_,problemSolver_->paths()[pathId]);
+        hpp::rbprm::interpolation::RbPrmInterpolationPtr_t interpolator = rbprm::interpolation::RbPrmInterpolation::create(fullBody_,startState_,endState_,problemSolver_->paths()[pathId]);
         lastStatesComputed_ = interpolator->Interpolate(problemSolver_->collisionObstacles(),timestep,robustnessTreshold);
 
         hpp::floatSeqSeq *res;
@@ -809,7 +810,8 @@ namespace hpp {
 	    }
 
 	  hpp::rbprm::BallisticInterpolationPtr_t interpolator = 
-	    rbprm::BallisticInterpolation::create(fullBody_, startState_,
+	    rbprm::BallisticInterpolation::create(*(problemSolver_->problem ()),
+						  fullBody_, startState_,
 						  endState_,
 						  problemSolver_->paths()[pid]);
 	  core::PathVectorPtr_t newPath = interpolator->InterpolateFullPath(problemSolver_->collisionObstacles());
@@ -836,9 +838,9 @@ namespace hpp {
 	  const CORBA::ULong configSize = robot->configSize(); // with ECS
 	  hppDout (info, "robot configSize: " << configSize);
 	  const CORBA::ULong ecsSize = robot->extraConfigSpace ().dimension ();
-	  core::PathVectorPtr_t path = problemSolver_->paths () [pid];
-	  std::size_t num_subpaths  = (*path).numberPaths ();
-	  std::size_t num_waypoints  = num_subpaths - 1;
+	  const core::PathVectorPtr_t path = problemSolver_->paths () [pid];
+	  const std::size_t num_subpaths  = (*path).numberPaths ();
+	  const std::size_t num_waypoints  = num_subpaths - 1;
 	  bool success;
 	  std::vector<core::Configuration_t> configs;
 	  fullBody_->noStability_ = true; // disable stability for waypoints
@@ -925,6 +927,79 @@ namespace hpp {
 	bindShooter_.nbFilterMatch_ = nbFilterMatch;
 	problemSolver_->problem ()->configValidations ()->selectFirst ()->setSizeParameter (nbFilterMatch);
       }
+
+      // --------------------------------------------------------------------
+
+      hpp::floatSeqSeq* RbprmBuilder::getsubPathsV0Vimp (const char* Vquery,
+							 CORBA::UShort pathId)
+	throw (hpp::Error) {
+	std::size_t pid = (std::size_t) pathId;
+	if(problemSolver_->paths().size() <= pid) {
+	  throw std::runtime_error ("No path computed");
+	}
+	std::string Vquery_str = std::string(Vquery);
+	if(Vquery_str.compare ("V0") != 0 && Vquery_str.compare ("Vimp") != 0) {
+	  throw std::runtime_error ("Query problem, ask for V0 or Vimp");
+	}
+	const core::PathVectorPtr_t path = problemSolver_->paths () [pid];
+	const std::size_t num_subpaths  = (*path).numberPaths ();
+	core::vector_t V (3);
+	std::vector<core::vector_t> V_vector;
+	for (std::size_t i = 0; i < num_subpaths; i++) {
+	  const core::PathPtr_t subpath = (*path).pathAtRank (i);
+	  ParabolaPathPtr_t pp = 
+	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
+	  if (Vquery_str.compare("V0") == 0) {
+	    V = pp->V0_;
+	  }
+	    V = pp->Vimp_;
+	  V_vector.push_back (V);
+	}
+	hpp::floatSeq* vArray;
+	vArray = new hpp::floatSeq ();
+	vArray->length (3);
+	hpp::floatSeqSeq *vSequence;
+	vSequence = new hpp::floatSeqSeq ();
+	vSequence->length ((CORBA::ULong) V_vector.size ());
+	for (std::size_t i = 0; i < V_vector.size (); i++) {
+	  for (std::size_t k = 0; k < 3; k++) {
+	    (*vArray) [(CORBA::ULong) k] = V_vector [i][k];
+	  }
+	  (*vSequence) [(CORBA::ULong) i] = *vArray;
+	}
+	return vSequence;
+      }
+
+      // --------------------------------------------------------------------
+
+      /*void RbprmBuilder::rotateAlongPath (CORBA::UShort pathId)
+	throw (hpp::Error) {
+	std::size_t pid = (std::size_t) pathId;
+	if(problemSolver_->paths().size() <= pid) {
+	  throw std::runtime_error ("No path computed");
+	}
+	const core::PathVectorPtr_t path = problemSolver_->paths () [pid];
+	core::PathVectorPtr_t newPath;
+	const std::size_t num_subpaths  = (*path).numberPaths ();
+	core::DevicePtr_t robot = problemSolver_->robot ();
+	core::Configuration_t q1, q2, q1rot, q2rot;
+
+	for (std::size_t i = 0; i < num_subpaths; i++) {
+	  const core::PathPtr_t subpath = (*path).pathAtRank (i);
+	  ParabolaPathPtr_t pp = 
+	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
+	  // TODO !!!
+	  core::Configuration_t q1 = subpath->initial ();
+	  core::Configuration_t q2 = subpath->end ();
+	  q1rot = rbprm::setOrientation (robot, q1);
+	  q2rot = rbprm::setOrientation (robot, q2);
+
+	  // push in new path vector
+	}
+
+	// add path vector to problemSolver
+	problemSolver_->paths_.push_back (newPath);
+	}*/
 
     } // namespace impl
   } // namespace rbprm

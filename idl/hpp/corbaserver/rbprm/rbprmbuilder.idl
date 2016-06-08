@@ -243,8 +243,15 @@ module hpp
     floatSeq fillConfiguration (in floatSeq dofArray,
 				in unsigned short fullSize) raises (Error);
 
-    /// set the number of filters that must match for RoM validation
+    /// Set the number of filters that must match for RoM validation
     void setNumberFilterMatch (in unsigned short nbFilterMatch) raises (Error);
+
+    /// Get the initial or impact/final velocity directions computed by the 
+    /// steering method for each subpath.
+    /// \param Vquery is set to "V0" for initial velocities or "Vimp" for 
+    /// impact/final velocities
+    floatSeqSeq getsubPathsV0Vimp (in string Vquery, in unsigned short pathId)
+      raises (Error);
 
   }; // interface Robot
   }; // module rbprm

@@ -105,14 +105,14 @@ def plotConeWaypoints (cl, nPath, r, coneGroupName, coneURDFname):
 
 ## Plot cone ##
 ## Parameters:
-# cl: corbaserver client
+# cl: rbprm-corbaserver client (rbprmBuilder.client.rbprm.rbprm)
 # q: configuration of cone (position, orientation)
 # r: viewer server
 # coneName: string used for cone name (e.g. "cone_wp0/this_cone")
 # coneURDFname: "friction_cone" (mu = 0.5) or "friction_cone2" (mu = 1.2)
 # To avoid problem with cone names in Blender, use also "friction_cone_SG"...
 def plotCone (q, cl, r, coneName, coneURDFname):
-    qCone = cl.robot.setOrientation (q)
+    qCone = cl.setOrientation (q)
     r.loadObstacleModel ("animals_description",coneURDFname,coneName)
     r.client.gui.applyConfiguration (coneName, qCone[0:7])
     r.client.gui.refresh ()

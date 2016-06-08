@@ -24,8 +24,9 @@ ecsSize = 4
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, -0.3, 2.4])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, 0.001, 2.4])
 #rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
+rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
 #rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], 0.5)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
@@ -39,7 +40,7 @@ r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
 r.loadObstacleModel ('hpp-rbprm-corba', "groundcrouch", "planning")
-#addLight (r, [-3,3,4,1,0,0,0], "li"); addLight (r, [3,-3,4,1,0,0,0], "li1")
+addLight (r, [-3,0,8,1,0,0,0], "li");
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
@@ -55,7 +56,7 @@ rbprmBuilder.isConfigValid(q22)
 
 ps.selectPathPlanner("PRMplanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
-ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(5.2)
+ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(4.2)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
@@ -63,11 +64,15 @@ t = ps.solve ()
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
+V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
+Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
+
 print("Verify that all RB-waypoints are valid: ")
 pathWaypoints = ps.getWaypoints(solutionPathId)
 for i in range(1,len(pathWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathWaypoints[i]))):
         print('problem with waypoints number: ' + str(i))
+
 
 """
 # Write data to log file
@@ -183,7 +188,26 @@ pbCl.addEdgeToRoadmap (waypoints[2], q22, pathId2g, True)
 
 pbCl.saveRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
+
+
+# solve manually:
+waypoints = [[-3.699170692218081, -0.14040727877555925, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -0.0, -0.0, 0.0]]
+ps.setInitialConfig (q11); ps.addGoalConfig (waypoints [0]); ps.solve (); ps.resetGoalConfigs ()
+
+for i in range(0,len(waypoints)-1):
+	ps.setInitialConfig (waypoints [i]); ps.addGoalConfig (waypoints [i+1]); ps.solve (); ps.resetGoalConfigs ()
+
+ps.setInitialConfig (waypoints [len(waypoints)-1]); ps.addGoalConfig (q22); ps.solve (); ps.resetGoalConfigs ()
+ps.setInitialConfig (q11); ps.addGoalConfig (q22)
+
+plotFrame (r, 'frame_group', [-2,0,0], 0.6)
+waypoints = [[-3.699170692218081, -0.14040727877555925, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -0.0, -0.0, 0.0]]
+plotThetaPlane (q22, waypoints[0], r, "ThetaPlane")
+cl = rbprmBuilder.client.rbprm.rbprm
+plotCone (q22, cl, r, "c2", "friction_cone2")
+plotCone (waypoints[0], cl, r, "wp0", "friction_cone2")
+
+r([-3.76847,1.72037,0.001,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-0,-0,0])
+
 """
-
-
 

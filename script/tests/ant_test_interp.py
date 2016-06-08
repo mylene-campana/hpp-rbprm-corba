@@ -5,6 +5,7 @@
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
 from hpp.gepetto import Viewer, PathPlayer
+import numpy as np
 from viewer_library import *
 
 import ant_test_path as tp
@@ -19,6 +20,8 @@ urdfName = "ant"
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = tp.ecsSize
+V0list = tp.V0list
+Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
@@ -34,7 +37,7 @@ psf = tp.ProblemSolver( fullBody )
 rr = tp.Viewer (psf); gui = rr.client.gui
 
 #~ AFTER loading obstacles
-nbSamples = 3000
+nbSamples = 4000
 x = 0.006 # contact surface width
 y = 0.006 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
@@ -81,22 +84,25 @@ q_goal[0:confsize] = tp.q22[0:confsize]
 q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
 q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
 
+
+dir_init = V0list [0] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, [0,0,1], True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
+dir_goal = (-1*np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, [0,0,1], True); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
-
-fullBody.generateWaypointContacts(tp.solutionPathId)
-
 fullBody.interpolateBallisticPath(tp.solutionPathId)
+
+#fullBody.generateWaypointContacts(tp.solutionPathId)
+
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp(psf.numberPaths ()-1)
@@ -123,14 +129,14 @@ r.client.gui.refresh ()
 ## Video recording
 import time
 pp.dt = 0.01
-pp.speed=0.6
-r(q_init)
-r.startCapture ("capture","png")
-r(q_init_test); time.sleep(0.2)
-r(q_init_test)
-pp(ps.numberPaths ()-1)
-r(q_goal_test); time.sleep(1);
-r.stopCapture ()
+pp.speed=0.5
+rr(q_init_test)
+rr.startCapture ("capture","png")
+rr(q_init_test); time.sleep(1)
+rr(q_init_test)
+pp(psf.numberPaths ()-1)
+rr(q_goal_test); time.sleep(1);
+rr.stopCapture ()
 
 ## ffmpeg commands
 ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4

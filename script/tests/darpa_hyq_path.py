@@ -21,7 +21,7 @@ srdfSuffix = ""
 rbprmBuilder = Builder ()
 
 rbprmBuilder.loadModel(urdfName, urdfNameRom, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-2,5, -1, 1, 0.3, 4])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [-2,0, -1, 1, 0.3, 4])
 rbprmBuilder.setFilter(['hyq_rhleg_rom', 'hyq_lfleg_rom', 'hyq_rfleg_rom','hyq_lhleg_rom'])
 rbprmBuilder.setNormalFilter('hyq_lhleg_rom', [0,0,1], 0.5)
 rbprmBuilder.setNormalFilter('hyq_rfleg_rom', [0,0,1], 0.5)
@@ -42,7 +42,8 @@ q_init [0:3] = [-2, 0, 0.63]; rbprmBuilder.setCurrentConfig (q_init); r (q_init)
 #~ q_init [0:3] = [2, 0, 0.63]; rbprmBuilder.setCurrentConfig (q_init); r (q_init)
 
 q_goal = q_init [::]
-q_goal [0:3] = [3, 0, 0.63]; r (q_goal)
+#q_goal [0:3] = [3, 0, 0.63]; r (q_goal)
+q_goal [0:3] = [-1.5, 0, 0.63]; r (q_goal)
 
 #~ ps.addPathOptimizer("GradientBased")
 ps.addPathOptimizer("RandomShortcut")
@@ -69,9 +70,9 @@ pp = PathPlayer (rbprmBuilder.client.basic, r)
 #~ 
 #~ pp (2)
 #~ pp (0)
-pp.displayPath(1)
+pp.displayPath(0)
 r.client.gui.setVisibility("path_1_root","ALWAYS_ON_TOP")
-pp (1)
+pp (0)
 
 #r.client.gui.removeFromGroup("rm",r.sceneName)
 r.client.gui.removeFromGroup("rmPath",r.sceneName)

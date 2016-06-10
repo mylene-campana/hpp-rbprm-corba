@@ -244,8 +244,8 @@ class FullBody (object):
 		return self.client.rbprm.rbprm.interpolateConfigs(configs)
 
 	## Given start and goal states
-    def interpolateBallisticPath(self, pathId = 0):
-		return self.client.rbprm.rbprm.interpolateBallisticPath(pathId)
+    def interpolateBallisticPath(self, pathId = 0, u_offset = 0):
+		return self.client.rbprm.rbprm.interpolateBallisticPath(pathId, u_offset)
 
     ## Transforms path waypoint-configurations in contact-configurations
     def generateWaypointContacts(self, pathId = 0):
@@ -543,3 +543,7 @@ class FullBody (object):
     def getJacobianCenterOfMass (self):
         return self.client.basic.robot.getJacobianCenterOfMass ()
     ##\}
+
+    # Rotate waypoints according to path directions.
+    def rotateAlongPath (self, pathId):
+        return self.client.rbprm.rbprm.rotateAlongPath (pathId, True)

@@ -37,9 +37,9 @@ psf = tp.ProblemSolver( fullBody )
 rr = tp.Viewer (psf); gui = rr.client.gui
 
 #~ AFTER loading obstacles
-nbSamples = 4000
-x = 0.006 # contact surface width
-y = 0.006 # contact surface length
+nbSamples = 2000
+x = 0.02 # contact surface width
+y = 0.02 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
 
 lfLegId = 'lffoot'
@@ -108,6 +108,8 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp(psf.numberPaths ()-1)
 
 
+fullBody.rotateAlongPath (psf.numberPaths ()-1) # TODO tester
+
 q11 [robot.rankInConfiguration ['RElbow_J1']] = -1.5
 
 # verify given offset position of contact-point
@@ -162,11 +164,6 @@ for t in FrameRange:
         r (q); gui.refresh (); gui.captureTransform ()
 
 r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform ()
-
-
-['base_joint_xyz', 'base_joint_SO3', 'ThoraxAbdomen_J1', 'Abdomen', 'ThoraxAbdomen_J2', 'ThoraxHead_J1', 'ThoraxHead_J2', 'Head', 'HeadLAntena_J1', 'HeadLAntena_J2', 'LAntena', 'HeadLAntenaFoot_J1', 'HeadLAntenaFoot_J2', 'LAntenaFoot', 'HeadRAntena_J1', 'HeadRAntena_J2', 'RAntena', 'HeadRAntenaFoot_J1', 'HeadRAntenaFoot_J2', 'RAntenaFoot']
-
-['base_joint_xyz', 'base_joint_SO3', 'ThoraxAbdomen_J1', 'Abdomen', 'ThoraxAbdomen_J2', 'ThoraxHead_J1', 'ThoraxHead_J2', 'Head', 'HeadLAntena_J1', 'HeadLAntena_J2', 'LAntena', 'HeadLAntenaFoot_J1', 'HeadLAntenaFoot_J2', 'LAntenaFoot', 'HeadRAntena_J1', 'HeadRAntena_J2', 'RAntena', 'HeadRAntenaFoot_J1', 'HeadRAntenaFoot_J2', 'RAntenaFoot', 'ThoraxLBThigh_J1', 'ThoraxLBThigh_J2', 'LBThigh', 'ThoraxLBShank_J2', 'LBShank', 'ThoraxLBFoot_J1', 'LBFoot', 'ThoraxLFThigh_J1', 'ThoraxLFThigh_J2', 'LFThigh', 'ThoraxLFShank_J2', 'LFShank', 'ThoraxLFFoot_J1', 'LFFoot', 'ThoraxLMThigh_J1', 'ThoraxLMThigh_J2', 'LMThigh', 'ThoraxLMShank_J2', 'LMShank', 'ThoraxLMFoot_J1', 'LMFoot', 'ThoraxRBThigh_J1', 'ThoraxRBThigh_J2', 'RBThigh', 'ThoraxRBShank_J2', 'RBShank', 'ThoraxRBFoot_J1', 'RBFoot', 'ThoraxRFThigh_J1', 'ThoraxRFThigh_J2', 'RFThigh', 'ThoraxRFShank_J2', 'RFShank', 'ThoraxRFFoot_J1', 'RFFoot', 'ThoraxRMThigh_J1', 'ThoraxRMThigh_J2', 'RMThigh', 'ThoraxRMShank_J2', 'RMShank', 'ThoraxRMFoot_J1', 'RMFoot']
 
 
 

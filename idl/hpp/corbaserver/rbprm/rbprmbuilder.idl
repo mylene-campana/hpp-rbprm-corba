@@ -283,7 +283,10 @@ module hpp
     /// Add to ProblemSolver list of paths a new path resulting from: a 
     /// parabola path for the robot trunk and an interpolation between start 
     /// and goal states for the limbs
-    void interpolateBallisticPath (in unsigned short pathId) raises (Error);
+    /// \param pathId: ID path (in Problem Solver path stack) to interpolate
+    /// \param u_offset: normalized curvilinear abcissa of contact maintain
+    void interpolateBallisticPath (in unsigned short pathId,
+				   in double u_offset) raises (Error);
 
     /// Generate contact on the waypoint-configurations of the given path
     floatSeqSeq generateWaypointContacts (in unsigned short pathId)
@@ -302,6 +305,27 @@ module hpp
     /// impact/final velocities
     floatSeqSeq getsubPathsV0Vimp (in string Vquery, in unsigned short pathId)
       raises (Error);
+
+    /// Add new path vector to Problem Solver, where robot orientation was
+    /// updated to "follow" the given path directions
+    /// \param pathId: reference path to apply rotation
+    /// \param fullbody: True if applied on a fullbody robot (returns path 
+    /// vector of ballistic-paths), False if applied on a rbprm robot 
+    /// (returns path vector of parabola-paths)
+    void rotateAlongPath (in unsigned short pathId,
+			  in boolean fullbody) raises (Error);
+
+    /// Compute GIWC for the given configuration, return the V representation
+    /// \param dofArray: given configuration
+    /// \param contactLength: length of the robot surface of contact
+    /// \param contactWidth: width of the robot surface of contact
+    floatSeqSeq computeConfigGIWC (in floatSeq dofArray,
+				   in double contactLength,
+				   in double contactWidth) raises (Error);
+
+    /// Set fullOrientationMode of rbprm-shooter
+    /// \param fullOrientationMode: True if robot fully oriented according to obstacle surface normal, False if robot randomly oriented
+    void setFullOrientationMode (in boolean fullOrientationMode) raises (Error);
 
     /// returns octree transform for a given robot configuration
     /// \param config configuration tested on the robot

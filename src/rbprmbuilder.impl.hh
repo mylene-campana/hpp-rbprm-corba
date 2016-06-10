@@ -41,7 +41,8 @@ namespace hpp {
         BindShooter(const std::size_t shootLimit = 10000,
                     const std::size_t displacementLimit = 1000)
             : shootLimit_(shootLimit)
-            , displacementLimit_(displacementLimit), nbFilterMatch_ (0)
+            , displacementLimit_(displacementLimit), nbFilterMatch_ (0),
+	      fullOrientationMode_ (false)
       {}
 
         hpp::rbprm::RbPrmShooterPtr_t create (const hpp::model::DevicePtr_t& robot)
@@ -54,6 +55,8 @@ namespace hpp {
 	  hpp::model::RbPrmDevicePtr_t robotcast = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
 	  rbprm::RbPrmShooterPtr_t shooter = hpp::rbprm::RbPrmShooter::create
 	    (robotcast,problemSolver_->problem ()->collisionObstacles(),romFilter_,normalFilter_,shootLimit_,displacementLimit_,effectiveNbFilterMatch);
+	  shooter->fullOrientationMode (fullOrientationMode_);
+	  hppDout (info, "fullOrientationMode = " << fullOrientationMode_);
             if(!so3Bounds_.empty())
                 shooter->BoundSO3(so3Bounds_);
             return shooter;
@@ -81,6 +84,7 @@ namespace hpp {
         std::size_t displacementLimit_;
         std::vector<double> so3Bounds_;
         std::size_t nbFilterMatch_;
+        bool fullOrientationMode_;
     };
 
       // -----------------------------------------------------------------
@@ -168,7 +172,9 @@ namespace hpp {
 			   CORBA::Boolean& trunkValidity,
 			   CORBA::Boolean& romValidity,
 			   CORBA::String_out report) throw (hpp::Error);
-	void interpolateBallisticPath (CORBA::UShort pathId) throw (hpp::Error);
+	void interpolateBallisticPath (const CORBA::UShort pathId,
+				       const double u_offset)
+	  throw (hpp::Error);
 	hpp::floatSeqSeq* generateWaypointContacts (CORBA::UShort pathId)
 	  throw (hpp::Error);
 	virtual hpp::floatSeq* fillConfiguration (const hpp::floatSeq& dofArray,
@@ -178,6 +184,16 @@ namespace hpp {
 	  throw (hpp::Error);
 	hpp::floatSeqSeq* getsubPathsV0Vimp (const char* Vquery,
 					     CORBA::UShort pathId)
+	  throw (hpp::Error);
+
+	void rotateAlongPath (const CORBA::UShort pathId,
+			      const bool fullbody) throw (hpp::Error);
+
+	hpp::floatSeqSeq* computeConfigGIWC (const hpp::floatSeq& dofArray,
+					     const double contactLength,
+					     const double contactWidth);
+
+	void setFullOrientationMode (const bool fullOrientationMode)
 	  throw (hpp::Error);
 
       private:

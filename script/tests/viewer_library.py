@@ -412,6 +412,23 @@ def plotBodyCurvPath (r, cl, robot, dt, nPath, bodyName, pathName, pathColor):
 
 # --------------------------------------------------------------------#
 
+## Plot GIWC ##
+# Vmatrix: V-representation of GIWC, previously obtained from rbprmBuilder.computeConfigGIWC (config)
+# r: viewer server
+# cl: corbaserver client
+# giwcId: Id (for name) of giwc
+# color: osg-color of displayed giwc (e.g. [0,0.9,0.1,1])
+def plotGIWC (Vmatrix, r, cl, giwcId, color):
+    print("not finished")
+    Vrows = len(Vmatrix[0]); Vcols = len(Vmatrix)
+    origin = Vmatrix [0:Vrows][0]
+    plotSphere (origin, cl, r, "giwc_" + str(giwcId) + "_origin", color, 0.05)
+    for i in range (0,Vcols):
+        lineName = "giwc_" + str(giwcId) + "_line_" + str(i)
+        r.client.gui.addLine(lineName,[origin[0],origin[1],origin[2]], [Vmatrix[0][i],Vmatrix[1][i],Vmatrix[2][i]],color)
+        r.client.gui.addToGroup (lineName, r.sceneName)
+
+# --------------------------------------------------------------------#
 # ----------------------------## BLENDER ##------------------------------------#
 
 ## Write Path-motion in Yaml file ##

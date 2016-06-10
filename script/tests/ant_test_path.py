@@ -54,6 +54,8 @@ q22[0:7] = [-1.5, -1, 0.2, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
+rbprmBuilder.computeConfigGIWC (q22) #TODO tester
+
 ps.selectPathPlanner("PRMplanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(4.2)
@@ -63,6 +65,8 @@ ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 t = ps.solve ()
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+
+fullBody.rotateAlongPath (solutionPathId) # TODO tester
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)

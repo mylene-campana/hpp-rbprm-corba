@@ -547,3 +547,7 @@ class FullBody (object):
     # Rotate waypoints according to path directions.
     def rotateAlongPath (self, pathId):
         return self.client.rbprm.rbprm.rotateAlongPath (pathId, True)
+
+    # Set extending or flexion pose
+    def setPose (self, config, query):
+        return self.client.rbprm.rbprm.setPose (config, query)

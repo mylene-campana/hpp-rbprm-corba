@@ -18,7 +18,7 @@
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
       <child link="Thorax"/>
-      <origin rpy="0 0 0" xyz="0.001 -0.0382 -0.1982"/>
+      <origin rpy="0 0 1.570796" xyz="0.001 -0.0382 -0.1982"/>
    </joint>
 
   <link name="Thorax">
@@ -802,21 +802,21 @@
       <child link="ThoraxLFThigh_J1"/>
       <origin rpy="0 0 0" xyz="0.0743 -0.0223 0.1894"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLFThigh_J2" type="revolute">
       <parent link="ThoraxLFThigh_J1"/>
       <child link="ThoraxLFThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="LFThigh" type="revolute">
       <parent link="ThoraxLFThigh_J2"/>
       <child link="LFThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLFShank_J1" type="fixed">
       <parent link="LFThigh"/>
@@ -830,35 +830,35 @@
       <child link="ThoraxLFShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="LFShank" type="revolute">
       <parent link="ThoraxLFShank_J2"/>
       <child link="LFShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLFFoot_J1" type="revolute">
       <parent link="LFShank"/>
       <child link="ThoraxLFFoot_J1"/>
       <origin rpy="0 0 0" xyz="0.0349 -0.0208 -0.0839"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
-   <joint name="ThoraxLFFoot_J2" type="fixed">
+   <joint name="ThoraxLFFoot_J2" type="revolute">
       <parent link="ThoraxLFFoot_J1"/>
       <child link="ThoraxLFFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <!--<axis xyz="0 1 0"/>-->
-      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    <joint name="LFFoot" type="revolute">
       <parent link="ThoraxLFFoot_J2"/>
       <child link="LFFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
    <joint name="ThoraxLMThigh_J1" type="revolute">
@@ -866,21 +866,21 @@
       <child link="ThoraxLMThigh_J1"/>
       <origin rpy="0 0 0" xyz="0.07469 0.03933 0.19123"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLMThigh_J2" type="revolute">
       <parent link="ThoraxLMThigh_J1"/>
       <child link="ThoraxLMThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="LMThigh" type="revolute">
       <parent link="ThoraxLMThigh_J2"/>
       <child link="LMThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLMShank_J1" type="fixed">
       <parent link="LMThigh"/>
@@ -894,14 +894,14 @@
       <child link="ThoraxLMShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="LMShank" type="revolute">
       <parent link="ThoraxLMShank_J2"/>
       <child link="LMShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLMFoot_J1" type="revolute">
       <parent link="LMShank"/>
@@ -910,19 +910,19 @@
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
-   <joint name="ThoraxLMFoot_J2" type="fixed">
+   <joint name="ThoraxLMFoot_J2" type="revolute">
       <parent link="ThoraxLMFoot_J1"/>
       <child link="ThoraxLMFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <!--<axis xyz="0 1 0"/>-->
-      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="LMFoot" type="revolute">
       <parent link="ThoraxLMFoot_J2"/>
       <child link="LMFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
    <joint name="ThoraxLBThigh_J1" type="revolute">
@@ -930,21 +930,21 @@
       <child link="ThoraxLBThigh_J1"/>
       <origin rpy="0 0 0" xyz="0.06238 0.08879 0.18588"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLBThigh_J2" type="revolute">
       <parent link="ThoraxLBThigh_J1"/>
       <child link="ThoraxLBThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="LBThigh" type="revolute">
       <parent link="ThoraxLBThigh_J2"/>
       <child link="LBThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLBShank_J1" type="fixed">
       <parent link="LBThigh"/>
@@ -958,14 +958,14 @@
       <child link="ThoraxLBShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="LBShank" type="revolute">
       <parent link="ThoraxLBShank_J2"/>
       <child link="LBShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="ThoraxLBFoot_J1" type="revolute">
       <parent link="LBShank"/>
@@ -974,19 +974,19 @@
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
-   <joint name="ThoraxLBFoot_J2" type="fixed">
+   <joint name="ThoraxLBFoot_J2" type="revolute">
       <parent link="ThoraxLBFoot_J1"/>
       <child link="ThoraxLBFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <!--<axis xyz="0 1 0"/>-->
-      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="LBFoot" type="revolute">
       <parent link="ThoraxLBFoot_J2"/>
       <child link="LBFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
    <!-- right side -->
@@ -995,21 +995,21 @@
       <child link="ThoraxRFThigh_J1"/>
       <origin rpy="0 0 0" xyz="-0.07030 -0.02046 0.18987"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRFThigh_J2" type="revolute">
       <parent link="ThoraxRFThigh_J1"/>
       <child link="ThoraxRFThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RFThigh" type="revolute">
       <parent link="ThoraxRFThigh_J2"/>
       <child link="RFThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRFShank_J1" type="fixed">
       <parent link="RFThigh"/>
@@ -1023,14 +1023,14 @@
       <child link="ThoraxRFShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RFShank" type="revolute">
       <parent link="ThoraxRFShank_J2"/>
       <child link="RFShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRFFoot_J1" type="revolute">
       <parent link="RFShank"/>
@@ -1039,19 +1039,19 @@
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
-   <joint name="ThoraxRFFoot_J2" type="fixed">
+   <joint name="ThoraxRFFoot_J2" type="revolute">
       <parent link="ThoraxRFFoot_J1"/>
       <child link="ThoraxRFFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <!--<axis xyz="0 1 0"/>-->
-      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="RFFoot" type="revolute">
       <parent link="ThoraxRFFoot_J2"/>
       <child link="RFFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
    <joint name="ThoraxRMThigh_J1" type="revolute">
@@ -1059,21 +1059,21 @@
       <child link="ThoraxRMThigh_J1"/>
       <origin rpy="0 0 0" xyz="-0.07457 0.03980 0.19130"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRMThigh_J2" type="revolute">
       <parent link="ThoraxRMThigh_J1"/>
       <child link="ThoraxRMThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RMThigh" type="revolute">
       <parent link="ThoraxRMThigh_J2"/>
       <child link="RMThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRMShank_J1" type="fixed">
       <parent link="RMThigh"/>
@@ -1087,14 +1087,14 @@
       <child link="ThoraxRMShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RMShank" type="revolute">
       <parent link="ThoraxRMShank_J2"/>
       <child link="RMShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRMFoot_J1" type="revolute">
       <parent link="RMShank"/>
@@ -1103,19 +1103,19 @@
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
-   <joint name="ThoraxRMFoot_J2" type="fixed">
+   <joint name="ThoraxRMFoot_J2" type="revolute">
       <parent link="ThoraxRMFoot_J1"/>
       <child link="ThoraxRMFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <!--<axis xyz="0 1 0"/>-->
-      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="RMFoot" type="revolute">
       <parent link="ThoraxRMFoot_J2"/>
       <child link="RMFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
    <joint name="ThoraxRBThigh_J1" type="revolute">
@@ -1123,21 +1123,21 @@
       <child link="ThoraxRBThigh_J1"/>
       <origin rpy="0 0 0" xyz="-0.06230 0.08906 0.18543"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRBThigh_J2" type="revolute">
       <parent link="ThoraxRBThigh_J1"/>
       <child link="ThoraxRBThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RBThigh" type="revolute">
       <parent link="ThoraxRBThigh_J2"/>
       <child link="RBThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRBShank_J1" type="fixed">
       <parent link="RBThigh"/>
@@ -1151,14 +1151,14 @@
       <child link="ThoraxRBShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RBShank" type="revolute">
       <parent link="ThoraxRBShank_J2"/>
       <child link="RBShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="ThoraxRBFoot_J1" type="revolute">
       <parent link="RBShank"/>
@@ -1167,19 +1167,19 @@
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
-   <joint name="ThoraxRBFoot_J2" type="fixed">
+   <joint name="ThoraxRBFoot_J2" type="revolute">
       <parent link="ThoraxRBFoot_J1"/>
       <child link="ThoraxRBFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <!--<axis xyz="0 1 0"/>-->
-      <!--<limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>-->
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="RBFoot" type="revolute">
       <parent link="ThoraxRBFoot_J2"/>
       <child link="RBFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
 
  <!-- end-effector spheres -->

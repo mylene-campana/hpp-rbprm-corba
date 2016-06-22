@@ -328,4 +328,10 @@ class Builder (object):
         return self.client.rbprm.rbprm.rotateAlongPath (pathId, False)
 
     def computeConfigGIWC (self, config, contactLength, contactWidth):
-        return self.client.rbprm.rbprm.rotateAlongPath (config)
+        return self.client.rbprm.rbprm.computeConfigGIWC (config, contactLength, contactWidth)
+
+    def setFullOrientationMode (self, fullOrientationMode):
+        return self.client.rbprm.rbprm.setFullOrientationMode (fullOrientationMode)
+
+    def setContactSize (self, xValue, yValue):
+        return self.client.rbprm.rbprm.setContactSize (xValue, yValue)

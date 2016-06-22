@@ -28,7 +28,15 @@ rbprmBuilder.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, 0.001, 2.4])
 #rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
-#rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], 0.5)
+filterRange = 0.3
+rbprmBuilder.setNormalFilter('LFFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('LMFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('LBFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RFFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RMFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RBFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setContactSize (0.03,0.03)
+
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
@@ -45,20 +53,25 @@ addLight (r, [-3,0,8,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-5.0, 0, 0.2, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [-5.0, 0, 0.18, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
+#V = rbprmBuilder.computeConfigGIWC (q11,0.02,0.02)
+#plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
+
 q22 = q11[::]
-q22[0:7] = [-1.5, -1, 0.2, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-1.5, -1, 0.17, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-rbprmBuilder.computeConfigGIWC (q22) #TODO tester
+qt = [-4.26049006105259, -1.4066260935510233, 0.061143439483642585, 0.9921872049128063, 0.0, -0.0, -0.1247579673099597, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.9999999999999999, -0.2501677777851498]
 
-ps.selectPathPlanner("PRMplanner")
+#ps.selectPathPlanner("PRMplanner")
+ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
-ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(4.2)
+rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
+ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(4.3)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
@@ -66,7 +79,9 @@ t = ps.solve ()
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
-fullBody.rotateAlongPath (solutionPathId) # TODO tester
+rbprmBuilder.rotateAlongPath (solutionPathId)
+orientedpathId = ps.numberPaths () - 1
+#pp(orientedpathId)
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
@@ -74,8 +89,12 @@ Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 print("Verify that all RB-waypoints are valid: ")
 pathWaypoints = ps.getWaypoints(solutionPathId)
 for i in range(1,len(pathWaypoints)-1):
-    if(not(rbprmBuilder.isConfigValid(pathWaypoints[i]))):
+    if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
+
+
+plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone_WP2")
+plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbprmBuilder, r, "cone_21", "friction_cone2")
 
 
 """
@@ -93,7 +112,7 @@ rob = rbprmBuilder.client.basic.robot
 r(q11)
 
 # Move RB-robot away in viewer
-qAway = q11 [::]; qAway[0] = -8
+qAway = q11 [::]; qAway[0] = -6.5; qAway[1] = -2
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 
@@ -134,7 +153,7 @@ ps.numberNodes()
 
 pathSamples = plotSampleSubPath (cl, r, pathId, 70, "path0", [0,0,1,1])
 plotCone (q1, cl, r, "cone_first", "friction_cone_SG2"); plotCone (q2, cl, r, "cone_second", "friction_cone_SG2")
-plotConeWaypoints (cl, pathId, r, "cone_wp_group", "friction_cone_WP2")
+plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone_WP2")
 
 # Plot cones and edges in viewer
 plotConesRoadmap (cl, r, 'cone_rm_group', "friction_cone2")

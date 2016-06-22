@@ -48,14 +48,15 @@ def normalizeDir (q, robot):
 ## Plot whole path in viewer (in blue) WARNING: NOT ADAPTED FOR PARABOLA ##
 # For parabola, prefrer method plotSampleSubPath
 ## Parameters:
-# cl: corbaserver client
+# rbprmBuilder: rbprmBuilder instance (hpp.corbaserver.rbprm.rbprmbuilder)
 # nPath: path number
 # r: viewer server
 # lineNamePrefix: string prefix used for line name
 # dt: step time
-def plotPath (cl, nPath, r, lineNamePrefix, dt):
+def plotPath (rbprmBuilder, nPath, r, lineNamePrefix, dt):
     for t in np.arange(0., cl.problem.pathLength(nPath), dt):
         lineName = lineNamePrefix+str(t)
+        cl = rbprmBuilder.client.basic
         r.client.gui.addLine(lineName,[cl.problem.configAtParam(nPath, t)[0],cl.problem.configAtParam(nPath, t)[1],cl.problem.configAtParam(nPath, t)[2]],[cl.problem.configAtParam(nPath, t+dt)[0],cl.problem.configAtParam(nPath, t+dt)[1],cl.problem.configAtParam(nPath, t+dt)[2]],[0,0.3,1,1])
         r.client.gui.addToGroup (lineName, r.sceneName)
 
@@ -85,19 +86,19 @@ def plotFrame (r, frameGroupName, framePosition, ampl):
 
 ## Plot cone at each waypoint of the path ##
 ## Parameters:
-# cl: corbaserver client
+# rbprmBuilder: rbprmBuilder instance (hpp.corbaserver.rbprm.rbprmbuilder)
 # nPath: path number
 # r: viewer server
 # coneGroupName: string used for cone group name ('cone_wp_group')
 # coneURDFname: "friction_cone" (mu = 0.5) or "friction_cone2" (mu = 1.2)
 # To avoid problem with cone names in Blender, use also "friction_cone_WP"...
-def plotConeWaypoints (cl, nPath, r, coneGroupName, coneURDFname):
-    wp = cl.problem.getWaypoints (nPath)
+def plotConeWaypoints (rbprmBuilder, nPath, r, coneGroupName, coneURDFname):
+    wp = rbprmBuilder.client.basic.problem.getWaypoints (nPath)
     r.client.gui.createGroup (coneGroupName)
     for i in np.arange(1, len(wp)-1, 1): # avoid (re-)plot start and goal
         coneName = coneGroupName+'_'+"cone_"+str(i)
-        plotCone (wp[i], cl, r, coneName, coneURDFname)
-        r.client.gui.addToGroup (coneName, coneGroupName)
+        plotCone (wp[i], rbprmBuilder, r, coneName, coneURDFname)
+        r.client.gui.addToGroup (coneName, coneGroupName) # visually not needed, but names for Blender ?
     r.client.gui.addSceneToWindow(coneGroupName,r.windowId)
 
 
@@ -111,8 +112,8 @@ def plotConeWaypoints (cl, nPath, r, coneGroupName, coneURDFname):
 # coneName: string used for cone name (e.g. "cone_wp0/this_cone")
 # coneURDFname: "friction_cone" (mu = 0.5) or "friction_cone2" (mu = 1.2)
 # To avoid problem with cone names in Blender, use also "friction_cone_SG"...
-def plotCone (q, cl, r, coneName, coneURDFname):
-    qCone = cl.setOrientation (q)
+def plotCone (q, rbprmBuilder, r, coneName, coneURDFname):
+    qCone = rbprmBuilder.client.rbprm.rbprm.setOrientation (q)
     r.loadObstacleModel ("animals_description",coneURDFname,coneName)
     r.client.gui.applyConfiguration (coneName, qCone[0:7])
     r.client.gui.refresh ()
@@ -164,16 +165,17 @@ def plotThetaPlane (q1, q2, r, lineNamePrefix):
 
 ## Shoot random config, normalize 'dir' part and plot cone ##
 ## Parameters:
-# cl: corbaserver client
+# rbprmBuilder: rbprmBuilder instance (hpp.corbaserver.rbprm.rbprmbuilder)
 # r: viewer server
 # mu: cone coefficient of friction
 # ampl: cone amplitude
 # lineNamePrefix: string prefix used for line name
-def shootNormPlot (cl, r, mu, ampl, lineNamePrefix):
+def shootNormPlot (rbprmBuilder, r, mu, ampl, lineNamePrefix):
+    cl = rbprmBuilder.client.basic
     q = cl.robot.shootRandomConfig ()
     print q
     q = normalizeDir (q, cl.robot)
-    plotCone (q, cl, r, mu, ampl, lineNamePrefix)
+    plotCone (q, rbprmBuilder, r, mu, ampl, lineNamePrefix)
     index = cl.robot.getConfigSize () - 4
     plotStraightLine ([q [index],q [index+1],q [index+2]], q, r, lineNamePrefix+"normale")
     return q
@@ -182,13 +184,14 @@ def shootNormPlot (cl, r, mu, ampl, lineNamePrefix):
 
 ## Plot path choosing the number of samples by subpath ##
 ## Parameters:
-# cl: corbaserver client
+# rbprmBuilder: rbprmBuilder instance (hpp.corbaserver.rbprm.rbprmbuilder)
 # r: viewer server
 # nPath: path number
 # NbPointsPerSubPath: number of sampled points per subpath (each parabola)
 # curvePrefix: string prefix used for curve name
 # curveColor: osg-color of the curve (e.g. [0,1,0,1])
-def plotSampleSubPath (cl, r, nPath, NbPointsPerSubPath, curvePrefix, curveColor):
+def plotSampleSubPath (rbprmBuilder, r, nPath, NbPointsPerSubPath, curvePrefix, curveColor):
+    cl = rbprmBuilder.client.basic
     plotSampleConfigs = cl.problem.sampleSubPath(nPath, NbPointsPerSubPath)
     pointsCurv = []
     for i in range(0, len(plotSampleConfigs)):
@@ -205,9 +208,10 @@ def plotSampleSubPath (cl, r, nPath, NbPointsPerSubPath, curvePrefix, curveColor
 # (if one wants to plot the cone at the contact...)
 ## Parameters:
 # q: CoM configuration (not at the contact)
-# cl: corbaserver client
+# rbprmBuilder: rbprmBuilder instance (hpp.corbaserver.rbprm.rbprmbuilder)
 # r: viewer server
-def contactPosition (q, cl, r):
+def contactPosition (q, rbprmBuilder, r):
+    cl = rbprmBuilder.client.basic
     qConeContact = q[::] # at least for orientation
     index = cl.robot.getConfigSize () - cl.robot.getExtraConfigSize ()
     n = np.array([q[index], q[index+1], q[index+2]]) # normal
@@ -238,15 +242,14 @@ def addLight (r, q, lightName):
 # --------------------------------------------------------------------#
 
 ## Plot sphere ##
-# Example (plot small green sphere) "plotSphere (q, cl, r, sphereName, [0,1,0,1], 0.02)"
+# Example (plot small green sphere) "plotSphere (q, r, sphereName, [0,1,0,1], 0.02)"
 ## Parameters:
-# cl: corbaserver client
 # q: configuration of cone (position, orientation)
 # r: viewer server
 # sphereName: string suffix used for cone name
 # sphereColor: color of sphere
 # sphereSize: size of sphere
-def plotSphere (q, cl, r, sphereName, sphereColor, sphereSize):
+def plotSphere (q, r, sphereName, sphereColor, sphereSize):
     r.client.gui.addSphere (sphereName,sphereSize,sphereColor)
     r.client.gui.applyConfiguration (sphereName, q[0:7])
     r.client.gui.addToGroup (sphereName, r.sceneName)
@@ -256,18 +259,19 @@ def plotSphere (q, cl, r, sphereName, sphereColor, sphereSize):
 
 ## Plot sphere at each waypoint of the path ##
 ## Parameters:
-# cl: corbaserver client
+# rbprmBuilder: rbprmBuilder instance (hpp.corbaserver.rbprm.rbprmbuilder)
 # nPath: path number
 # r: viewer server
 # sphereGroupName: string used for sphere group name
 # sphereColor: color of sphere
 # sphereSize: size of sphere
-def plotSpheresWaypoints (cl, nPath, r, sphereGroupName, sphereColor, sphereSize):
+def plotSpheresWaypoints (rbprmBuilder, nPath, r, sphereGroupName, sphereColor, sphereSize):
+    cl = rbprmBuilder.client.basic
     wp = cl.problem.getWaypoints (nPath)
     r.client.gui.createGroup (sphereGroupName)
     for i in np.arange(1, len(wp)-1, 1): # avoid (re-)plot start and goal
         sphereName = sphereGroupName+'_'+"sphere_"+str(i)
-        plotSphere (wp[i][0:7], cl, r, sphereName, sphereColor, sphereSize)
+        plotSphere (wp[i][0:7], r, sphereName, sphereColor, sphereSize)
         r.client.gui.addToGroup (sphereName, sphereGroupName)
         #r.client.gui.removeFromGroup(sphereName,r.sceneName) # remove duplicata in sceneName NOT WORKING
     r.client.gui.addSceneToWindow(sphereGroupName,r.windowId)
@@ -413,19 +417,24 @@ def plotBodyCurvPath (r, cl, robot, dt, nPath, bodyName, pathName, pathColor):
 # --------------------------------------------------------------------#
 
 ## Plot GIWC ##
+## Parameters:
 # Vmatrix: V-representation of GIWC, previously obtained from rbprmBuilder.computeConfigGIWC (config)
+# q: current configuration TODO not sure if need the CoM one...
 # r: viewer server
-# cl: corbaserver client
 # giwcId: Id (for name) of giwc
 # color: osg-color of displayed giwc (e.g. [0,0.9,0.1,1])
-def plotGIWC (Vmatrix, r, cl, giwcId, color):
-    print("not finished")
+def plotGIWC (q, Vmatrix, r, giwcId, color):
     Vrows = len(Vmatrix[0]); Vcols = len(Vmatrix)
-    origin = Vmatrix [0:Vrows][0]
-    plotSphere (origin, cl, r, "giwc_" + str(giwcId) + "_origin", color, 0.05)
-    for i in range (0,Vcols):
+    origin = q[0:3] # TODO use also q's quaternion ?
+    origin.append(1); origin.append(0); origin.append(0); origin.append(0); # quaternion
+    plotSphere (origin, r, "giwc_" + str(giwcId) + "_origin", color, 0.05)
+    for i in range (0,Vrows):
         lineName = "giwc_" + str(giwcId) + "_line_" + str(i)
-        r.client.gui.addLine(lineName,[origin[0],origin[1],origin[2]], [Vmatrix[0][i],Vmatrix[1][i],Vmatrix[2][i]],color)
+        pos_i = [Vmatrix[i][0],Vmatrix[i][1],Vmatrix[i][2]]
+        rot_i = [Vmatrix[i][3],Vmatrix[i][4],Vmatrix[i][5]]
+        # TODO: compute point_i = origin + ... rot_i*pos_i ...
+        #r.client.gui.addLine(lineName,[Vmatrix[i][0],Vmatrix[i][1],Vmatrix[i][2]], [Vmatrix[i][3],Vmatrix[i][4],Vmatrix[i][5]],color)
+        r.client.gui.addLine(lineName,[origin[0],origin[1],origin[2]], [rot_i[0],rot_i[1],rot_i[2]],color)
         r.client.gui.addToGroup (lineName, r.sceneName)
 
 # --------------------------------------------------------------------#

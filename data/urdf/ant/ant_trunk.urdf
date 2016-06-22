@@ -5,7 +5,7 @@
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
       <child link="Thorax"/>
-      <origin rpy="0 0 0" xyz="0.001 -0.0382 -0.1982"/>
+      <origin rpy="0 0 1.570796" xyz="0.001 -0.0382 -0.1982"/>
    </joint>
 
   <link name="Thorax">
@@ -27,6 +27,22 @@
          </geometry>
       </collision>
    </link>
+
+   <!--<joint name="thorax_foot_rom_joint" type="fixed">
+      <parent link="Thorax"/>
+      <child link="thorax_foot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="thorax_foot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/rbfoot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
 
    <link name="ThoraxAbdomen_J1"/>
    <link name="ThoraxAbdomen_J2"/>

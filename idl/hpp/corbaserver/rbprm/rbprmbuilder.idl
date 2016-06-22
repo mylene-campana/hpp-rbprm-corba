@@ -325,7 +325,14 @@ module hpp
 
     /// Set fullOrientationMode of rbprm-shooter
     /// \param fullOrientationMode: True if robot fully oriented according to obstacle surface normal, False if robot randomly oriented
-    void setFullOrientationMode (in boolean fullOrientationMode) raises (Error);
+    void setFullOrientationMode (in boolean fullOrientationMode);
+
+    void setContactSize (in double xValue, in double yValue);
+
+    /// set the extending or the flexion pose of the fullbody
+    /// \param dofArray configuration of the pose
+    /// \param string query: 'extending' or 'flexion'
+    void setPose (in floatSeq dofArray, in string poseQuery) raises (Error);
 
     /// returns octree transform for a given robot configuration
     /// \param config configuration tested on the robot

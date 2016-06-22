@@ -966,6 +966,7 @@ namespace hpp {
 
     void RbprmBuilder::SetProblemSolver (hpp::core::ProblemSolverPtr_t problemSolver)
     {
+      hppDout (info, "set problem solver");
         problemSolver_ = problemSolver;
         bindShooter_.problemSolver_ = problemSolver;
         //bind shooter creator to hide problem as a parameter and respect signature
@@ -1112,25 +1113,41 @@ namespace hpp {
         try {
 	  std::size_t pid = (std::size_t) pathId;
 	  if(startState_.configuration_.rows() == 0)
-	    {
 	      throw std::runtime_error ("Start state not initialized, can not interpolate ");
-	    }
 	  if(endState_.configuration_.rows() == 0)
-	    {
 	      throw std::runtime_error ("End state not initialized, can not interpolate ");
-	    }
 
 	  if(problemSolver_->paths().size() <= pid)
-	    {
 	      throw std::runtime_error ("No path computed, cannot interpolate ");
-	    }
 
+	  const core::PathVectorConstPtr_t path = problemSolver_->paths()[pid];
+
+	  const core::PathPtr_t subpath1 = (*path).pathAtRank (0);
+	  const ParabolaPathPtr_t pp1 = 
+	    boost::dynamic_pointer_cast<ParabolaPath>(subpath1);
+
+	  const std::size_t subPathNumber = path->numberPaths ();
+	  core::PathVectorPtr_t newPath = core::PathVector::create 
+	    (fullBody_->device_->configSize (),
+	     fullBody_->device_->numberDof ());
 	  hpp::rbprm::BallisticInterpolationPtr_t interpolator = 
 	    rbprm::BallisticInterpolation::create(*(problemSolver_->problem ()),
 						  fullBody_, startState_,
-						  endState_,
-						  problemSolver_->paths()[pid]);
-	  core::PathVectorPtr_t newPath = interpolator->InterpolateFullPath(problemSolver_->collisionObstacles(), u_offset);
+						  endState_, path);
+	  const core::PathPtr_t subpath = (*path).pathAtRank (0);
+	  const ParabolaPathPtr_t pp = 
+	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
+
+	  if (extendingPose_.rows() > 0)
+	    interpolator->extendingPose (extendingPose_);
+	  if (flexionPose_.rows() > 0)
+	    interpolator->flexionPose (flexionPose_);
+
+	  if (subPathNumber == 1)
+	    newPath = interpolator->InterpolateDirectPath(u_offset);
+	  else
+	    newPath = interpolator->InterpolateFullPath(u_offset);
+
 	  std::size_t newPathId = problemSolver_->addPath (newPath);
 	  hppDout (info, "newPath Id is: " << newPathId);
 	}
@@ -1224,6 +1241,7 @@ namespace hpp {
 	    result [j] = 0;
 	}
 	// copy extra-configs at the end of the config
+	hppDout (info, "ecsSize= " << ecsSize);
 	for (std::size_t k = 0; k < ecsSize; k++)
 	  result [fullSize - ecsSize + k] = q [trunkSize - ecsSize + k];
 	hppDout (info, "filled config= " << displayConfig (result));
@@ -1265,9 +1283,9 @@ namespace hpp {
 	  const core::PathPtr_t subpath = (*path).pathAtRank (i);
 	  ParabolaPathPtr_t pp = 
 	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
-	  if (Vquery_str.compare("V0") == 0) {
+	  if (Vquery_str.compare("V0") == 0)
 	    V = pp->V0_;
-	  }
+	  else
 	    V = pp->Vimp_;
 	  V_vector.push_back (V);
 	}
@@ -1320,13 +1338,16 @@ namespace hpp {
 	  waypoints.push_back ((*tmpPath) (tmpPath->length (), success));
 
 	  // update theta values
+	  value_type theta_i;
 	  for (std::size_t i = 0; i < waypoints.size () - 1; i++) {
 	    // theta_(i,i+1)
-	    value_type theta_i = atan2 (waypoints [i+1][1]-waypoints [i][1],
+	    theta_i = atan2 (waypoints [i+1][1]-waypoints [i][1],
 					waypoints [i+1][0]-waypoints [i][0]);
 	    //hppDout (info, "theta_i: " << theta_i);
 	    waypoints [i][index + 3] = theta_i;
 	  }
+	  // ! last orientation (qEnd) = last theta_i
+	  waypoints [waypoints.size () - 1][index + 3] = theta_i;
 
 	  // update waypoints orientations
 	  //const JointPtr_t skullJoint = robot_->getJointByName ("Skull");
@@ -1340,8 +1361,11 @@ namespace hpp {
 
 	  // loop to construct new path vector with parabPath constructor
 	  for (std::size_t i = 0; i < num_subpaths; i++) {
-	    vector_t coefs = (*path).pathAtRank (i)->coefficients ();
-	    value_type length = (*path).pathAtRank (i)->length ();
+	    const core::PathPtr_t subpath = (*path).pathAtRank (i);
+	    const ParabolaPathPtr_t pp = 
+	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
+	    const vector_t coefs = pp->coefficients ();
+	    const value_type length = pp->length ();
 	    if (fullbody) {
 	      newPath->appendPath
 		(rbprm::BallisticPath::create (robot, waypoints [i],
@@ -1349,7 +1373,10 @@ namespace hpp {
 	    } else { // rbprm
 	      newPath->appendPath
 		(rbprm::ParabolaPath::create (robot, waypoints [i],
-					      waypoints [i+1], length, coefs));
+					      waypoints [i+1], length, coefs,
+					      pp->V0_, pp->Vimp_,
+					      pp->initialROMnames_,
+					      pp->endROMnames_));
 	    }
 	  }
 	  // add path vector to problemSolver
@@ -1367,26 +1394,28 @@ namespace hpp {
       {
 	core::DevicePtr_t robot = problemSolver_->robot ();
 	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
+	
 	core::vector_t contactSize (2);
 	contactSize [0] = contactLength;
 	contactSize [1] = contactWidth;
 	const polytope::ProjectedCone* giwc =
 	  rbprm::computeConfigGIWC (problemSolver_->problem (), q, contactSize);
-	
+	if (!giwc)
+	  throw std::runtime_error ("no GIWC could be computed");
 	const core::matrix_t& V = giwc->V; // V-representation
+	hppDout (info, "V GIWC rows = " << V.rows ()); // num_contacts * 16
+	hppDout (info, "V GIWC cols = " << V.cols ()); // 6
 	hppDout (info, "V GIWC = " << V);
-	hppDout (info, "V GIWC rows = " << V.rows ());
-	hppDout (info, "V GIWC cols = " << V.cols ());
 
 	hpp::floatSeq* vArray;
 	vArray = new hpp::floatSeq ();
-	vArray->length (V.rows ());
+	vArray->length (V.cols ());
 	hpp::floatSeqSeq *vSequence;
 	vSequence = new hpp::floatSeqSeq ();
-	vSequence->length ((CORBA::ULong) V.size ());
-	for (std::size_t i = 0; i < V.cols (); i++) {
-	  for (std::size_t k = 0; k < V.rows (); k++) {
-	    (*vArray) [(CORBA::ULong) k] = V (k,i);
+	vSequence->length ((CORBA::ULong) V.rows ());
+	for (std::size_t i = 0; i < V.rows (); i++) {
+	  for (std::size_t k = 0; k < V.cols (); k++) {
+	    (*vArray) [(CORBA::ULong) k] = V (i,k);
 	  }
 	  (*vSequence) [(CORBA::ULong) i] = *vArray;
 	}
@@ -1397,8 +1426,38 @@ namespace hpp {
       // --------------------------------------------------------------------
 
       void RbprmBuilder::setFullOrientationMode
-      (const bool fullOrientationMode) throw (hpp::Error) {
+      (const bool fullOrientationMode) {
 	bindShooter_.fullOrientationMode_ = fullOrientationMode;
+      }
+
+      // --------------------------------------------------------------------
+
+      void RbprmBuilder::setContactSize (const double xValue,
+					 const double yValue) {
+	const core::DevicePtr_t robot = problemSolver_->robot ();
+	model::RbPrmDevicePtr_t rbRobot = boost::dynamic_pointer_cast<model::RbPrmDevice>(robot);
+	rbRobot->contactSize_ [0] = xValue;
+	rbRobot->contactSize_ [1] = yValue;
+      }
+
+      // --------------------------------------------------------------------
+
+      void RbprmBuilder::setPose (const hpp::floatSeq& dofArray,
+				  const char* poseQuery) throw (hpp::Error){
+	std::string query_str = std::string(poseQuery);
+	if(query_str.compare ("extending") != 0 && 
+	   query_str.compare ("flexion") != 0)
+	  throw std::runtime_error ("Query problem, ask for extending or flexion");
+	core::DevicePtr_t robot = problemSolver_->robot ();
+	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
+	if (query_str.compare ("extending") == 0) {
+	  extendingPose_ = q;
+	  hppDout (info, "extendingPose_= " << displayConfig(extendingPose_));
+	}
+	else {
+	  flexionPose_ = q;
+	  hppDout (info, "flexionPose_= " << displayConfig(flexionPose_));
+	}
       }
 
     } // namespace impl

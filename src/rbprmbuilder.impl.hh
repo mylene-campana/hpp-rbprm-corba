@@ -193,8 +193,12 @@ namespace hpp {
 					     const double contactLength,
 					     const double contactWidth);
 
-	void setFullOrientationMode (const bool fullOrientationMode)
-	  throw (hpp::Error);
+	void setFullOrientationMode (const bool fullOrientationMode);
+
+	void setContactSize (const double xValue, const double yValue);
+
+	void setPose (const hpp::floatSeq& dofArray,
+		      const char* poseQuery) throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -209,6 +213,8 @@ namespace hpp {
         std::vector<rbprm::State> lastStatesComputed_;
 	rbprm::RbPrmShooterPtr_t rbShooter_;
         sampling::AnalysisFactory* analysisFactory_;
+	core::Configuration_t extendingPose_;
+	core::Configuration_t flexionPose_;
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

@@ -106,6 +106,12 @@ install(FILES
   data/urdf/skeleton/LHandSphere.urdf
   data/urdf/skeleton/RFootSphere.urdf
   data/urdf/skeleton/LFootSphere.urdf
+  data/urdf/spiderman/spiderman.urdf
+  data/urdf/spiderman/spiderman_trunk.urdf
+  data/urdf/spiderman/RHandSphere.urdf
+  data/urdf/spiderman/LHandSphere.urdf
+  data/urdf/spiderman/RFootSphere.urdf
+  data/urdf/spiderman/LFootSphere.urdf
   data/urdf/ant/ant.urdf
   data/urdf/ant/ant_trunk.urdf
   data/urdf/ant/LFFootSphere.urdf
@@ -161,6 +167,12 @@ install(FILES
   data/srdf/skeleton/LHandSphere.srdf
   data/srdf/skeleton/RFootSphere.srdf
   data/srdf/skeleton/LFootSphere.srdf
+  data/srdf/spiderman/spiderman.srdf
+  data/srdf/spiderman/spiderman_trunk.srdf
+  data/srdf/spiderman/RHandSphere.srdf
+  data/srdf/spiderman/LHandSphere.srdf
+  data/srdf/spiderman/RFootSphere.srdf
+  data/srdf/spiderman/LFootSphere.srdf
   data/srdf/ant/ant.srdf
   data/srdf/ant/ant_trunk.srdf
   data/srdf/ant/LFFootSphere.srdf
@@ -247,6 +259,11 @@ install(DIRECTORY
 
 install(DIRECTORY
 	data/meshes/ant
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
+  )
+
+install(DIRECTORY
+	data/meshes/spiderman
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
   )
 

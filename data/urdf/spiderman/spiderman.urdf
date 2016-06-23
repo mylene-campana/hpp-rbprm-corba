@@ -1,0 +1,713 @@
+<?xml version="1.0"?>
+<!-- meshes from http://tf3dm.com/ -->
+<robot name="spiderman">
+  <material name="Blue"> <!-- for spheres -->
+    <color rgba="0 0 1 0.5"/>
+  </material>
+  <material name="White"> <!-- for bones -->
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="Green"> <!-- for bones -->
+    <color rgba="0 1 0.1 0.2"/>
+  </material>
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Pelvis"/>
+      <origin rpy="0 0 1.57079632" xyz="0 0 0"/>
+   </joint>
+
+   <link name="Pelvis">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="8.4552"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-pelvis.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-pelvis.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+ <!--<joint name="pelvis_rfoot_rom_joint" type="fixed">
+      <parent link="Pelvis"/>
+      <child link="pelvis_rfoot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="pelvis_rfoot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/rfoot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+  <!--<joint name="pelvis_lfoot_rom_joint" type="fixed">
+      <parent link="Pelvis"/>
+      <child link="pelvis_lfoot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="pelvis_lfoot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/lfoot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+   <link name="PelvisThorax_J1"/>
+   <link name="PelvisThorax_J2"/>
+   <link name="Thorax">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="19.8372"/>
+         <inertia ixx="-0.16485" ixy="0.25777" ixz="0.0015499" iyy="0.20309" iyz="-0.0061998" izz="-0.18263"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-thorax.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-thorax.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+  <!--<joint name="thorax_rhand_rom_joint" type="fixed">
+      <parent link="Thorax"/>
+      <child link="thorax_rhand_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="thorax_rhand_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/rhand_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+  <!--<joint name="thorax_lhand_rom_joint" type="fixed">
+      <parent link="Thorax"/>
+      <child link="thorax_lhand_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="thorax_lhand_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/lhand_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+   <link name="ThoraxSkull_J1"/>
+   <link name="ThoraxSkull_J2"/>
+   <link name="Skull">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="4.2276"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-skull.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-skull.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RHip_J1"/>
+   <link name="RHip_J2"/>
+   <link name="RThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="7.3797"/>
+         <inertia ixx="0.11501" ixy="0.0067008" ixz="-0.000547" iyy="0.030769" iyz="-0.0067008" izz="0.12308"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RThigh.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="2.8801"/>
+         <inertia ixx="0.042617" ixy="-0.00086974" ixz="-0.00021743" iyy="0.0054359" iyz="0.001359" izz="0.042617"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RShank.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RAnkle_J1"/>
+   <link name="RFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.72029"/>
+         <inertia ixx="0.0035454" ixy="0.00043767" ixz="0" iyy="0.00074844" iyz="-0.00016575" izz="0.0033563"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RFoot.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+  <link name="RFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.01"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.01"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="LHip_J1">
+   </link>
+   <link name="LHip_J2">
+   </link>
+   <link name="LThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="7.3797"/>
+         <inertia ixx="0.11501" ixy="0.0067008" ixz="-0.000547" iyy="0.030769" iyz="-0.0067008" izz="0.12308"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LThigh.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="LShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="2.8801"/>
+         <inertia ixx="0.042617" ixy="-0.00086974" ixz="-0.00021743" iyy="0.0054359" iyz="0.001359" izz="0.042617"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LShank.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="LAnkle_J1"/>
+   <link name="LFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.72029"/>
+         <inertia ixx="0.0035454" ixy="0.00043767" ixz="0" iyy="0.00074844" iyz="-0.00016575" izz="0.0033563"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LFoot.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+  <link name="LFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.01"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.01"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RShoulder_J1"/>
+   <link name="RShoulder_J2"/>
+   <link name="RHumerus">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1.4399"/>
+         <inertia ixx="-0.022156" ixy="0.00051827" ixz="0.00035991" iyy="0.0028217" iyz="5.7586e-05" izz="-0.021249"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RHumerus.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RHumerus.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RElbow_J1"/>
+   <link name="RForearm">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1.02"/>
+         <inertia ixx="-0.0082187" ixy="5.6551e-05" ixz="2.5134e-05" iyy="0.0007603" iyz="-0.00040214" izz="-0.0085643"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RForearm.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RForearm.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RWrist_J1"/>
+   <link name="RHand">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.36011"/>
+         <inertia ixx="0.0036215" ixy="0.00058753" ixz="0.00027313" iyy="0.0017529" iyz="-0.00048556" izz="0.0029113"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RHand.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RHand.stl"/>
+         </geometry>
+      </collision>
+   </link>
+  <link name="RHandSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius = "0.01"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+      <collision> <!-- is collision needed ?-->
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius = "0.01"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="LShoulder_J1"/>
+   <link name="LShoulder_J2"/>
+   <link name="LHumerus">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1.4399"/>
+         <inertia ixx="-0.022156" ixy="0.00051827" ixz="0.00035991" iyy="0.0028217" iyz="5.7586e-05" izz="-0.021249"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LHumerus.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LHumerus.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="LElbow_J1"/>
+   <link name="LForearm">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 -0.11352 0"/>
+         <mass value="1.02"/>
+         <inertia ixx="-0.0082187" ixy="5.6551e-05" ixz="2.5134e-05" iyy="0.0007603" iyz="-0.00040214" izz="-0.0085643"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LForearm.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LForearm.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="LWrist_J1"/>
+   <link name="LHand">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.36011"/>
+         <inertia ixx="0.0036215" ixy="0.00058753" ixz="0.00027313" iyy="0.0017529" iyz="-0.00048556" izz="0.0029113"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LHand.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LHand.stl"/>
+         </geometry>
+      </collision>
+   </link>
+  <link name="LHandSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.01"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.01"/>
+         </geometry>
+      </collision>
+   </link>
+
+  <joint name="A_PelvisThorax_J1" type="revolute"> <!-- A_ added for order while parsing with ROS -->
+      <parent link="Pelvis"/>
+      <child link="PelvisThorax_J1"/>
+      <origin rpy="0 0 0" xyz="0.0006 -0.0373 0.0788"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+   </joint>
+   <joint name="PelvisThorax_J2" type="revolute">
+      <parent link="PelvisThorax_J1"/>
+      <child link="PelvisThorax_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.5" upper="1.5" velocity="1.0"/>
+   </joint>
+   <joint name="Thorax" type="revolute">
+      <parent link="PelvisThorax_J2"/>
+      <child link="Thorax"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="A_ThoraxSkull_J1" type="revolute"> <!-- A_ added for order while parsing with ROS -->
+      <parent link="Thorax"/>
+      <child link="ThoraxSkull_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0006 0.0160 0.5204"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="ThoraxSkull_J2" type="revolute">
+      <parent link="ThoraxSkull_J1"/>
+      <child link="ThoraxSkull_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.4" upper="1.4" velocity="1.0"/>
+   </joint>
+   <joint name="Skull" type="revolute">
+      <parent link="ThoraxSkull_J2"/>
+      <child link="Skull"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-1.1" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="RHip_J1" type="revolute">
+      <parent link="Pelvis"/>
+      <child link="RHip_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0943 -0.0367 -0.0844"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-1.3" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="RHip_J2" type="revolute">
+      <parent link="RHip_J1"/>
+      <child link="RHip_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.3" upper="1.1" velocity="1.0"/>
+   </joint>
+   <joint name="RThigh" type="revolute">
+      <parent link="RHip_J2"/>
+      <child link="RThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-2.6" upper="0.9" velocity="1.0"/>
+   </joint>
+   <joint name="RShank" type="revolute">
+      <parent link="RThigh"/>
+      <child link="RShank"/>
+      <origin rpy="0 0 0" xyz="0.0012 0.0385 -0.4586"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.05" upper="2.5" velocity="1.0"/>
+   </joint>
+   <joint name="RAnkle_J1" type="revolute">
+      <parent link="RShank"/>
+      <child link="RAnkle_J1"/>
+      <origin rpy="0 0 0" xyz="0.0070 0.0310 -0.4016"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-1.7" upper="1.7" velocity="1.0"/>
+   </joint>
+   <joint name="RFoot" type="revolute">
+      <parent link="RAnkle_J1"/>
+      <child link="RFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+   </joint>
+  <joint name="RFootSphere" type="fixed">
+      <parent link="RFoot"/>
+      <child link="RFootSphere"/>
+      <origin rpy="0 0 0" xyz="-0.00134 -0.16 -0.09568"/>
+   </joint>
+   <joint name="LHip_J1" type="revolute">
+      <parent link="Pelvis"/>
+      <child link="LHip_J1"/>
+      <origin rpy="0 0 0" xyz="0.0908 -0.0355 -0.0850"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.6" upper="1.3" velocity="1.0"/>
+   </joint>
+   <joint name="LHip_J2" type="revolute">
+      <parent link="LHip_J1"/>
+      <child link="LHip_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.1" upper="1.4" velocity="1.0"/>
+   </joint>
+   <joint name="LThigh" type="revolute">
+      <parent link="LHip_J2"/>
+      <child link="LThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-2.6" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="LShank" type="revolute">
+      <parent link="LThigh"/>
+      <child link="LShank"/>
+      <origin rpy="0 0 0" xyz="0 0.0308 -0.4471"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.1" upper="2.5" velocity="1.0"/>
+   </joint>
+   <joint name="LAnkle_J1" type="revolute">
+      <parent link="LShank"/>
+      <child link="LAnkle_J1"/>
+      <origin rpy="0 0 0" xyz="0.0026 0.0393 -0.4117"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-1.4" upper="1.4" velocity="1.0"/>
+   </joint>
+   <joint name="LFoot" type="revolute">
+      <parent link="LAnkle_J1"/>
+      <child link="LFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+   </joint>
+  <joint name="LFootSphere" type="fixed">
+      <parent link="LFoot"/>
+      <child link="LFootSphere"/>
+      <origin rpy="0 0 0" xyz="0.00134 -0.16 -0.09568"/>
+   </joint>
+   <joint name="RShoulder_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="RShoulder_J1"/>
+      <origin rpy="0 0 0" xyz="-0.1938 0.0528 0.3355"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-2.4" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="RShoulder_J2" type="revolute">
+      <parent link="RShoulder_J1"/>
+      <child link="RShoulder_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.4" upper="2.3" velocity="1.0"/>
+   </joint>
+   <joint name="RHumerus" type="revolute">
+      <parent link="RShoulder_J2"/>
+      <child link="RHumerus"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-2.9" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="RElbow_J1" type="revolute">
+      <parent link="RHumerus"/>
+      <child link="RElbow_J1"/>
+      <origin rpy="0 0 0" xyz="-0.2007 -0.0213 -0.1671"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-2.9" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="RForearm" type="revolute">
+      <parent link="RElbow_J1"/>
+      <child link="RForearm"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.6" upper="3.3" velocity="1.0"/>
+   </joint>
+   <joint name="RWrist_J1" type="revolute">
+      <parent link="RForearm"/>
+      <child link="RWrist_J1"/>
+      <origin rpy="0 0 0" xyz="-0.1949 -0.0716 -0.1326"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-1.6" upper="1.4" velocity="1.0"/>
+   </joint>
+   <joint name="RHand" type="revolute">
+      <parent link="RWrist_J1"/>
+      <child link="RHand"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.5" upper="0.6" velocity="1.0"/>
+   </joint>
+  <joint name="RHandSphere" type="fixed">
+      <parent link="RHand"/>
+      <child link="RHandSphere"/>
+      <origin rpy="0 0.2 -0.2" xyz="0.0034 -0.0434 -0.0752"/>
+   </joint>
+   <joint name="LShoulder_J1" type="revolute">
+      <parent link="Thorax"/>
+      <child link="LShoulder_J1"/>
+      <origin rpy="0 0 0" xyz="0.1813 0.0529 0.3280"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.7" upper="2.4" velocity="1.0"/>
+   </joint>
+   <joint name="LShoulder_J2" type="revolute">
+      <parent link="LShoulder_J1"/>
+      <child link="LShoulder_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-2.1" upper="1.4" velocity="1.0"/>
+   </joint>
+   <joint name="LHumerus" type="revolute">
+      <parent link="LShoulder_J2"/>
+      <child link="LHumerus"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-2.9" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="LElbow_J1" type="revolute">
+      <parent link="LHumerus"/>
+      <child link="LElbow_J1"/>
+      <origin rpy="0 0 0" xyz="0.2086 -0.0205 -0.1575"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-2.9" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="LForearm" type="revolute">
+      <parent link="LElbow_J1"/>
+      <child link="LForearm"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-3.3" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="LWrist_J1" type="revolute">
+      <parent link="LForearm"/>
+      <child link="LWrist_J1"/>
+      <origin rpy="0 0 0" xyz="0.1986 -0.0758 -0.1368"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-1.6" upper="1.4" velocity="1.0"/>
+   </joint>
+   <joint name="LHand" type="revolute">
+      <parent link="LWrist_J1"/>
+      <child link="LHand"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.6" upper="0.5" velocity="1.0"/>
+   </joint>
+  <joint name="LHandSphere" type="fixed">
+      <parent link="LHand"/>
+      <child link="LHandSphere"/>
+      <origin rpy="0 0.2 3.3415" xyz="-0.003 -0.0434 -0.0727"/>
+   </joint>
+</robot>

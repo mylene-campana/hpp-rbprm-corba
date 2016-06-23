@@ -1140,8 +1140,12 @@ namespace hpp {
 
 	  if (extendingPose_.rows() > 0)
 	    interpolator->extendingPose (extendingPose_);
+	  else
+	    hppDout (info, "no extending pose was provided to interpolator");
 	  if (flexionPose_.rows() > 0)
 	    interpolator->flexionPose (flexionPose_);
+	  else
+	    hppDout (info, "no flexion pose was provided to interpolator");
 
 	  if (subPathNumber == 1)
 	    newPath = interpolator->InterpolateDirectPath(u_offset);

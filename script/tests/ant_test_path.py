@@ -65,13 +65,11 @@ q22[0:7] = [-1.5, -1, 0.17, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-qt = [-4.26049006105259, -1.4066260935510233, 0.061143439483642585, 0.9921872049128063, 0.0, -0.0, -0.1247579673099597, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, 0.0, 0.9999999999999999, -0.2501677777851498]
-
 #ps.selectPathPlanner("PRMplanner")
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(4.3)
+ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(8)#(4.3)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 

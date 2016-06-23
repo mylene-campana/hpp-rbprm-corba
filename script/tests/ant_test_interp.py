@@ -103,6 +103,11 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
+extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0]
+flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0]
+fullBody.setPose (extending, "extending")
+fullBody.setPose (flexion, "flexion")
+
 print("Start ballistic-interpolation")
 #fullBody.interpolateBallisticPath(tp.solutionPathId, 0.03)
 fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
@@ -111,34 +116,6 @@ fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.5
 pp(psf.numberPaths ()-1)
-
-## EXTEND GAIT:
-q = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]; rr(q)
-
-q [fullBody.rankInConfiguration ['ThoraxLFThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBFoot_J2']] = 0.2; rr(q)
-
-q [fullBody.rankInConfiguration ['ThoraxRFThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBFoot_J2']] = 0.2; rr(q)
-
-
-rr((-1.85049,1.72708,0.121676,0.882875,-0,0,-0.469608,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.00135299,-0.00813696,0.390055,-0.202998,0.0637806,0.149891,0.00262369,0.198911,-0.745635,0.213932,0.766207,-0.0283826,-0.0568401,0.1,0.155055,0.246105,-0.282811,0.133985,-0.00149704,0.018923,0.013833,0.111456,0.5535,0.160529,-0.540398,-0.0326272,-0.190441,-0.0208561,0.134171,0.564777,-0.385487,-0.715292,-0.0643031,-0.0606793,-0.0409097,-0.00705443,0.635377,0.199697,-0.622771,0.018432,-0.115078,-0.014202,))
-
-rr((-1.85049,1.72708,0.121676,0.882875,-0,0,-0.469608,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,-0.977693,0,0,0,0.17578,-0.0200687,-0.0356915,-0.789442,0.017821,0.0528335,-0.0135675,0,0,0,0,0,0,0,-0.165717,0.248323,-0.481317,-0.573927,-0.083776,-0.00329866,0.0366513,0,0,0,0,0,0,0,-0.0360778,0.252139,0.460751,0.221883,-0.0229585,-0.0729576,0.0822674))
 
 
 """
@@ -178,7 +155,7 @@ rr(q_goal_test); time.sleep(1);
 rr.stopCapture ()
 
 ## ffmpeg commands
-ffmpeg -r 32 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
+ffmpeg -r 30 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
 x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$(($x+1)); done
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
@@ -201,5 +178,57 @@ for t in FrameRange:
         r (q); gui.refresh (); gui.captureTransform ()
 
 r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform ()
+
+
+
+
+
+
+# flexion
+q [fullBody.rankInConfiguration ['ThoraxLFThigh_J2']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLFShank_J2']] = 0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLFFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLMThigh_J2']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLMShank_J2']] = 0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLMFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLBThigh_J2']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLBShank_J2']] = 0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLBFoot_J2']] = 0.2; rr(q)
+
+q [fullBody.rankInConfiguration ['ThoraxRFThigh_J2']] = 0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRFShank_J2']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRFFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRMThigh_J2']] = 0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRMShank_J2']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRMFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRBThigh_J2']] = 0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRBShank_J2']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRBFoot_J2']] = 0.2; rr(q)
+
+flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0]
+
+# extending
+q [fullBody.rankInConfiguration ['ThoraxLFThigh_J2']] = 1.1; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLFShank_J2']] = -0.5; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLFFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLMThigh_J2']] = 1.1; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLMShank_J2']] = -0.5; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLMFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLBThigh_J2']] = 1.1; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLBShank_J2']] = -0.5; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxLBFoot_J2']] = 0.2; rr(q)
+
+q [fullBody.rankInConfiguration ['ThoraxRFThigh_J2']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRFShank_J2']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRFFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRMThigh_J2']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRMShank_J2']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRMFoot_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRBThigh_J2']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRBShank_J2']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['ThoraxRBFoot_J2']] = 0.2; rr(q)
+
+extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0]
+
 """
 

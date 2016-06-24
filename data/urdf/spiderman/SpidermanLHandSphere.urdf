@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="LHandSphere">
+<robot name="SpidermanLHandSphere">
 
   <link name="base_link"/>
   <joint name="base_link_J" type="fixed">

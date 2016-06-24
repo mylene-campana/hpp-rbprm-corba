@@ -108,10 +108,10 @@ install(FILES
   data/urdf/skeleton/LFootSphere.urdf
   data/urdf/spiderman/spiderman.urdf
   data/urdf/spiderman/spiderman_trunk.urdf
-  data/urdf/spiderman/RHandSphere.urdf
-  data/urdf/spiderman/LHandSphere.urdf
-  data/urdf/spiderman/RFootSphere.urdf
-  data/urdf/spiderman/LFootSphere.urdf
+  data/urdf/spiderman/SpidermanRHandSphere.urdf
+  data/urdf/spiderman/SpidermanLHandSphere.urdf
+  data/urdf/spiderman/SpidermanRFootSphere.urdf
+  data/urdf/spiderman/SpidermanLFootSphere.urdf
   data/urdf/ant/ant.urdf
   data/urdf/ant/ant_trunk.urdf
   data/urdf/ant/LFFootSphere.urdf
@@ -169,10 +169,10 @@ install(FILES
   data/srdf/skeleton/LFootSphere.srdf
   data/srdf/spiderman/spiderman.srdf
   data/srdf/spiderman/spiderman_trunk.srdf
-  data/srdf/spiderman/RHandSphere.srdf
-  data/srdf/spiderman/LHandSphere.srdf
-  data/srdf/spiderman/RFootSphere.srdf
-  data/srdf/spiderman/LFootSphere.srdf
+  data/srdf/spiderman/SpidermanRHandSphere.srdf
+  data/srdf/spiderman/SpidermanLHandSphere.srdf
+  data/srdf/spiderman/SpidermanRFootSphere.srdf
+  data/srdf/spiderman/SpidermanLFootSphere.srdf
   data/srdf/ant/ant.srdf
   data/srdf/ant/ant_trunk.srdf
   data/srdf/ant/LFFootSphere.srdf

@@ -5,9 +5,10 @@
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
 from hpp.gepetto import Viewer, PathPlayer
+import numpy as np
 from viewer_library import *
 
-import skeleton_test_path as tp
+import spiderman_test_path as tp
 
 
 
@@ -24,76 +25,85 @@ ecsSize = tp.ecsSize
 fullBody = FullBody ()
 
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, 0, 3])
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, -0.3, 3])
+#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
+#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 #ps = ProblemSolver( fullBody )
-#r = Viewer (ps)
+r = tp.r; ps = tp.ps
 
-ps = tp.ProblemSolver( fullBody )
-r = tp.Viewer (ps); gui = r.client.gui
+psf = tp.ProblemSolver( fullBody )
+rr = tp.Viewer (psf); gui = rr.client.gui
 
 #~ AFTER loading obstacles
-
+nbSamples = 10000
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
+# By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 
-nbSamples = 8000
+nbSamples = 10000
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
 rLeg = 'RHip_J1'
 rfoot = 'RFootSphere'
-rLegOffset = [0, 0, 0]
-rLegNormal = [0,0,1]
 rLegx = x; rLegy = y
-fullBody.addLimb(rLegId,rLeg,rfoot,rLegOffset,rLegNormal, rLegx, rLegy, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LHip_J1'
 lfoot = 'LFootSphere'
-lLegOffset = [0, 0, 0]
-lLegNormal = [0,0,1]
 lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,lLegOffset,lLegNormal, lLegx, lLegy, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 q_0 = fullBody.getCurrentConfig(); r(q_0)
 
-fullBody.client.basic.robot.setJointConfig('LShoulder_J1',[1])
-fullBody.client.basic.robot.setJointConfig('RShoulder_J1',[-1])
 confsize = len(tp.q11)-ecsSize
+fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
-fullConfSize = len(q_init)-ecsSize
 
-q_init[0:confsize] = tp.q11[0:confsize]
-q_goal[0:confsize] = tp.q22[0:confsize]
-q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
-q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
+# WARNING: q_init and q_goal may have changed in orientedPath
+trunkPathwaypoints = ps.getWaypoints (tp.orientedpathId)
+q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
+q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
+#q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
+#q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
 
+
+dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, [-1,0,0], False); r (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
+fullBody.isConfigValid(q_init_test)
 
-
+dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, [0,0,1], False); r (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
+fullBody.isConfigValid(q_goal_test)
+
+fullBody.setStartState(q_init_test,[lLegId,rLegId])
+fullBody.setEndState(q_goal_test,[lLegId,rLegId])
+
+extending = q_0 # TODO: better ankle config  q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.5
+flexion = q_0
+fullBody.setPose (extending, "extending")
+fullBody.setPose (flexion, "flexion")
 
 
-fullBody.setStartState(q_init_test,[rLegId,lLegId])
-fullBody.setEndState(q_goal_test,[rLegId,lLegId])
+print("Start ballistic-interpolation")
+#fullBody.interpolateBallisticPath(tp.solutionPathId, 0.03)
+fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 
 
-#fullBody.generateWaypointContacts(tp.solutionPathId)
-
-fullBody.interpolateBallisticPath(tp.solutionPathId)
-
-pp = PathPlayer (fullBody.client.basic, r)
-pp(ps.numberPaths ()-1)
+pp = PathPlayer (fullBody.client.basic, rr)
+pp.speed=0.4
+pp(psf.numberPaths ()-1)
 
 
-q11 [robot.rankInConfiguration ['RElbow_J1']] = -1.5
 
+
+"""
 # verify given offset position of contact-point
 q = q_init_test
 r(q)
@@ -113,14 +123,14 @@ r.client.gui.refresh ()
 ## Video recording
 import time
 pp.dt = 0.01
-pp.speed=0.6
-r(q_init)
-r.startCapture ("capture","png")
-r(q_init_test); time.sleep(0.2)
-r(q_init_test)
-pp(ps.numberPaths ()-1)
-r(q_goal_test); time.sleep(1);
-r.stopCapture ()
+pp.speed=0.5
+rr(q_init_test)
+rr.startCapture ("capture","png")
+rr(q_init_test); time.sleep(2)
+rr(q_init_test)
+pp(psf.numberPaths ()-1)
+rr(q_goal_test); time.sleep(2);
+rr.stopCapture ()
 
 ## ffmpeg commands
 ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
@@ -150,4 +160,6 @@ r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform
 cl = tp.rbprmBuilder.client.basic
 plotJointFrame (r, cl, q_init_test, "RFootSphere", 0.15)
 
+q11 [robot.rankInConfiguration ['RElbow_J1']] = -1.5
+"""
 

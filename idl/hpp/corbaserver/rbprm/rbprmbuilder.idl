@@ -334,6 +334,18 @@ module hpp
     /// \param string query: 'extending' or 'flexion'
     void setPose (in floatSeq dofArray, in string poseQuery) raises (Error);
 
+    /// Set maximal takeoff velocity for parabola-steering-method
+    void setMaxTakeoffVelocity (in double vmax) raises (Error);
+
+    /// Set maximal landing velocity for parabola-steering-method
+    void setMaxLandingVelocity (in double vmax) raises (Error);
+
+    /// Set tangent friction coefficient for cones in parabola-steering-method
+    void setFrictionCoef (in double mu) raises (Error);
+
+    /// Get vector of parabola result values from parabola-steering-method
+    intSeq getResultValues () raises (Error);
+
     /// returns octree transform for a given robot configuration
     /// \param config configuration tested on the robot
     /// \param contacts name of the limbs in contact

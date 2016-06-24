@@ -39,7 +39,7 @@ namespace hpp {
     struct BindShooter
     {
         BindShooter(const std::size_t shootLimit = 10000,
-                    const std::size_t displacementLimit = 1000)
+                    const std::size_t displacementLimit = 100)
             : shootLimit_(shootLimit)
             , displacementLimit_(displacementLimit), nbFilterMatch_ (0),
 	      fullOrientationMode_ (false)
@@ -199,6 +199,11 @@ namespace hpp {
 
 	void setPose (const hpp::floatSeq& dofArray,
 		      const char* poseQuery) throw (hpp::Error);
+
+	void setMaxTakeoffVelocity (const double vmax) throw (hpp::Error);
+	void setMaxLandingVelocity (const double vmax) throw (hpp::Error);
+	void setFrictionCoef (const double mu) throw (hpp::Error);
+	hpp::intSeq* getResultValues () throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.

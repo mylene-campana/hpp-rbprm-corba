@@ -1464,6 +1464,46 @@ namespace hpp {
 	}
       }
 
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::setMaxTakeoffVelocity (const double vmax)
+	throw (hpp::Error)
+      {
+	problemSolver_->problem ()->vmaxTakeoff_ = vmax;
+      }
+
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::setMaxLandingVelocity (const double vmax)
+	throw (hpp::Error)
+      {
+	problemSolver_->problem ()->vmaxLanding_ = vmax;
+      }
+
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::setFrictionCoef (const double mu)
+	throw (hpp::Error)
+      {
+	problemSolver_->problem ()->mu_ = mu;
+      }
+
+      // ---------------------------------------------------------------
+
+      hpp::intSeq* RbprmBuilder::getResultValues () throw (hpp::Error)
+      {
+	unsigned int vectorLength =
+	  problemSolver_->problem ()->parabolaResults_.size ();
+	hpp::intSeq* resultValues = new hpp::intSeq();
+	resultValues->length((CORBA::ULong) vectorLength);
+	long result;
+	for (unsigned int i=0; i<vectorLength; i++) {
+	  result = problemSolver_->problem ()->parabolaResults_ [i];
+	  (*resultValues) [i] = result;
+	}
+	return resultValues;
+      }
+
     } // namespace impl
   } // namespace rbprm
 } // namespace hpp

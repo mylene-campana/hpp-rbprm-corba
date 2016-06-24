@@ -115,7 +115,7 @@ fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.2
+pp.speed=0.4
 pp(psf.numberPaths ()-1)
 
 

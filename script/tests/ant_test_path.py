@@ -68,7 +68,9 @@ rbprmBuilder.isConfigValid(q22)
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(8)#(4.3)
+rbprmBuilder.setFrictionCoef(1.2)
+rbprmBuilder.setMaxTakeoffVelocity(4.3)#(8)
+rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
@@ -96,7 +98,7 @@ plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbp
 
 """
 # Write data to log file
-pfr = ps.client.problem.getResultValues ()
+pfr = rbprmBuilder.getResultValues ()
 if isinstance(t, list):
     timeSec = t[0]* 3600000 + t[1] * 60000 + t[2] * 1000 + t[3]
 f = open('log.txt', 'a')

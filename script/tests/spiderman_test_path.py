@@ -19,7 +19,7 @@ rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 urdfName = 'spiderman_trunk'
-urdfNameRoms = ['LFootSphere','RFootSphere']
+urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
@@ -30,8 +30,8 @@ rbprmBuilder.setJointBounds ("base_joint_xyz", [-4, 5, -2, 2, -0.1, 2.7])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
-rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('RFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('SpidermanLFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('SpidermanRFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setContactSize (0.03,0.08)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
@@ -60,13 +60,23 @@ rbprmBuilder.isConfigValid(q22)
 
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
-ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(5.2)
+rbprmBuilder.setFrictionCoef(1.2)
+rbprmBuilder.setMaxTakeoffVelocity(4.3)#(8)
+rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
 t = ps.solve ()
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+
+
+rbprmBuilder.rotateAlongPath (solutionPathId)
+orientedpathId = ps.numberPaths () - 1
+#pp(orientedpathId)
+
+V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
+Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 
 print("Verify that all RB-waypoints are valid: ")
 pathWaypoints = ps.getWaypoints(solutionPathId)
@@ -80,7 +90,7 @@ plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbp
 
 """
 # Write data to log file
-pfr = ps.client.problem.getResultValues ()
+pfr = rbprmBuilder.getResultValues ()
 if isinstance(t, list):
     timeSec = t[0]* 3600000 + t[1] * 60000 + t[2] * 1000 + t[3]
 f = open('log.txt', 'a')

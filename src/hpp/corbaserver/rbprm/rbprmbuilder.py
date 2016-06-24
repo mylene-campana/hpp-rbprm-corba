@@ -335,3 +335,15 @@ class Builder (object):
 
     def setContactSize (self, xValue, yValue):
         return self.client.rbprm.rbprm.setContactSize (xValue, yValue)
+
+    def setMaxTakeoffVelocity (self, vmax):
+        return self.client.rbprm.rbprm.setMaxTakeoffVelocity (vmax)
+
+    def setMaxLandingVelocity (self, vmax):
+        return self.client.rbprm.rbprm.setMaxLandingVelocity (vmax)
+
+    def setFrictionCoef (self, mu):
+        return self.client.rbprm.rbprm.setFrictionCoef (mu)
+
+    def getResultValues (self):
+        return self.client.rbprm.rbprm.getResultValues ()

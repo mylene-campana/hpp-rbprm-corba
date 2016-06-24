@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="LFootSphere">
+<robot name="SpidermanRHandSphere">
 
   <link name="base_link"/>
   <joint name="base_link_J" type="fixed">
@@ -9,31 +9,32 @@
    </joint>
 
    <link name="Pelvis"/>
-   
-   <joint name="pelvis_lfoot_rom_joint" type="fixed">
-      <parent link="Pelvis"/>
-      <child link="pelvis_lfoot_rom"/>
+   <link name="PelvisThorax_J1"/>
+   <link name="PelvisThorax_J2"/>
+   <link name="Thorax"/>
+
+  <joint name="thorax_rhand_rom_joint" type="fixed">
+      <parent link="Thorax"/>
+      <child link="thorax_rhand_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
    </joint>
 
-  <link name="pelvis_lfoot_rom">
+  <link name="thorax_rhand_rom">
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/lfoot_rom.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/rhand_rom.stl"/>
          </geometry>
       </visual>
 	  <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/lfoot_rom.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/rhand_rom.stl"/>
          </geometry>
       </collision>
    </link>
-   
-   <link name="PelvisThorax_J1"/>
-   <link name="PelvisThorax_J2"/>
-   <link name="Thorax"/>
+
+
    <link name="ThoraxSkull_J1"/>
    <link name="ThoraxSkull_J2"/>
    <link name="Skull"/>

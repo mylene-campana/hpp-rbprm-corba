@@ -37,7 +37,8 @@ psf = tp.ProblemSolver( fullBody )
 rr = tp.Viewer (psf); gui = rr.client.gui
 
 #~ AFTER loading obstacles
-nbSamples = 2000
+nbSamples = 10000
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
@@ -45,33 +46,33 @@ y = 0.03 # contact surface length
 lfLegId = 'lffoot'
 lfLeg = 'ThoraxLFThigh_J1'
 lffoot = 'LFFootSphere'
-fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lmLegId = 'lmfoot'
 lmLeg = 'ThoraxLMThigh_J1'
 lmfoot = 'LMFootSphere'
-fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lbLegId = 'lbfoot'
 lbLeg = 'ThoraxLBThigh_J1'
 lbfoot = 'LBFootSphere'
-fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 rfLegId = 'rffoot'
 rfLeg = 'ThoraxRFThigh_J1'
 rffoot = 'RFFootSphere'
-fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 
 rmLegId = 'rmfoot'
 rmLeg = 'ThoraxRMThigh_J1'
 rmfoot = 'RMFootSphere'
-fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 rbLegId = 'rbfoot'
 rbLeg = 'ThoraxRBThigh_J1'
 rbfoot = 'RBFootSphere'
-fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
+fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 print("Limbs added to fullbody")
 
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
@@ -89,13 +90,13 @@ q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 #q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
 
 
-dir_init = V0list [0] # first V0
+dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
-dir_goal = (-1*np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
+dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)

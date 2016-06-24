@@ -53,7 +53,7 @@ addLight (r, [-3,0,8,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-5.0, 0, 0.18, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [-5.0, 0, 0.1, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -61,7 +61,7 @@ rbprmBuilder.isConfigValid(q11)
 #plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
 
 q22 = q11[::]
-q22[0:7] = [-1.5, -1, 0.17, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-1.5, -1, 0.1, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 

@@ -81,10 +81,10 @@ confsize = len(tp.q11)-ecsSize
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
-# WARNING: q_init may have changed in orientedPath
-
-q_init[0:confsize] = ps.configAtParam(tp.orientedpathId,0)[0:confsize]
-q_goal[0:confsize] = ps.configAtParam(tp.orientedpathId,ps.pathLength(tp.orientedpathId))[0:confsize] #tp.q22[0:confsize]
+# WARNING: q_init and q_goal may have changed in orientedPath
+trunkPathwaypoints = ps.getWaypoints (tp.orientedpathId)
+q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
+q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 #q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
 #q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
 
@@ -114,7 +114,7 @@ fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.5
+pp.speed=0.2
 pp(psf.numberPaths ()-1)
 
 
@@ -148,10 +148,10 @@ pp.dt = 0.01
 pp.speed=0.5
 rr(q_init_test)
 rr.startCapture ("capture","png")
-rr(q_init_test); time.sleep(1)
+rr(q_init_test); time.sleep(2)
 rr(q_init_test)
 pp(psf.numberPaths ()-1)
-rr(q_goal_test); time.sleep(1);
+rr(q_goal_test); time.sleep(2);
 rr.stopCapture ()
 
 ## ffmpeg commands

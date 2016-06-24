@@ -36,7 +36,6 @@ rbprmBuilder.setNormalFilter('RFFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('RMFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('RBFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setContactSize (0.03,0.03)
-
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
@@ -228,7 +227,6 @@ cl = rbprmBuilder.client.rbprm.rbprm
 plotCone (q22, cl, r, "c2", "friction_cone2")
 plotCone (waypoints[0], cl, r, "wp0", "friction_cone2")
 
-r([-3.76847,1.72037,0.001,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-0,-0,0])
 
 """
 

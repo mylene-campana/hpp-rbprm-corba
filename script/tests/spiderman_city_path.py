@@ -26,7 +26,7 @@ ecsSize = 4
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-4, 5, -2, 2, -0.1, 2.7])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, -0.1, 170])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
@@ -49,24 +49,30 @@ addLight (r, [-3,0,8,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-3.0, 0, 0.9, 1, 0, 0, 0]; r(q11)
+# q11[0:7] =  [35,45,100, 1, 0, 0, 0]; r(q11) toit en X
+q11[0:7] = [0,27,72.3, 1, 0, 0, 0]; r(q11) # first roof of big tower
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-q22[0:7] = [4, -1, 0.9, 1, 0, 0, 0]; r(q22)
+
+q22[0:7] = [-11.6,38.5,121.5, 1, 0, 0, 0]; r(q22) # highest tower
+#q22[0:7] =  [35,45,100, 1, 0, 0, 0]; r(q22) #toit en X
 
 rbprmBuilder.isConfigValid(q22)
 
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(4.3)#(8)
-rbprmBuilder.setMaxLandingVelocity(8)
+rbprmBuilder.setMaxTakeoffVelocity(30)#(8)
+rbprmBuilder.setMaxLandingVelocity(30)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
-t = ps.solve ()
+#ps.client.problem.prepareSolveStepByStep()
+
+#t = ps.solve ()
+r.solveAndDisplay("rm",1,1)
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 

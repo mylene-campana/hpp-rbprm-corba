@@ -26,7 +26,8 @@ ecsSize = 4
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, -0.1, 170])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 1, 170])
+#rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 20, 170])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
@@ -43,21 +44,27 @@ r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
-r.loadObstacleModel ("iai_maps", "buildings", "buildings")
+r.loadObstacleModel ("iai_maps", "buildings_reduced", "buildings_reduced")
 addLight (r, [-3,0,8,1,0,0,0], "li");
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-# q11[0:7] =  [35,45,100, 1, 0, 0, 0]; r(q11) toit en X
-q11[0:7] = [0,27,72.3, 1, 0, 0, 0]; r(q11) # first roof of big tower
+# q11[0:7] =  [16,45,100, 1, 0, 0, 0]; r(q11)# toit en X
+#q11[0:7] = [0,27,72.3, 1, 0, 0, 0]; r(q11) # first roof of big tower
+#q11[0:7] = [-100,45,0.4, 1, 0, 0, 0]; r(q11) # on floor
+#q11[0:7] = [-105,20,29.4, 1, 0, 0, 0]; r(q11) # roof of house
+#q11[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q11) # floor, right side
+q11[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q11) # highest tower
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
 
-q22[0:7] = [-11.6,38.5,121.5, 1, 0, 0, 0]; r(q22) # highest tower
-#q22[0:7] =  [35,45,100, 1, 0, 0, 0]; r(q22) #toit en X
+q22[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q22) # floor, right side
+#q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
+#q22[0:7] =  [16,45,100, 1, 0, 0, 0]; r(q22) #toit en X
+#q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -76,6 +83,8 @@ r.solveAndDisplay("rm",1,1)
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
+pp.setSpeed(10)
+pp(solutionPathId)
 
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1
@@ -210,5 +219,19 @@ pbCl.saveRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 """
 
+####
+id = r.client.gui.getWindowID("window_hpp_")
+r.client.gui.attachCameraToNode("spiderman_trunk/base_link",id)
 
+
+ps.clearRoadmap()
+gui.removeFromGroup("path_1_root",r.sceneName)
+ps.solve()
+
+solutionPathId = ps.numberPaths () - 1
+pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+rbprmBuilder.rotateAlongPath (solutionPathId)
+orientedpathId = ps.numberPaths () - 1
+r(pp.client.problem.configAtParam(orientedpathId,0))
+pp(orientedpathId)
 

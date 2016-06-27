@@ -34,7 +34,6 @@ nbSamples = 10000
 x = 0.03 # contact surface width
 y = 0.04 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
-
 rLegId = 'rfoot'
 rLeg = 'TorsoRThigh_J1'
 rfoot = 'FrogRFootSphere'
@@ -52,14 +51,14 @@ fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],lLegNormal, x, y, nbSamples, "EFORT",
 rarmId = 'rhand'
 rarm = 'HeadRHumerus_J1'
 rHand = 'FrogRHandSphere'
-rArmNormal = [1,0,0] # !! x, not z
+rArmNormal = [0,0,1]
 rArmx = x; rArmy = y
 fullBody.addLimb(rarmId,rarm,rHand,[0,0,0],rArmNormal, x, y, nbSamples, "EFORT", 0.01)
 
 larmId = 'lhand'
 larm = 'HeadLHumerus_J1'
 lHand = 'FrogLHandSphere'
-lArmNormal = [1,0,0] # !! x, not z
+lArmNormal = [0,0,1]
 lArmx = x; lArmy = y
 fullBody.addLimb(larmId,larm,lHand,[0,0,0],lArmNormal, x, y, nbSamples, "EFORT", 0.01)
 
@@ -78,7 +77,6 @@ def printEffPosition(limbId, nbSamples):
     f1=open('../../data/roms/frog/'+limbId+'.erom', 'w+')
     for i in range(0,limit):
         q = fullBody.getSamplePosition(limbId,i)
-        #if(fullBody.isConfigValid(config)[0]): # TODO config
         f1.write(str(q[0]) + "," + str(q[1]) + "," + str(q[2]) + "\n")
     f1.close()
 
@@ -91,10 +89,10 @@ printEffPosition(lLegId, nbSamples)
 
 #to generate .obj from .erom with Matlab scripts 
 """
-effectorRomToObj('../../data/roms/frog/rfoot.erom', '../../data/roms/frog/rfoot.obj')
-effectorRomToObj('../../data/roms/frog/lfoot.erom', '../../data/roms/frog/lfoot.obj')
-effectorRomToObj('../../data/roms/frog/lhand.erom', '../../data/roms/frog/lhand.obj')
-effectorRomToObj('../../data/roms/frog/rhand.erom', '../../data/roms/frog/rhand.obj')
+effectorRomToObj('../../data/roms/frog/rfoot.erom', '../../data/roms/frog/rfoot_rom.obj')
+effectorRomToObj('../../data/roms/frog/lfoot.erom', '../../data/roms/frog/lfoot_rom.obj')
+effectorRomToObj('../../data/roms/frog/lhand.erom', '../../data/roms/frog/lhand_rom.obj')
+effectorRomToObj('../../data/roms/frog/rhand.erom', '../../data/roms/frog/rhand_rom.obj')
 """
 
 # Then Decimate (object/Modifiers) the .obj in Blender and save it as .stl
@@ -120,5 +118,4 @@ r.client.gui.addSceneToWindow(frameGroupName,r.windowId)
 r.client.gui.setVisibility('frog/torso_lhand_rom',"OFF")
 
 q = q_0 [::]
-q [fullBody.rankInConfiguration ['HumerusLForearm_J1']] = -1.5;r(q)
 

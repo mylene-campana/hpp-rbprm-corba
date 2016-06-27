@@ -30,7 +30,7 @@ fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, -0.3, 3])
 #fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
-#ps = ProblemSolver( fullBody )
+#ps = ProblemSolver( fullBody ); r = Viewer (ps)
 r = tp.r; ps = tp.ps
 
 psf = tp.ProblemSolver( fullBody )
@@ -85,7 +85,7 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lLegId,rLegId])
 fullBody.setEndState(q_goal_test,[lLegId,rLegId])
 
-extending = q_0 # TODO: better ankle config  q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.5
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0] # = q_0 + 'RAnkle_J1'=0.6 + 'LAnkle_J1'=0.6
 flexion = q_0
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
@@ -160,6 +160,8 @@ r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform
 cl = tp.rbprmBuilder.client.basic
 plotJointFrame (r, cl, q_init_test, "RFootSphere", 0.15)
 
-q11 [robot.rankInConfiguration ['RElbow_J1']] = -1.5
+q_0 = fullBody.getCurrentConfig()
+q = q_0
+q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.6; r(q)
 """
 

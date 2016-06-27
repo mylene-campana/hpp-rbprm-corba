@@ -92,7 +92,7 @@
       </collision>
    </link>
 
-  <joint name="thorax_rhand_rom_joint" type="fixed">
+  <!--<joint name="thorax_rhand_rom_joint" type="fixed">
       <parent link="Thorax"/>
       <child link="thorax_rhand_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -105,7 +105,7 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>
+   </link>-->
 
   <!--<joint name="thorax_lhand_rom_joint" type="fixed">
       <parent link="Thorax"/>

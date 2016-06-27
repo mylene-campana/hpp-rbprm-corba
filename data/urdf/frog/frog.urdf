@@ -52,7 +52,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/frog/rfoot_rom.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/lfoot_rom.stl"/>
          </geometry>
          <material name="Gray"/>
       </visual>
@@ -79,6 +79,22 @@
             <mesh filename="package://hpp-rbprm-corba/meshes/frog/Head.stl"/>
          </geometry>
       </collision>
+   </link>
+
+  <joint name="head_rom_joint" type="fixed">
+      <parent link="Head"/>
+      <child link="head_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="head_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/rhand_rom.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
    </link>
   
    <!-- L = left, R = right-->
@@ -258,7 +274,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LShank.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LHumerus.stl"/>
          </geometry>
       </collision>
    </link>
@@ -337,7 +353,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RShank.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RHumerus.stl"/>
          </geometry>
       </collision>
    </link>
@@ -428,63 +444,63 @@
       <child link="TorsoLThigh_J1"/>
       <origin rpy="0 0 0" xyz="-0.0802 0.0196 -0.0173"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="TorsoLThigh_J2" type="revolute">
       <parent link="TorsoLThigh_J1"/>
       <child link="TorsoLThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.9" upper="0.3" velocity="1.0"/>
    </joint>
    <joint name="LThigh" type="revolute">
       <parent link="TorsoLThigh_J2"/>
       <child link="LThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+      <limit effort="0" lower="-0.6" upper="0.2" velocity="1.0"/>
    </joint>
   <joint name="ThighLShank_J1" type="revolute">
       <parent link="LThigh"/>
       <child link="ThighLShank_J1"/>
       <origin rpy="0 0 0" xyz="-0.0221 0.0676 -0.0232"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
    </joint>
    <joint name="ThighLShank_J2" type="revolute">
       <parent link="ThighLShank_J1"/>
       <child link="ThighLShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-0.3" upper="0.1" velocity="1.0"/>
    </joint>
    <joint name="LShank" type="revolute">
       <parent link="ThighLShank_J2"/>
       <child link="LShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.5" velocity="1.0"/>
    </joint>
   <joint name="ShankLFoot_J1" type="revolute">
       <parent link="LShank"/>
       <child link="ShankLFoot_J1"/>
       <origin rpy="0 0 0" xyz="-0.1130 -0.0525 0.0027"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="ShankLFoot_J2" type="revolute">
       <parent link="ShankLFoot_J1"/>
       <child link="ShankLFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    <joint name="LFoot" type="revolute">
       <parent link="ShankLFoot_J2"/>
       <child link="LFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.5" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="FrogLFootSphere" type="fixed">
       <parent link="LFoot"/>
@@ -518,14 +534,14 @@
       <child link="HumerusLForearm_J1"/>
       <origin rpy="0 0 0" xyz="0.0049 0.0258 -0.0184"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
    <joint name="HumerusLForearm_J2" type="revolute">
       <parent link="HumerusLForearm_J1"/>
       <child link="HumerusLForearm_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
    <joint name="LForearm" type="revolute">
       <parent link="HumerusLForearm_J2"/>
@@ -558,7 +574,7 @@
    <joint name="FrogLHandSphere" type="fixed">
       <parent link="LHand"/>
       <child link="FrogLHandSphere"/>
-      <origin rpy="0 0 0" xyz="0.0184 -0.0116 -0.0103"/>
+      <origin rpy="0 -0.1 0" xyz="0.0184 -0.0116 -0.0103"/>
    </joint>
    
    <!-- right side -->
@@ -567,63 +583,63 @@
       <child link="TorsoRThigh_J1"/>
       <origin rpy="0 0 0" xyz="-0.0806 -0.0223 -0.0182"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="TorsoRThigh_J2" type="revolute">
       <parent link="TorsoRThigh_J1"/>
       <child link="TorsoRThigh_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.9" upper="0.3" velocity="1.0"/>
    </joint>
    <joint name="RThigh" type="revolute">
       <parent link="TorsoRThigh_J2"/>
       <child link="RThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.6" velocity="1.0"/>
    </joint>
   <joint name="ThighRShank_J1" type="revolute">
       <parent link="RThigh"/>
       <child link="ThighRShank_J1"/>
       <origin rpy="0 0 0" xyz="-0.0275 -0.0739 -0.0259"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
    </joint>
    <joint name="ThighRShank_J2" type="revolute">
       <parent link="ThighRShank_J1"/>
       <child link="ThighRShank_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-0.3" upper="0.1" velocity="1.0"/>
    </joint>
    <joint name="RShank" type="revolute">
       <parent link="ThighRShank_J2"/>
       <child link="RShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-0.5" upper="0.8" velocity="1.0"/>
    </joint>
   <joint name="ShankRFoot_J1" type="revolute">
       <parent link="RShank"/>
       <child link="ShankRFoot_J1"/>
       <origin rpy="0 0 0" xyz="-0.1107 0.0556 0.0042"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="ShankRFoot_J2" type="revolute">
       <parent link="ShankRFoot_J1"/>
       <child link="ShankRFoot_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    <joint name="RFoot" type="revolute">
       <parent link="ShankRFoot_J2"/>
       <child link="RFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="FrogRFootSphere" type="fixed">
       <parent link="RFoot"/>
@@ -636,14 +652,14 @@
       <child link="HeadRHumerus_J1"/>
       <origin rpy="0 0 0" xyz="0.0323 -0.0394 -0.0279"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="HeadRHumerus_J2" type="revolute">
       <parent link="HeadRHumerus_J1"/>
       <child link="HeadRHumerus_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="RHumerus" type="revolute">
       <parent link="HeadRHumerus_J2"/>
@@ -657,14 +673,14 @@
       <child link="HumerusRForearm_J1"/>
       <origin rpy="0 0 0" xyz="0.0050 -0.0245 -0.0171"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
    <joint name="HumerusRForearm_J2" type="revolute">
       <parent link="HumerusRForearm_J1"/>
       <child link="HumerusRForearm_J2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
    <joint name="RForearm" type="revolute">
       <parent link="HumerusRForearm_J2"/>
@@ -697,6 +713,6 @@
    <joint name="FrogRHandSphere" type="fixed">
       <parent link="RHand"/>
       <child link="FrogRHandSphere"/>
-      <origin rpy="0 0 0" xyz="0.0169 0.0106 -0.0096"/>
+      <origin rpy="0 -0.1 0" xyz="0.0169 0.0106 -0.0096"/>
    </joint>
 </robot>

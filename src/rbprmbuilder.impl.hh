@@ -204,6 +204,7 @@ namespace hpp {
 	void setMaxLandingVelocity (const double vmax) throw (hpp::Error);
 	void setFrictionCoef (const double mu) throw (hpp::Error);
 	hpp::intSeq* getResultValues () throw (hpp::Error);
+	hpp::floatSeqSeq* getnormalAverageVec () throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -220,6 +221,7 @@ namespace hpp {
         sampling::AnalysisFactory* analysisFactory_;
 	core::Configuration_t extendingPose_;
 	core::Configuration_t flexionPose_;
+	std::vector <fcl::Vec3f> normalAvVec_; // normal averages of waypoints (EFORT interp contacts)
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

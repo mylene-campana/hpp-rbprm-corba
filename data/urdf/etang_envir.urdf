@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- meshes from http://tf3dm.com/ -->
+<robot name="etang_envir">
+  <material name="Blue"> <!-- for spheres -->
+    <color rgba="0 0 1 0.5"/>
+  </material>
+  <material name="White"> <!-- for bones -->
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="Gray"> <!-- for bones -->
+    <color rgba="0.6 0.6 0.6 1"/>
+  </material>
+
+   <link name="base_link">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="8.4552"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/etang_envir.dae"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/etang_envir.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+</robot>

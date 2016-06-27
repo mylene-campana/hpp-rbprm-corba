@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<robot name="frog_trunk">
+  <material name="Gray"> <!-- for ROMs -->
+    <color rgba="0.6 0.6 0.6 0.4"/>
+  </material>
+  <material name="Green">
+    <color rgba="0 1 0 1"/>
+  </material>
+
+  <link name="Torso">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Torso_view.dae"/>
+         </geometry>
+		 <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Torso.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <!--<joint name="torso_rom_joint" type="fixed">
+      <parent link="Torso"/>
+      <child link="torso_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="torso_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/rfoot_rom.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+   </link>-->
+
+   <link name="TorsoHead_J1"/>
+   <link name="TorsoHead_J2"/>
+   <link name="Head">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Head_view.dae"/>
+         </geometry>
+		 <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Head.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <!--<joint name="head_rom_joint" type="fixed">
+      <parent link="Head"/>
+      <child link="head_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="head_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/rhand_rom.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+   </link>-->
+
+  <!-- JOINTS -->
+  <joint name="TorsoHead_J1" type="revolute">
+      <parent link="Torso"/>
+      <child link="TorsoHead_J1"/>
+      <origin rpy="0 0 0" xyz="0.0296 0.0000897 0.0205"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="TorsoHead_J2" type="revolute">
+      <parent link="TorsoHead_J1"/>
+      <child link="TorsoHead_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="Head" type="revolute">
+      <parent link="TorsoHead_J2"/>
+      <child link="Head"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+</robot>

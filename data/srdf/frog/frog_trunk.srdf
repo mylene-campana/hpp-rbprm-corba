@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot name="frog_trunk">
+
+<!-- Disable collision pairs of inner links -->
+<!-- trunk -->
+<disable_collisions link1="Torso" link2="Head" />
+
+</robot>

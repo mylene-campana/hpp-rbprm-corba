@@ -112,6 +112,12 @@ install(FILES
   data/urdf/spiderman/SpidermanLHandSphere.urdf
   data/urdf/spiderman/SpidermanRFootSphere.urdf
   data/urdf/spiderman/SpidermanLFootSphere.urdf
+  data/urdf/frog/frog.urdf
+  data/urdf/frog/frog_trunk.urdf
+  data/urdf/frog/FrogRHandSphere.urdf
+  data/urdf/frog/FrogLHandSphere.urdf
+  data/urdf/frog/FrogRFootSphere.urdf
+  data/urdf/frog/FrogLFootSphere.urdf
   data/urdf/ant/ant.urdf
   data/urdf/ant/ant_trunk.urdf
   data/urdf/ant/LFFootSphere.urdf
@@ -123,6 +129,7 @@ install(FILES
   data/urdf/cave.urdf
   data/urdf/desert.urdf
   data/urdf/high_plateforms.urdf
+  data/urdf/etang_envir.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -173,6 +180,12 @@ install(FILES
   data/srdf/spiderman/SpidermanLHandSphere.srdf
   data/srdf/spiderman/SpidermanRFootSphere.srdf
   data/srdf/spiderman/SpidermanLFootSphere.srdf
+  data/srdf/frog/frog.srdf
+  data/srdf/frog/frog_trunk.srdf
+  data/srdf/frog/FrogRHandSphere.srdf
+  data/srdf/frog/FrogLHandSphere.srdf
+  data/srdf/frog/FrogRFootSphere.srdf
+  data/srdf/frog/FrogLFootSphere.srdf
   data/srdf/ant/ant.srdf
   data/srdf/ant/ant_trunk.srdf
   data/srdf/ant/LFFootSphere.srdf
@@ -230,6 +243,8 @@ install(FILES
 	data/meshes/cave.stl
 	data/meshes/desert.stl
 	data/meshes/high_plateforms.stl	
+	data/meshes/etang_envir.dae
+	data/meshes/etang_envir.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
 install(FILES
@@ -267,8 +282,12 @@ install(DIRECTORY
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
   )
 
+install(DIRECTORY
+	data/meshes/frog
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
+  )
+  
 #install(DIRECTORY data/hyq_description
 #  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/../)
   
 SETUP_PROJECT_FINALIZE()
-

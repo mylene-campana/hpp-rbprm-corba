@@ -1,0 +1,702 @@
+<?xml version="1.0"?>
+<robot name="frog">
+
+  <material name="Blue"> <!-- for spheres -->
+    <color rgba="0 0 1 0.5"/>
+  </material>
+  <material name="White">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="Gray"> <!-- for ROMs -->
+    <color rgba="0.6 0.6 0.6 0.4"/>
+  </material>
+  <material name="Green">
+    <color rgba="0 1 0 1"/>
+  </material>
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Torso"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="Torso">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Torso_view.dae"/>
+         </geometry>
+		 <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Torso.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <!--<joint name="torso_rom_joint" type="fixed">
+      <parent link="Torso"/>
+      <child link="torso_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="torso_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/rfoot_rom.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+   </link>-->
+
+   <link name="TorsoHead_J1"/>
+   <link name="TorsoHead_J2"/>
+   <link name="Head">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Head_view.dae"/>
+         </geometry>
+		 <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Head.stl"/>
+         </geometry>
+      </collision>
+   </link>
+  
+   <!-- L = left, R = right-->
+   <link name="TorsoLThigh_J1"/>
+   <link name="TorsoLThigh_J2"/>
+   <link name="LThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LThigh.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThighLShank_J1"/>
+   <link name="ThighLShank_J2"/>
+   <link name="LShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LShank.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ShankLFoot_J1"/>
+   <link name="ShankLFoot_J2"/>
+   <link name="LFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LFoot.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="FrogLFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+   
+   <link name="TorsoRThigh_J1"/>
+   <link name="TorsoRThigh_J2"/>
+   <link name="RThigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RThigh.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RThigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ThighRShank_J1"/>
+   <link name="ThighRShank_J2"/>
+   <link name="RShank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RShank.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ShankRFoot_J1"/>
+   <link name="ShankRFoot_J2"/>
+   <link name="RFoot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RFoot.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="FrogRFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+  
+   <link name="HeadLHumerus_J1"/>
+   <link name="HeadLHumerus_J2"/>
+   <link name="LHumerus">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LHumerus.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="HumerusLForearm_J1"/>
+   <link name="HumerusLForearm_J2"/>
+   <link name="LForearm">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LForearm.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LForearm.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="ForearmLHand_J1"/>
+   <link name="ForearmLHand_J2"/>
+   <link name="LHand">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LHand.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LHand.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="FrogLHandSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+
+   <link name="HeadRHumerus_J1"/>
+   <link name="HeadRHumerus_J2"/>
+   <link name="RHumerus">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RHumerus.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RShank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="HumerusRForearm_J1"/>
+   <link name="HumerusRForearm_J2"/>
+   <link name="RForearm">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RForearm.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RForearm.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="ForearmRHand_J1"/>
+   <link name="ForearmRHand_J2"/>
+   <link name="RHand">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RHand.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RHand.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="FrogRHandSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.005"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+   
+
+   <!-- JOINTS -->
+  <joint name="TorsoHead_J1" type="revolute">
+      <parent link="Torso"/>
+      <child link="TorsoHead_J1"/>
+      <origin rpy="0 0 0" xyz="0.0296 0.0000897 0.0205"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="TorsoHead_J2" type="revolute">
+      <parent link="TorsoHead_J1"/>
+      <child link="TorsoHead_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="Head" type="revolute">
+      <parent link="TorsoHead_J2"/>
+      <child link="Head"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   
+   <!-- left side -->
+  <joint name="TorsoLThigh_J1" type="revolute">
+      <parent link="Torso"/>
+      <child link="TorsoLThigh_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0802 0.0196 -0.0173"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="TorsoLThigh_J2" type="revolute">
+      <parent link="TorsoLThigh_J1"/>
+      <child link="TorsoLThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LThigh" type="revolute">
+      <parent link="TorsoLThigh_J2"/>
+      <child link="LThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+  <joint name="ThighLShank_J1" type="revolute">
+      <parent link="LThigh"/>
+      <child link="ThighLShank_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0221 0.0676 -0.0232"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="ThighLShank_J2" type="revolute">
+      <parent link="ThighLShank_J1"/>
+      <child link="ThighLShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="LShank" type="revolute">
+      <parent link="ThighLShank_J2"/>
+      <child link="LShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+  <joint name="ShankLFoot_J1" type="revolute">
+      <parent link="LShank"/>
+      <child link="ShankLFoot_J1"/>
+      <origin rpy="0 0 0" xyz="-0.1130 -0.0525 0.0027"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="ShankLFoot_J2" type="revolute">
+      <parent link="ShankLFoot_J1"/>
+      <child link="ShankLFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="LFoot" type="revolute">
+      <parent link="ShankLFoot_J2"/>
+      <child link="LFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="FrogLFootSphere" type="fixed">
+      <parent link="LFoot"/>
+      <child link="FrogLFootSphere"/>
+      <origin rpy="0 0 0" xyz="-0.0436 0.0776 -0.0269"/>
+   </joint>
+   
+  <joint name="HeadLHumerus_J1" type="revolute">
+      <parent link="Head"/>
+      <child link="HeadLHumerus_J1"/>
+      <origin rpy="0 0 0" xyz="0.0313 0.0379 -0.0261"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="HeadLHumerus_J2" type="revolute">
+      <parent link="HeadLHumerus_J1"/>
+      <child link="HeadLHumerus_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="LHumerus" type="revolute">
+      <parent link="HeadLHumerus_J2"/>
+      <child link="LHumerus"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+  <joint name="HumerusLForearm_J1" type="revolute">
+      <parent link="LHumerus"/>
+      <child link="HumerusLForearm_J1"/>
+      <origin rpy="0 0 0" xyz="0.0049 0.0258 -0.0184"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="HumerusLForearm_J2" type="revolute">
+      <parent link="HumerusLForearm_J1"/>
+      <child link="HumerusLForearm_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="LForearm" type="revolute">
+      <parent link="HumerusLForearm_J2"/>
+      <child link="LForearm"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+  <joint name="ForearmLHand_J1" type="revolute">
+      <parent link="LForearm"/>
+      <child link="ForearmLHand_J1"/>
+      <origin rpy="0 0 0" xyz="0.0314 -0.0127 -0.0189"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="ForearmLHand_J2" type="revolute">
+      <parent link="ForearmLHand_J1"/>
+      <child link="ForearmLHand_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="LHand" type="revolute">
+      <parent link="ForearmLHand_J2"/>
+      <child link="LHand"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="FrogLHandSphere" type="fixed">
+      <parent link="LHand"/>
+      <child link="FrogLHandSphere"/>
+      <origin rpy="0 0 0" xyz="0.0184 -0.0116 -0.0103"/>
+   </joint>
+   
+   <!-- right side -->
+  <joint name="TorsoRThigh_J1" type="revolute">
+      <parent link="Torso"/>
+      <child link="TorsoRThigh_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0806 -0.0223 -0.0182"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="TorsoRThigh_J2" type="revolute">
+      <parent link="TorsoRThigh_J1"/>
+      <child link="TorsoRThigh_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RThigh" type="revolute">
+      <parent link="TorsoRThigh_J2"/>
+      <child link="RThigh"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+  <joint name="ThighRShank_J1" type="revolute">
+      <parent link="RThigh"/>
+      <child link="ThighRShank_J1"/>
+      <origin rpy="0 0 0" xyz="-0.0275 -0.0739 -0.0259"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="ThighRShank_J2" type="revolute">
+      <parent link="ThighRShank_J1"/>
+      <child link="ThighRShank_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
+   </joint>
+   <joint name="RShank" type="revolute">
+      <parent link="ThighRShank_J2"/>
+      <child link="RShank"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+  <joint name="ShankRFoot_J1" type="revolute">
+      <parent link="RShank"/>
+      <child link="ShankRFoot_J1"/>
+      <origin rpy="0 0 0" xyz="-0.1107 0.0556 0.0042"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="ShankRFoot_J2" type="revolute">
+      <parent link="ShankRFoot_J1"/>
+      <child link="ShankRFoot_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="RFoot" type="revolute">
+      <parent link="ShankRFoot_J2"/>
+      <child link="RFoot"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="FrogRFootSphere" type="fixed">
+      <parent link="RFoot"/>
+      <child link="FrogRFootSphere"/>
+      <origin rpy="0 0 0" xyz="-0.0461 -0.0853 -0.0268"/>
+   </joint>
+   
+  <joint name="HeadRHumerus_J1" type="revolute">
+      <parent link="Head"/>
+      <child link="HeadRHumerus_J1"/>
+      <origin rpy="0 0 0" xyz="0.0323 -0.0394 -0.0279"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="HeadRHumerus_J2" type="revolute">
+      <parent link="HeadRHumerus_J1"/>
+      <child link="HeadRHumerus_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.7" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="RHumerus" type="revolute">
+      <parent link="HeadRHumerus_J2"/>
+      <child link="RHumerus"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+  <joint name="HumerusRForearm_J1" type="revolute">
+      <parent link="RHumerus"/>
+      <child link="HumerusRForearm_J1"/>
+      <origin rpy="0 0 0" xyz="0.0050 -0.0245 -0.0171"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="HumerusRForearm_J2" type="revolute">
+      <parent link="HumerusRForearm_J1"/>
+      <child link="HumerusRForearm_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+   </joint>
+   <joint name="RForearm" type="revolute">
+      <parent link="HumerusRForearm_J2"/>
+      <child link="RForearm"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
+   </joint>
+  <joint name="ForearmRHand_J1" type="revolute">
+      <parent link="RForearm"/>
+      <child link="ForearmRHand_J1"/>
+      <origin rpy="0 0 0" xyz="0.0318 0.0138 -0.0191"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="ForearmRHand_J2" type="revolute">
+      <parent link="ForearmRHand_J1"/>
+      <child link="ForearmRHand_J2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="RHand" type="revolute">
+      <parent link="ForearmRHand_J2"/>
+      <child link="RHand"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="FrogRHandSphere" type="fixed">
+      <parent link="RHand"/>
+      <child link="FrogRHandSphere"/>
+      <origin rpy="0 0 0" xyz="0.0169 0.0106 -0.0096"/>
+   </joint>
+</robot>

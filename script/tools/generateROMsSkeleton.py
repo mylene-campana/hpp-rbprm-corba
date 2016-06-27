@@ -115,4 +115,7 @@ r.client.gui.addLine('frame3',[x,y,z], [x,y,z+ampl],[0,0,1,1])
 r.client.gui.addToGroup ('frame3', frameGroupName)
 r.client.gui.addSceneToWindow(frameGroupName,r.windowId)
 
+q_0 = fullBody.getCurrentConfig ()
+q = q_0[::]
+q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.5;r(q)
 

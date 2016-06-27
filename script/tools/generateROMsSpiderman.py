@@ -2,6 +2,7 @@
 
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
+from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 from hpp.gepetto import Viewer
 from viewer_library import *
 
@@ -20,20 +21,17 @@ fullBody = FullBody ()
  
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 
-from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
-
-nbSamples = 10000
 
 ps = ProblemSolver( fullBody )
-
 r = Viewer (ps)
 q_0 = fullBody.getCurrentConfig (); r(q_0)
 
 # Verify that normals will be correct
 #cl = fullBody.client.basic
-#plotJointFrame (r, cl, q_0, "RFootSphere", 0.15); plotJointFrame (r, cl, q_0, "LFootSphere", 0.15)
-#plotJointFrame (r, cl, q_0, "RHandSphere", 0.15); plotJointFrame (r, cl, q_0, "LHandSphere", 0.15)
+#plotJointFrame (r, cl, q_0, "SpidermanRFootSphere", 0.15); plotJointFrame (r, cl, q_0, "SpidermanLFootSphere", 0.15)
+#plotJointFrame (r, cl, q_0, "SpidermanRHandSphere", 0.15); plotJointFrame (r, cl, q_0, "SpidermanLHandSphere", 0.15)
 
+nbSamples = 10000
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
 
@@ -100,10 +98,12 @@ printEffPosition(lLegId, nbSamples)
 
 
 #to generate .obj from .erom with Matlab scripts
-#effectorRomToObj('../../data/roms/spiderman/rfoot.erom', '../../data/roms/spiderman/rfoot.obj')
-#effectorRomToObj('../../data/roms/spiderman/lfoot.erom', '../../data/roms/spiderman/lfoot.obj')
-#effectorRomToObj('../../data/roms/spiderman/lhand.erom', '../../data/roms/spiderman/lhand.obj')
-#effectorRomToObj('../../data/roms/spiderman/rhand.erom', '../../data/roms/spiderman/rhand.obj')
+"""
+effectorRomToObj('../../data/roms/spiderman/rfoot.erom', '../../data/roms/spiderman/rfoot.obj')
+effectorRomToObj('../../data/roms/spiderman/lfoot.erom', '../../data/roms/spiderman/lfoot.obj')
+effectorRomToObj('../../data/roms/spiderman/lhand.erom', '../../data/roms/spiderman/lhand.obj')
+effectorRomToObj('../../data/roms/spiderman/rhand.erom', '../../data/roms/spiderman/rhand.obj')
+"""
 
 # Then Decimate (object/Modifiers) the .obj in Blender and save it as .stl
 # Decimate decrease the too high number of facets.
@@ -126,4 +126,6 @@ r.client.gui.addToGroup ('frame3', frameGroupName)
 r.client.gui.addSceneToWindow(frameGroupName,r.windowId)
 
 r.client.gui.setVisibility('spiderman/thorax_lhand_rom',"OFF")
+q = q_0[::]
+q [fullBody.rankInConfiguration ['RShank']] = 0.5;r(q)
 

@@ -115,9 +115,12 @@ fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.4
+pp.speed=0.6
 pp(psf.numberPaths ()-1)
 
+avNorm = fullBody.getnormalAverageVec()
+#plotStraightLine(avNorm[4],q_goal_test[0:3],rr,"av4")
+#plotCone (q, fullBody, rr, "cony", "friction_cone2")  # TODO avNorm -> q_cone
 
 """
 fullBody.interpolateBetweenStates(state1, state2) # TODO tester

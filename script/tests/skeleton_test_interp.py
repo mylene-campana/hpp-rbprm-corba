@@ -25,11 +25,11 @@ fullBody = FullBody ()
 
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, 0, 3])
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
-#ps = ProblemSolver( fullBody )
+#ps = ProblemSolver( fullBody ); r = Viewer (ps)
 #r = Viewer (ps)
 
 ps = tp.ProblemSolver( fullBody )
@@ -131,7 +131,7 @@ ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
 
 
 ## Export path to BLENDER
-pathId = 0; dt = 0.01; gui.setCaptureTransform ("skeleton_path.yaml", ["skeleton"])
+pathId = 0; dt = 0.01; gui.setCaptureTransform ("skeleton_initial_pose.yaml", ["skeleton"])
 PL = ps.pathLength(pathId)
 FrameRange = np.arange(0,PL,dt)
 numberFrame = len(FrameRange)

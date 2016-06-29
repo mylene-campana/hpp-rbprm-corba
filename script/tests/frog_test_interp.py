@@ -8,7 +8,7 @@ from hpp.gepetto import Viewer, PathPlayer
 import numpy as np
 from viewer_library import *
 
-import spiderman_test_path as tp
+import frog_test_path as tp
 
 
 
@@ -21,9 +21,10 @@ urdfName = "frog"
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = tp.ecsSize
+V0list = tp.V0list
+Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
-
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, -0.3, 3])
 #fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
@@ -44,30 +45,30 @@ y = 0.04 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 
 rLegId = 'rfoot'
-rLeg = 'RHip_J1'
+rLeg = 'TorsoRThigh_J1'
 rfoot = 'FrogRFootSphere'
 rLegNormal = [0,0,1]
 rLegx = x; rLegy = y
 fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],rLegNormal, x, y, nbSamples, "EFORT", 0.01)
 
 lLegId = 'lfoot'
-lLeg = 'LHip_J1'
+lLeg = 'TorsoLThigh_J1'
 lfoot = 'FrogLFootSphere'
 lLegNormal = [0,0,1]
 lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],lLegNormal, x, y, nbSamples, "EFORT", 0.01)
 
 rarmId = 'rhand'
-rarm = 'RShoulder_J1'
+rarm = 'HeadRHumerus_J1'
 rHand = 'FrogRHandSphere'
-rArmNormal = [1,0,0] # !! x, not z
+rArmNormal = [0,0,1] # !! x, not z
 rArmx = x; rArmy = y
 fullBody.addLimb(rarmId,rarm,rHand,[0,0,0],rArmNormal, x, y, nbSamples, "EFORT", 0.01)
 
 larmId = 'lhand'
-larm = 'LShoulder_J1'
+larm = 'HeadLHumerus_J1'
 lHand = 'FrogLHandSphere'
-lArmNormal = [1,0,0] # !! x, not z
+lArmNormal = [0,0,1] # !! x, not z
 lArmx = x; lArmy = y
 fullBody.addLimb(larmId,larm,lHand,[0,0,0],lArmNormal, x, y, nbSamples, "EFORT", 0.01)
 
@@ -99,7 +100,7 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lLegId,rLegId])
 fullBody.setEndState(q_goal_test,[lLegId,rLegId])
 
-extending = q_0 # TODO: better ankle config  q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.5
+extending = q_0
 flexion = q_0
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")

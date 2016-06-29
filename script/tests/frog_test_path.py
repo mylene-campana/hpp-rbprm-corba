@@ -27,13 +27,13 @@ ecsSize = 4
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 rbprmBuilder.setJointBounds ("base_joint_xyz", [-4, 5, -2, 2, -0.1, 2.7])
-rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
+rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
 rbprmBuilder.setNormalFilter('FrogLFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('FrogRFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('FrogLHandSphere', [1,0,0], filterRange)
-rbprmBuilder.setNormalFilter('FrogRHandSphere', [1,0,0], filterRange)
+rbprmBuilder.setNormalFilter('FrogLHandSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('FrogRHandSphere', [0,0,1], filterRange)
 rbprmBuilder.setContactSize (0.03,0.08)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
@@ -51,7 +51,7 @@ addLight (r, [0,0,6,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-1.4, 2.88, -0.1, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [-1.4, 2.85, -0.125, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 

@@ -21,6 +21,8 @@ urdfName = "spiderman"
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = tp.ecsSize
+V0list = tp.V0list
+Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
 

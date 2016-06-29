@@ -115,9 +115,12 @@ fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.4
-pp(psf.numberPaths ()-1)
+pp.speed=1
+#pp(psf.numberPaths ()-1)
 
+# time parametrization : 
+fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+pp(psf.numberPaths ()-1)
 
 """
 fullBody.interpolateBetweenStates(state1, state2) # TODO tester

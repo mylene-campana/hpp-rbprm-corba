@@ -1400,16 +1400,24 @@ namespace hpp {
         core::DevicePtr_t robot = problemSolver_->robot ();        
         const core::PathVectorPtr_t path = problemSolver_->paths () [pid];
         core::PathPtr_t tmpPath;
-        rbprm::BallisticPathPtr_t castedPath;
+        rbprm::BallisticPathPtr_t castedPath1,castedPath1Max,castedPath2,castedPath2Max;
         core::PathVectorPtr_t newPath = core::PathVector::create (robot->configSize (),
                   robot->numberDof ());
         const std::size_t num_subpaths  = (*path).numberPaths ();
-        for (std::size_t i = 0; i < num_subpaths; i++) { // convert each subpath
+        if(num_subpaths%4 != 0 )
+          throw std::runtime_error ("interpolated path doesn't have 4 subpath per parabola");
+          
+        for (std::size_t i = 0; i < num_subpaths; i = i+4) { // convert each subpath
           tmpPath = (*path).pathAtRank (i);
-          castedPath= boost::dynamic_pointer_cast<rbprm::BallisticPath>(tmpPath);
-          if(!castedPath)
+          castedPath1= boost::dynamic_pointer_cast<rbprm::BallisticPath>(tmpPath);
+          if(!castedPath1)
             throw std::runtime_error ("subPath isn't a BallisticPath");
-          newPath->appendPath(rbprm::TimedBallisticPath::create(castedPath)); 
+          castedPath1Max= boost::dynamic_pointer_cast<rbprm::BallisticPath>((*path).pathAtRank (i+1));
+          castedPath2Max= boost::dynamic_pointer_cast<rbprm::BallisticPath>((*path).pathAtRank (i+2));
+          castedPath2= boost::dynamic_pointer_cast<rbprm::BallisticPath>((*path).pathAtRank (i+3));
+          
+
+          newPath->appendPath(rbprm::TimedBallisticPath::create(castedPath1,castedPath1Max,castedPath2Max,castedPath2)); 
         }
         
         problemSolver_->addPath (newPath);

@@ -33,33 +33,33 @@ y = 0.006 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
 
 lfLegId = 'lffoot'
-lfLeg = 'ThoraxLFThigh_J1'
+lfLeg = 'LFThigh_rx'
 lffoot = 'LFFootSphere'
 fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
 
 lmLegId = 'lmfoot'
-lmLeg = 'ThoraxLMThigh_J1'
+lmLeg = 'LMThigh_rx'
 lmfoot = 'LMFootSphere'
 fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
 
 lbLegId = 'lbfoot'
-lbLeg = 'ThoraxLBThigh_J1'
+lbLeg = 'LBThigh_rx'
 lbfoot = 'LBFootSphere'
 fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
 
 rfLegId = 'rffoot'
-rfLeg = 'ThoraxRFThigh_J1'
+rfLeg = 'RFThigh_rx'
 rffoot = 'RFFootSphere'
 fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
 
 
 rmLegId = 'rmfoot'
-rmLeg = 'ThoraxRMThigh_J1'
+rmLeg = 'RMThigh_rx'
 rmfoot = 'RMFootSphere'
 fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
 
 rbLegId = 'rbfoot'
-rbLeg = 'ThoraxRBThigh_J1'
+rbLeg = 'RBThigh_rx'
 rbfoot = 'RBFootSphere'
 fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT", 0.01)
 

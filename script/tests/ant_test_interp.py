@@ -44,33 +44,33 @@ y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
 
 lfLegId = 'lffoot'
-lfLeg = 'ThoraxLFThigh_J1'
+lfLeg = 'LFThigh_rx'
 lffoot = 'LFFootSphere'
 fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lmLegId = 'lmfoot'
-lmLeg = 'ThoraxLMThigh_J1'
+lmLeg = 'LMThigh_rx'
 lmfoot = 'LMFootSphere'
 fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lbLegId = 'lbfoot'
-lbLeg = 'ThoraxLBThigh_J1'
+lbLeg = 'LBThigh_rx'
 lbfoot = 'LBFootSphere'
 fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 rfLegId = 'rffoot'
-rfLeg = 'ThoraxRFThigh_J1'
+rfLeg = 'RFThigh_rx'
 rffoot = 'RFFootSphere'
 fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 
 rmLegId = 'rmfoot'
-rmLeg = 'ThoraxRMThigh_J1'
+rmLeg = 'RMThigh_rx'
 rmfoot = 'RMFootSphere'
 fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 rbLegId = 'rbfoot'
-rbLeg = 'ThoraxRBThigh_J1'
+rbLeg = 'RBThigh_rx'
 rbfoot = 'RBFootSphere'
 fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 print("Limbs added to fullbody")
@@ -83,7 +83,8 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-trunkPathwaypoints = ps.getWaypoints (tp.orientedpathId)
+entryPathId = tp.solutionPathId # tp.orientedpathId
+trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 #q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
@@ -110,8 +111,7 @@ fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
 print("Start ballistic-interpolation")
-#fullBody.interpolateBallisticPath(tp.solutionPathId, 0.03)
-fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
+fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
@@ -128,7 +128,7 @@ pp(psf.numberPaths ()-1)
 
 fullBody.rotateAlongPath (psf.numberPaths ()-1) # TODO tester
 
-q11 [robot.rankInConfiguration ['RElbow_J1']] = -1.5
+q11 [robot.rankInConfiguration ['RElbow_rx']] = -1.5
 
 # verify given offset position of contact-point
 q = q_init_test

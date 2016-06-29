@@ -540,7 +540,7 @@
       <limit effort="0" lower="-0.6" upper="1.1" velocity="1.0"/>
    </joint>
    <joint name="RFoot_rz" type="revolute">
-      <parent link="RFoot_ry"/>
+      <parent link="RFoot_rx"/>
       <child link="RFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
@@ -581,7 +581,7 @@
    </joint>
    <joint name="LFoot_rx" type="revolute">
       <parent link="LShank"/>
-      <child link="LFoot_ry"/>
+      <child link="LFoot_rx"/>
       <origin rpy="0 0 0" xyz="0.0026 0.0393 -0.4117"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.6" upper="1.1" velocity="1.0"/>

@@ -14,7 +14,6 @@ from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.gepetto import Viewer, PathPlayer
 import math
-#import numpy as np
 from viewer_library import *
 
 

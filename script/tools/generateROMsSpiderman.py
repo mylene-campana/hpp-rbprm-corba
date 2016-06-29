@@ -37,32 +37,32 @@ y = 0.08 # contact surface length
 
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
-rLeg = 'RHip_J1'
-rfoot = 'RFootSphere'
+rLeg = 'RThigh_ry'
+rfoot = 'SpidermanRFootSphere'
 rLegOffset = [0,0,0]
 rLegNormal = [0,0,1]
 rLegx = x; rLegy = y
 fullBody.addLimb(rLegId,rLeg,rfoot,rLegOffset,rLegNormal, rLegx, rLegy, nbSamples, "EFORT", 0.01)
 
 lLegId = 'lfoot'
-lLeg = 'LHip_J1'
-lfoot = 'LFootSphere'
+lLeg = 'LThigh_ry'
+lfoot = 'SpidermanLFootSphere'
 lLegOffset = [0,0,0]
 lLegNormal = [0,0,1]
 lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,lLegOffset,lLegNormal, lLegx, lLegy, nbSamples, "EFORT", 0.01)
 
 rarmId = 'rhand'
-rarm = 'RShoulder_J1'
-rHand = 'RHandSphere'
+rarm = 'RHumerus_ry'
+rHand = 'SpidermanRHandSphere'
 rArmOffset = [0,0,0]
 rArmNormal = [1,0,0] # !! x, not z
 rArmx = x; rArmy = y
 fullBody.addLimb(rarmId,rarm,rHand,rArmOffset,rArmNormal, rArmx, rArmy, nbSamples, "EFORT", 0.01)
 
 larmId = 'lhand'
-larm = 'LShoulder_J1'
-lHand = 'LHandSphere'
+larm = 'RHumerus_ry'
+lHand = 'SpidermanLHandSphere'
 lArmOffset = [0,0,0]
 lArmNormal = [1,0,0] # !! x, not z
 lArmx = x; lArmy = y

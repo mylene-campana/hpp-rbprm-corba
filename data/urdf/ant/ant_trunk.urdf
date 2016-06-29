@@ -219,43 +219,43 @@
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
-   <joint name="Antena_rx" type="revolute">
+   <joint name="LAntena_rx" type="revolute">
       <parent link="Head"/>
-      <child link="Antena_rx"/>
+      <child link="LAntena_rx"/>
       <origin rpy="0 0 0" xyz="0.0176 -0.1027 0.0225"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
-   <joint name="Antena_ry" type="revolute">
-      <parent link="Antena_rx"/>
-      <child link="Antena_ry"/>
+   <joint name="LAntena_ry" type="revolute">
+      <parent link="LAntena_rx"/>
+      <child link="LAntena_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
       <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="LAntena_rz" type="revolute">
-      <parent link="Antena_ry"/>
+      <parent link="LAntena_ry"/>
       <child link="LAntena"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
-   <joint name="AntenaFoot_rx" type="revolute">
+   <joint name="LAntenaFoot_rx" type="revolute">
       <parent link="LAntena"/>
-      <child link="AntenaFoot_rx"/>
+      <child link="LAntenaFoot_rx"/>
       <origin rpy="0 0 0" xyz="0.0267 -0.0198 0.1006"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
-   <joint name="AntenaFoot_ry" type="revolute">
-      <parent link="AntenaFoot_rx"/>
-      <child link="AntenaFoot_ry"/>
+   <joint name="LAntenaFoot_ry" type="revolute">
+      <parent link="LAntenaFoot_rx"/>
+      <child link="LAntenaFoot_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
       <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
    <joint name="LAntenaFoot_rz" type="revolute">
-      <parent link="AntenaFoot_ry"/>
+      <parent link="LAntenaFoot_ry"/>
       <child link="LAntenaFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>

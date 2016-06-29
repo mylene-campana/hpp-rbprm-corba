@@ -29,7 +29,7 @@ rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, p
 rbprmBuilder.setJointBounds ("base_joint_xyz", [-4, 5, -2, 2, -0.1, 2.7])
 rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = 0.6
+filterRange = -1
 rbprmBuilder.setNormalFilter('FrogLFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('FrogRFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('FrogLHandSphere', [0,0,1], filterRange)
@@ -62,6 +62,7 @@ rbprmBuilder.isConfigValid(q22)
 
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
+rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
 rbprmBuilder.setMaxTakeoffVelocity(4.3)#(8)
 rbprmBuilder.setMaxLandingVelocity(8)

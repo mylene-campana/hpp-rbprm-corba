@@ -34,34 +34,34 @@ nbSamples = 10000
 x = 0.03 # contact surface width
 y = 0.04 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
+
 rLegId = 'rfoot'
-rLeg = 'TorsoRThigh_J1'
+rLeg = 'RThigh_rx'
 rfoot = 'FrogRFootSphere'
 rLegNormal = [0,0,1]
 rLegx = x; rLegy = y
 fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],rLegNormal, x, y, nbSamples, "EFORT", 0.01)
 
 lLegId = 'lfoot'
-lLeg = 'TorsoLThigh_J1'
+lLeg = 'LThigh_rx'
 lfoot = 'FrogLFootSphere'
 lLegNormal = [0,0,1]
 lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],lLegNormal, x, y, nbSamples, "EFORT", 0.01)
 
 rarmId = 'rhand'
-rarm = 'HeadRHumerus_J1'
+rarm = 'RHumerus_rx'
 rHand = 'FrogRHandSphere'
-rArmNormal = [0,0,1]
+rArmNormal = [0,0,1] # !! x, not z
 rArmx = x; rArmy = y
 fullBody.addLimb(rarmId,rarm,rHand,[0,0,0],rArmNormal, x, y, nbSamples, "EFORT", 0.01)
 
 larmId = 'lhand'
-larm = 'HeadLHumerus_J1'
+larm = 'LHumerus_rx'
 lHand = 'FrogLHandSphere'
-lArmNormal = [0,0,1]
+lArmNormal = [0,0,1] # !! x, not z
 lArmx = x; lArmy = y
 fullBody.addLimb(larmId,larm,lHand,[0,0,0],lArmNormal, x, y, nbSamples, "EFORT", 0.01)
-
 
 
 fullBody.createOctreeBoxes(r.client.gui, r.windowId, rarmId, q_0, [1,0.3,1,0.4])

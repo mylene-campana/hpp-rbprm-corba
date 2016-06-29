@@ -28,7 +28,7 @@ rbprmBuilder.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, 0.001, 2.4])
 #rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = 0.3
+filterRange = -1
 rbprmBuilder.setNormalFilter('LFFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('LMFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('LBFootSphere', [0,0,1], filterRange)
@@ -67,7 +67,7 @@ rbprmBuilder.isConfigValid(q22)
 #ps.selectPathPlanner("PRMplanner")
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
-rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
+#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
 rbprmBuilder.setMaxTakeoffVelocity(4.3)#(8)
 rbprmBuilder.setMaxLandingVelocity(8)

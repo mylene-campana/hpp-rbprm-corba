@@ -4,6 +4,7 @@
 
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
+from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 from hpp.gepetto import Viewer, PathPlayer
 import numpy as np
 from viewer_library import *
@@ -31,7 +32,6 @@ fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, -0.3, 3])
 #fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
 #fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
-from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 #ps = ProblemSolver( fullBody ); r = Viewer (ps)
 r = tp.r; ps = tp.ps
 
@@ -48,25 +48,27 @@ y = 0.08 # contact surface length
 nbSamples = 10000
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
-rLeg = 'RHip_J1'
-rfoot = 'RFootSphere'
+rLeg = 'RThigh_ry'
+rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
 fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lLegId = 'lfoot'
-lLeg = 'LHip_J1'
-lfoot = 'LFootSphere'
+lLeg = 'LThigh_ry'
+lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+print("Limbs added to fullbody")
 
-q_0 = fullBody.getCurrentConfig(); r(q_0)
+q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 confsize = len(tp.q11)-ecsSize
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-trunkPathwaypoints = ps.getWaypoints (tp.orientedpathId)
+entryPathId = tp.solutionPathId # tp.orientedpathId
+trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 #q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
@@ -94,8 +96,7 @@ fullBody.setPose (flexion, "flexion")
 
 
 print("Start ballistic-interpolation")
-#fullBody.interpolateBallisticPath(tp.solutionPathId, 0.03)
-fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
+fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)

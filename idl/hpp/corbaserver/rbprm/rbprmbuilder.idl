@@ -314,6 +314,10 @@ module hpp
     /// (returns path vector of parabola-paths)
     void rotateAlongPath (in unsigned short pathId,
 			  in boolean fullbody) raises (Error);
+     
+    /// Add new path vector to Problem Solver, where the parametrization is made with time, and not x distance
+    /// \param pathId: reference path to apply time parametrization
+    void timeParametrizedPath (in unsigned short pathId) raises (Error);
 
     /// Compute GIWC for the given configuration, return the V representation
     /// \param dofArray: given configuration

@@ -188,6 +188,8 @@ namespace hpp {
 
 	void rotateAlongPath (const CORBA::UShort pathId,
 			      const bool fullbody) throw (hpp::Error);
+  
+  void timeParametrizedPath (const CORBA::UShort pathId) throw (hpp::Error);
 
 	hpp::floatSeqSeq* computeConfigGIWC (const hpp::floatSeq& dofArray,
 					     const double contactLength,

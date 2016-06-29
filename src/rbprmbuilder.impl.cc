@@ -32,6 +32,7 @@
 #include <hpp/rbprm/fullbodyBallistic/ballistic-interpolation.hh>
 #include "hpp/rbprm/projection-shooter.hh"
 #include "hpp/rbprm/planner/parabola-path.hh"
+#include <hpp/rbprm/fullbodyBallistic/timed-ballistic-path.hh>
 
 
 namespace hpp {
@@ -1389,6 +1390,29 @@ namespace hpp {
 	} catch(std::runtime_error& e) {
 	    throw Error(e.what());
 	  }
+      }
+      
+      void RbprmBuilder::timeParametrizedPath (const CORBA::UShort pathId) throw (hpp::Error){
+        std::size_t pid = (std::size_t) pathId;
+        if(problemSolver_->paths().size() <= pid) {
+          throw std::runtime_error ("No path computed");
+        }
+        core::DevicePtr_t robot = problemSolver_->robot ();        
+        const core::PathVectorPtr_t path = problemSolver_->paths () [pid];
+        core::PathPtr_t tmpPath;
+        rbprm::BallisticPathPtr_t castedPath;
+        core::PathVectorPtr_t newPath = core::PathVector::create (robot->configSize (),
+                  robot->numberDof ());
+        const std::size_t num_subpaths  = (*path).numberPaths ();
+        for (std::size_t i = 0; i < num_subpaths; i++) { // convert each subpath
+          tmpPath = (*path).pathAtRank (i);
+          castedPath= boost::dynamic_pointer_cast<rbprm::BallisticPath>(tmpPath);
+          if(!castedPath)
+            throw std::runtime_error ("subPath isn't a BallisticPath");
+          newPath->appendPath(rbprm::TimedBallisticPath::create(castedPath)); 
+        }
+        
+        problemSolver_->addPath (newPath);
       }
 
       // --------------------------------------------------------------------

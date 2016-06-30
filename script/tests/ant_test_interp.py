@@ -92,7 +92,7 @@ q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, [0,0,-1], True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed

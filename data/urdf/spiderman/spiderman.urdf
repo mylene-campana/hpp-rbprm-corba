@@ -215,12 +215,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius="0.01"/>
-         </geometry>
-      </collision>
    </link>
    <link name="LThigh_ry">
    </link>
@@ -295,12 +289,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius="0.01"/>
-         </geometry>
-      </collision>
    </link>
    <link name="RHumerus_ry"/>
    <link name="RHumerus_rz"/>
@@ -374,12 +362,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision> <!-- is collision needed ?-->
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius = "0.01"/>
-         </geometry>
-      </collision>
    </link>
 
    <link name="LHumerus_ry"/>
@@ -454,12 +436,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius="0.01"/>
-         </geometry>
-      </collision>
    </link>
 
   <joint name="A_Thorax_ry" type="revolute"> <!-- A_ added for order while parsing with ROS -->
@@ -549,7 +525,7 @@
   <joint name="SpidermanRFootSphere" type="fixed">
       <parent link="RFoot"/>
       <child link="SpidermanRFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.00134 -0.16 -0.09568"/>
+      <origin rpy="0 0 0" xyz="-0.00134 -0.1 -0.09568"/>
    </joint>
    <joint name="LThigh_ry" type="revolute">
       <parent link="Pelvis"/>
@@ -596,7 +572,7 @@
   <joint name="SpidermanLFootSphere" type="fixed">
       <parent link="LFoot"/>
       <child link="SpidermanLFootSphere"/>
-      <origin rpy="0 0 0" xyz="0.00134 -0.16 -0.09568"/>
+      <origin rpy="0 0 0" xyz="0.00134 -0.1 -0.09568"/>
    </joint>
    <joint name="RHumerus_ry" type="revolute">
       <parent link="Thorax"/>
@@ -650,7 +626,7 @@
   <joint name="SpidermanRHandSphere" type="fixed">
       <parent link="RHand"/>
       <child link="SpidermanRHandSphere"/>
-      <origin rpy="0 0.2 -0.2" xyz="0.0034 -0.0434 -0.0752"/>
+      <origin rpy="0 0.2 -0.2" xyz="0 -0.0434 -0.08"/>
    </joint>
    <joint name="LHumerus_ry" type="revolute">
       <parent link="Thorax"/>
@@ -704,6 +680,6 @@
   <joint name="SpidermanLHandSphere" type="fixed">
       <parent link="LHand"/>
       <child link="SpidermanLHandSphere"/>
-      <origin rpy="0 0.2 3.3415" xyz="-0.003 -0.0434 -0.0727"/>
+      <origin rpy="0 0.2 3.3415" xyz="0 -0.0434 -0.08"/>
    </joint>
 </robot>

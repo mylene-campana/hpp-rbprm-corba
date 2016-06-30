@@ -30,7 +30,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-pelvis.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-pelvis_box.stl"/>
          </geometry>
       </collision>
    </link>
@@ -85,7 +85,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-thorax.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-thorax_box.stl"/>
          </geometry>
       </collision>
    </link>

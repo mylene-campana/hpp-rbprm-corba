@@ -358,12 +358,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius="0.01"/>
-         </geometry>
-      </collision>
    </link>
    <link name="LHip_J1">
    </link>
@@ -445,12 +439,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius="0.01"/>
-         </geometry>
-      </collision>
    </link>
    <link name="RShoulder_J1"/>
    <link name="RShoulder_J2"/>
@@ -531,12 +519,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision> <!-- is collision needed ?-->
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius = "0.01"/>
-         </geometry>
-      </collision>
    </link>
 
    <link name="LShoulder_J1"/>
@@ -618,12 +600,6 @@
          </geometry>
          <material name="Blue"/>
       </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <sphere radius="0.01"/>
-         </geometry>
-      </collision>
    </link>
 
    <joint name="A_PelvisSacrum_J1" type="revolute"> <!-- A_ added for order while parsing with ROS -->

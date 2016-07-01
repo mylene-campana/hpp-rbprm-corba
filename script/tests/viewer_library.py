@@ -444,19 +444,61 @@ def plotGIWC (q, Vmatrix, r, giwcId, color):
 ## Parameters:
 # cl: corbaserver client
 # fileName: name (string) of the file where samples will be written
-def pathToYamlFile (cl, r, fileName, robotName, pathId, goalConfig, dt):
+def pathToYamlFile (ps, r, fileName, robotName, pathId, goalConfig, dt):
     gui = r.client.gui
-    FrameRange = np.arange(0, cl.problem.pathLength(pathId), dt)
+    FrameRange = np.arange(0, ps.pathLength(pathId), dt)
     gui.setCaptureTransform (fileName, [robotName])
     for t in FrameRange:
-        q = cl.problem.configAtParam (pathId, t)#update robot configuration
-        r (q); cl.robot.setCurrentConfig(q)
+        q = ps.configAtParam (pathId, t)#update robot configuration
+        r (q); ps.robot.setCurrentConfig(q)
         gui.refresh ()
         gui.captureTransform ()
     
-    r (goalConfig); cl.robot.setCurrentConfig(goalConfig)
+    r (goalConfig); ps.robot.setCurrentConfig(goalConfig)
     gui.refresh ()
     gui.captureTransform ()
+
+# --------------------------------------------------------------------#
+
+## Write Path-motion configurations to file ##
+## Parameters:
+# ps: Problem Solver
+# fileName: name (string) of the file where samples will be written 'jointConfigs.txt'
+def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
+    robot = ps.robot
+    pathToFile = '/local/mcampana/devel/hpp/videos/' # WARNING!
+    gui = r.client.gui
+    FrameRange = np.arange(0, ps.pathLength(pathId), dt)
+    iFrame = 0 # int
+    jointNames = robot.getJointNames ()
+    rootJointName = robot.getAllJointNames() [3] # virtualPelvis or virtualTorso or virtualThorax
+    nbInnerJoints = len(jointNames) - 2
+    f = open(fileName,'a')   # 
+    print (str(nbInnerJoints))
+    f.write(str(nbInnerJoints) + "\n")
+    for t in FrameRange:
+        print ("Frame " + str(iFrame))
+        f.write ("Frame " + str(iFrame) + "\n")
+        q = ps.configAtParam (pathId, t)
+        ps.robot.setCurrentConfig(q)
+        rootPosRot = robot.getLinkPosition(rootJointName)
+        print (str(rootPosRot).strip('[]'))
+        f.write (str(rootPosRot).strip('[]') + "\n")
+        for jointName in jointNames:
+            if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
+                qJoint = q [robot.rankInConfiguration [jointName]]
+                f.write (jointName + " " + str(qJoint) + "\n")
+        iFrame = iFrame + 1
+    
+    f.write ("Frame " + str(iFrame) + "\n")
+    q = goalConfig
+    ps.robot.setCurrentConfig(q)
+    rootPosRot = robot.getLinkPosition(rootJointName)
+    f.write (str(rootPosRot).strip('[]') + "\n")
+    for jointName in jointNames:
+        if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
+            qJoint = q [robot.rankInConfiguration [jointName]]
+            f.write (jointName + " " + str(qJoint) + "\n")
 
 # --------------------------------------------------------------------#
 

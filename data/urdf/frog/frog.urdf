@@ -21,6 +21,13 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
    </joint>
 
+  <link name="virtualTorso"/> <!-- for Blender Armature export -->
+  <joint name="virtualTorso" type="fixed">
+      <parent link="base_link"/>
+      <child link="virtualTorso"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
   <link name="Torso">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -505,7 +512,7 @@
    <joint name="FrogLFootSphere" type="fixed">
       <parent link="LFoot"/>
       <child link="FrogLFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.0436 0.0776 -0.0269"/>
+      <origin rpy="0 0 0" xyz="-0.0436 0.0776 -0.032"/>
    </joint>
    
   <joint name="LHumerus_rx" type="revolute">
@@ -644,7 +651,7 @@
    <joint name="FrogRFootSphere" type="fixed">
       <parent link="RFoot"/>
       <child link="FrogRFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.0461 -0.0853 -0.0268"/>
+      <origin rpy="0 0 0" xyz="-0.0461 -0.0853 -0.032"/>
    </joint>
    
   <joint name="RHumerus_rx" type="revolute">

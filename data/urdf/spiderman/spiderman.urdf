@@ -18,6 +18,13 @@
       <origin rpy="0 0 1.57079632" xyz="0 0 0"/>
    </joint>
 
+  <link name="virtualPelvis"/> <!-- for Blender Armature export -->
+  <joint name="virtualPelvis" type="fixed">
+      <parent link="base_link"/>
+      <child link="virtualPelvis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
    <link name="Pelvis">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>

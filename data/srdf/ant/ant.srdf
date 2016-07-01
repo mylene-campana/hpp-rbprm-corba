@@ -36,12 +36,4 @@
 <disable_collisions link1="RBThigh" link2="RBShank" />
 <disable_collisions link1="RBShank" link2="RBFoot" />
 
-<!-- spheres -->
-<disable_collisions link1="LFFoot" link2="LFFootSphere" />
-<disable_collisions link1="LMFoot" link2="LMFootSphere" />
-<disable_collisions link1="LBFoot" link2="LBFootSphere" />
-<disable_collisions link1="RFFoot" link2="RFFootSphere" />
-<disable_collisions link1="RMFoot" link2="RMFootSphere" />
-<disable_collisions link1="RBFoot" link2="RBFootSphere" />
-
 </robot>

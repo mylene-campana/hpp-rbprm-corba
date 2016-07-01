@@ -21,6 +21,13 @@
       <origin rpy="0 0 1.570796" xyz="0.001 -0.0382 -0.1982"/>
    </joint>
 
+  <link name="virtualThorax"/> <!-- for Blender Armature export -->
+  <joint name="virtualThorax" type="fixed">
+      <parent link="base_link"/>
+      <child link="virtualThorax"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
   <link name="Thorax">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>

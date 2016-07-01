@@ -4,6 +4,7 @@
 
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
+from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 from hpp.gepetto import Viewer, PathPlayer
 import math
 from viewer_library import *
@@ -16,66 +17,41 @@ meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
 ##
 #  Information to retrieve urdf and srdf files.
-urdfName = "skeleton"
+urdfName = "armlessSkeleton"
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = tp.ecsSize
+V0list = tp.V0list
+Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
-
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
-from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
-#ps = ProblemSolver( fullBody )
-#r = Viewer (ps)
 
-ps = tp.ProblemSolver( fullBody )
-r = tp.Viewer (ps); gui = r.client.gui; cl = fullBody.client.basic
+#psf = ProblemSolver(fullBody); rr = tp.Viewer (psf); gui = rr.client.gui
+r = tp.r; ps = tp.ps
+psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 
-#r.loadObstacleModel (packageName,"desert","desert")
 
-#~ AFTER loading obstacles
-
+cType = "_6_DOF"
 x = 0.01 # contact surface width
 y = 0.01 # contact surface length
 eps = 0.15
 
-nbSamples = 8000
+nbSamples = 10000
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
 rLeg = 'RHip_J1'
 rfoot = 'RFootSphere'
-rLegOffset = [0,0,0]
 rLegNormal = [-eps, 0, math.sqrt(1-eps**2)]
-rLegx = x; rLegy = y
-fullBody.addLimb(rLegId,rLeg,rfoot,rLegOffset,rLegNormal, rLegx, rLegy, nbSamples, "EFORT", 0.1)
+fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],rLegNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LHip_J1'
 lfoot = 'LFootSphere'
-lLegOffset = [0,0,0]
 lLegNormal = [-eps, 0, math.sqrt(1-eps**2)]
-lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,lLegOffset,lLegNormal, lLegx, lLegy, nbSamples, "EFORT", 0.1)
-
-rarmId = 'rhand'
-rarm = 'RShoulder_J1'
-rHand = 'RHandSphere'
-rArmOffset = [0,0,0]
-rArmNormal = [-1,0,0]
-rArmx = x; rArmy = y
-fullBody.addLimb(rarmId,rarm,rHand,rArmOffset,rArmNormal, rArmx, rArmy, nbSamples, "EFORT", 0.1)
-
-larmId = 'lhand'
-larm = 'LShoulder_J1'
-lHand = 'LHandSphere'
-lArmOffset = [0,0,0]
-lArmNormal = [-1,0,0]
-lArmx = x; lArmy = y
-fullBody.addLimb(larmId,larm,lHand,lArmOffset,lArmNormal, lArmx, lArmy, nbSamples, "EFORT", 0.1)
+fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],lLegNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 
 q_0 = fullBody.getCurrentConfig(); r(q_0)
@@ -98,36 +74,42 @@ fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, [0,0,1]); r (q_goal_test)
 
 
-fullBody.setStartState(q_init_test,[rLegId,lLegId,rarmId,larmId])
-fullBody.setEndState(q_goal_test,[rLegId,lLegId,rarmId,larmId])
+fullBody.setStartState(q_init_test,[rLegId,lLegId])
+fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
 
-#fullBody.generateWaypointContacts(0)
+extending = q_0 # TODO
+flexion = q_0 # TODO
+fullBody.setPose (extending, "extending")
+fullBody.setPose (flexion, "flexion")
 
-fullBody.interpolateBallisticPath(0)
-
-pp = PathPlayer (fullBody.client.basic, r)
-pp(ps.numberPaths ()-1)
-
-
-#i = 0;
-#fullBody.draw(configs[i],r); i=i+1; i-1
+print("Start ballistic-interpolation")
+fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 
-q11 [robot.rankInConfiguration ['RElbow_J1']] = -1.5
+pp = PathPlayer (fullBody.client.basic, rr)
+pp.speed=0.6
+pp(psf.numberPaths ()-1)
+
+avNorm = fullBody.getnormalAverageVec() # verify that, with new contacts, averageConeNormals did not change too much
+
+fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+pp(psf.numberPaths ()-1)
 
 
+
+"""
 ## Video recording
 import time
 pp.dt = 0.01
-pp.speed=0.6
-r(q_init)
-r.startCapture ("capture","png")
-r(q_init_test); time.sleep(0.2)
-r(q_init_test)
-pp(ps.numberPaths ()-1)
-r(q_goal_test); time.sleep(1);
-r.stopCapture ()
+pp.speed=0.5
+rr(q_init_test)
+rr.startCapture ("capture","png")
+rr(q_init_test); time.sleep(2)
+rr(q_init_test)
+pp(psf.numberPaths ()-1)
+rr(q_goal_test); time.sleep(2);
+rr.stopCapture ()
 
 ## ffmpeg commands
 ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
@@ -186,4 +168,5 @@ configSphere.extend ([1,0,0,0])
 r.client.gui.applyConfiguration (sphereName,configSphere)
 r.client.gui.addToGroup (sphereName, r.sceneName)
 r.client.gui.refresh ()
+"""
 

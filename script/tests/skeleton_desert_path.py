@@ -20,10 +20,8 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'skeleton_trunk_flexible'
-#urdfNameRoms = ['LHandSphere','RHandSphere','LFootSphere','RFootSphere']
-#urdfNameRoms = ['LFootSphere','RFootSphere']
-urdfNameRoms = ['LFootSphere']
+urdfName = 'armlessSkeleton_trunk'
+urdfNameRoms = ['LFootSphere','RFootSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
@@ -33,30 +31,28 @@ base_joint_xyz_limits = [-2, 5, -3, 3, -1.7, 2.5] # first
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 rbprmBuilder.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
-#rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
+rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
-#rbprmBuilder.setNormalFilter('LHandSphere', [0,0,1], 0.5)
-#rbprmBuilder.setNormalFilter('RHandSphere', [0,0,1], 0.5)
-#rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], 0.5)
-#rbprmBuilder.setNormalFilter('RFootSphere', [0,0,1], 0.5)
+filterRange = 0.3
+rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RFootSphere', [0,0,1], filterRange)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
-rbprmBuilder.getCurrentConfig ()
-
-
 ps = ProblemSolver (rbprmBuilder)
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
+rbprmBuilder.setNumberFilterMatch(2)
 r = Viewer (ps); gui = r.client.gui
-#r(rbprmBuilder.getCurrentConfig ())
+r(rbprmBuilder.getCurrentConfig ())
 
 
+pp = PathPlayer (rbprmBuilder.client.basic, r)
 r.loadObstacleModel (packageName,"desert","desert")
-#ps.loadObstacleFromUrdf(packageName,'desert','')
 #addLight (r, [-3,0,3,1,0,0,0], "li"); addLight (r, [3,0,3,1,0,0,0], "li1")
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
-q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config  # Mylene
+q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 q11[0:7] = [2.55, 0.8, -1.0, 0.8924, -0.09905, 0.23912, -0.36964]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
@@ -68,36 +64,55 @@ q22[0:7] = [0.3, 1.2, -1.1, -0.08419, 0.25783, 0.02256, -0.96225]; r(q22) # firs
 
 rbprmBuilder.isConfigValid(q22)
 
-offsetOrientedPath = 1 # If remove oriented path computation in ProblemSolver, set to 1 instead of 2
 
-ps.selectPathPlanner("PRMplanner")
-ps.setInitialConfig (q11)
-ps.addGoalConfig (q22)
-
+ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05)
-
-ps.client.problem.setFrictionCoef(1.2); ps.client.problem.setMaxVelocityLim(7)
+rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
+rbprmBuilder.setFrictionCoef(1.2)
+rbprmBuilder.setMaxTakeoffVelocity(5)
+rbprmBuilder.setMaxLandingVelocity(10)
 ps.clearRoadmap();
-t = ps.solve ()
-pathId = ps.numberPaths()-offsetOrientedPath # path without orientation stuff
-pp = PathPlayer (rbprmBuilder.client.basic, r)
-pp.displayPath(0,[0.0, 0.0, 0.8, 1.0]) # blue
+ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
+t = ps.solve ()
+solutionPathId = ps.numberPaths () - 1
+pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+
+rbprmBuilder.rotateAlongPath (solutionPathId)
+orientedpathId = ps.numberPaths () - 1
+#pp(orientedpathId)
+
+V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
+Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
+
+print("Verify that all RB-waypoints are valid: ")
+pathWaypoints = ps.getWaypoints(solutionPathId)
+for i in range(1,len(pathWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
+
+
+plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone_WP2")
+plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbprmBuilder, r, "cone_21", "friction_cone2")
+
+
+"""
 # Write data to log file
-pfr = ps.client.problem.getResultValues ()
+pfr = rbprmBuilder.getResultValues ()
 if isinstance(t, list):
     timeSec = t[0]* 3600000 + t[1] * 60000 + t[2] * 1000 + t[3]
 f = open('log.txt', 'a')
-f.write("skeleton_desert_path\n")
+f.write("ant_test_path\n")
 f.write("path computation: " + str(timeSec) + "\n")
 f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
-
+"""
 rob = rbprmBuilder.client.basic.robot
-#r(q11)
+r(q11)
 
-q_far = q11[::]; q_far[0:3] = [-10,0,10]; r(q_far) # move RB-robot away in viewer
+# Move RB-robot away in viewer
+qAway = q11 [::]; qAway[0] = -8
+rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 ## DEBUG tools ##
 """

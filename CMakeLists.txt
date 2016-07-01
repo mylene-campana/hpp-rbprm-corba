@@ -102,6 +102,8 @@ install(FILES
 	data/urdf/ground_with_bridge.urdf
   data/urdf/skeleton/skeleton.urdf
   data/urdf/skeleton/skeleton_trunk_flexible.urdf
+  data/urdf/skeleton/armlessSkeleton.urdf
+  data/urdf/skeleton/armlessSkeleton_trunk.urdf
   data/urdf/skeleton/RHandSphere.urdf
   data/urdf/skeleton/LHandSphere.urdf
   data/urdf/skeleton/RFootSphere.urdf
@@ -170,6 +172,8 @@ install(FILES
 	data/srdf/ground_with_bridge.srdf
   data/srdf/skeleton/skeleton.srdf
   data/srdf/skeleton/skeleton_trunk_flexible.srdf
+  data/srdf/skeleton/armlessSkeleton.srdf
+  data/srdf/skeleton/armlessSkeleton_trunk.srdf
   data/srdf/skeleton/RHandSphere.srdf
   data/srdf/skeleton/LHandSphere.srdf
   data/srdf/skeleton/RFootSphere.srdf

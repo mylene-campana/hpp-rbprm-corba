@@ -26,9 +26,9 @@ Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-fullBody.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, -0.3, 2.4])
-#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, 0.001, 2.4])
+fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf)
 r = tp.r; ps = tp.ps
@@ -37,7 +37,7 @@ q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 #~ AFTER loading obstacles
 nbSamples = 10000
-cType = "_6_DOF"
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]
@@ -76,17 +76,18 @@ print("Limbs added to fullbody")
 
 
 
-confsize = len(tp.q11)-ecsSize
+confsize = len(tp.q11)
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId
+entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
-#q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
-#q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
+if (ecsSize > 0):
+    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
+    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
@@ -103,8 +104,8 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
-extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0]
-flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0]
+extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0,0,0,0,0]
+flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0,0,0,0,0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
@@ -115,38 +116,27 @@ fullBody.interpolateBallisticPath(entryPathId, 0.03)
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.8
 
-avNorm = fullBody.getnormalAverageVec()
-#plotStraightLine(avNorm[4],q_goal_test[0:3],rr,"av4")
-#plotCone (q, fullBody, rr, "cony", "friction_cone2")  # TODO avNorm -> q_cone
-
-fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+fullBody.timeParametrizedPath(psf.numberPaths() -1)
 pp(psf.numberPaths ()-1)
 
+
+
+## Export for Blender ##
+# First display in Viewer, then export
+# Don't change exported names, because harcoded in fullAnimationSkinning.py
+pathId = psf.numberPaths()-1 # path to export
+plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2")
+plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2")
+plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2")
+pathSamples = plotSampleSubPath (psf, rr, pathId, 70, "sampledPath", [1,0,0,1])
+
+gui.writeNodeFile('cone_wp_group','cones_path.dae')
+gui.writeNodeFile('cone_start','cone_start.dae')
+gui.writeNodeFile('cone_goal','cone_goal.dae')
+writePathSamples (pathSamples, 'path.txt')
+pathJointConfigsToFile (psf, rr, "jointConfigs.txt", pathId, q_goal_test, 0.02)
 
 """
-fullBody.interpolateBetweenStates(state1, state2) # TODO tester
-pp(psf.numberPaths ()-1)
-
-fullBody.rotateAlongPath (psf.numberPaths ()-1) # TODO tester
-
-q11 [robot.rankInConfiguration ['RElbow_rx']] = -1.5
-
-# verify given offset position of contact-point
-q = q_init_test
-r(q)
-fullBody.setCurrentConfig (q)
-#posAtester = fullBody.client.basic.robot.computeGlobalPosition(fullBody.client.basic.robot.getJointPosition(rfoot),[0,0,0.2]); sphereName = "machin2"
-posAtester = fullBody.client.basic.robot.computeGlobalPosition(fullBody.client.basic.robot.getJointPosition(rHand),[0.1,0,0]); sphereName = "machin2"
-
-
-r.client.gui.addSphere (sphereName,0.03,[0.1,0.1,0.1,1]) # black
-configSphere = posAtester [::]
-configSphere.extend ([1,0,0,0])
-r.client.gui.applyConfiguration (sphereName,configSphere)
-r.client.gui.addToGroup (sphereName, r.sceneName)
-r.client.gui.refresh ()
-
-
 ## Video recording
 import time
 pp.dt = 0.01
@@ -160,80 +150,9 @@ rr(q_goal_test); time.sleep(2);
 rr.stopCapture ()
 
 ## ffmpeg commands
-ffmpeg -r 30 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
+ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
 x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$(($x+1)); done
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
-
-
-## Export path to BLENDER
-pathId = 0; dt = 0.01; gui.setCaptureTransform ("skeleton_path.yaml", ["skeleton"])
-PL = ps.pathLength(pathId)
-FrameRange = np.arange(0,PL,dt)
-numberFrame = len(FrameRange)
-
-# test frame capture
-q = q_init_test; r (q); gui.refresh (); gui.captureTransform ()
-q = q_goal_test; r (q); gui.refresh (); gui.captureTransform ()
-
-# capture path
-for t in FrameRange:
-        q = ps.configAtParam (pathId, t)#update robot configuration
-        r (q); gui.refresh (); gui.captureTransform ()
-
-r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform ()
-
-
-
-
-
-
-# flexion
-q [fullBody.rankInConfiguration ['ThoraxLFThigh_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFShank_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMThigh_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMShank_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBThigh_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBShank_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBFoot_J2']] = 0.2; rr(q)
-
-q [fullBody.rankInConfiguration ['ThoraxRFThigh_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFShank_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMThigh_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMShank_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBThigh_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBShank_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBFoot_J2']] = 0.2; rr(q)
-
-flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0]
-
-# extending
-q [fullBody.rankInConfiguration ['ThoraxLFThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBFoot_J2']] = 0.2; rr(q)
-
-q [fullBody.rankInConfiguration ['ThoraxRFThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBFoot_J2']] = 0.2; rr(q)
-
-extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0]
-
 """
-

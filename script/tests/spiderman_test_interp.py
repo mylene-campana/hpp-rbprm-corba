@@ -32,42 +32,51 @@ fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, -0.3, 3])
 #fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
 #fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
-#ps = ProblemSolver( fullBody ); r = Viewer (ps)
+#ps = ProblemSolver( fullBody ); rr = Viewer (ps)
 r = tp.r; ps = tp.ps
 
 psf = tp.ProblemSolver( fullBody )
 rr = tp.Viewer (psf); gui = rr.client.gui
 
-#~ AFTER loading obstacles
-nbSamples = 10000
-cType = "_3_DOF"
-x = 0.03 # contact surface width
-y = 0.08 # contact surface length
-# By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
+q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
-nbSamples = 10000
 #~ AFTER loading obstacles
+nbSamples = 12000
+cType = "_6_DOF" # disable rotation constraint on contacts ??
+x = 0.04 # contact surface width
+y = 0.1 # contact surface length
+# By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 print("Limbs added to fullbody")
+"""
+rarmId = 'rhand'
+rarm = 'RHumerus_ry'
+rHand = 'SpidermanRHandSphere'
+fullBody.addLimb(rarmId,rarm,rHand,[0,0,0],[-1,0,0], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
-q_0 = fullBody.getCurrentConfig(); rr(q_0)
+larmId = 'lhand'
+larm = 'RHumerus_ry'
+lHand = 'SpidermanLHandSphere'
+fullBody.addLimb(larmId,larm,lHand,[0,0,0],[-1,0,0], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+print("Limbs added to fullbody")
+"""
 
 confsize = len(tp.q11)-ecsSize
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.solutionPathId # tp.orientedpathId
+entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
@@ -86,8 +95,8 @@ fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
-fullBody.setStartState(q_init_test,[lLegId,rLegId])
-fullBody.setEndState(q_goal_test,[lLegId,rLegId])
+fullBody.setStartState(q_init_test,[lLegId,rLegId])#,larmId,rarmId])
+fullBody.setEndState(q_goal_test,[lLegId,rLegId])#,larmId,rarmId])
 
 extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0] # = q_0 + 'RAnkle_J1'=0.6 + 'LAnkle_J1'=0.6
 flexion = q_0
@@ -100,29 +109,28 @@ fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.4
+pp.speed=0.8
+
+fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)
 
 
+## Export for Blender ##
+# First display in Viewer, then export
+# Don't change exported names, because harcoded in fullAnimationSkinning.py
+pathId = psf.numberPaths()-1 # path to export
+plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2")
+plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2")
+plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2")
+pathSamples = plotSampleSubPath (psf, rr, pathId, 70, "sampledPath", [1,0,0,1])
 
+gui.writeNodeFile('cone_wp_group','cones_path.dae')
+gui.writeNodeFile('cone_start','cone_start.dae')
+gui.writeNodeFile('cone_goal','cone_goal.dae')
+writePathSamples (pathSamples, 'path.txt')
+pathJointConfigsToFile (psf, rr, "jointConfigs.txt", pathId, q_goal_test, 0.02)
 
 """
-# verify given offset position of contact-point
-q = q_init_test
-r(q)
-fullBody.setCurrentConfig (q)
-#posAtester = fullBody.client.basic.robot.computeGlobalPosition(fullBody.client.basic.robot.getJointPosition(rfoot),[0,0,0.2]); sphereName = "machin2"
-posAtester = fullBody.client.basic.robot.computeGlobalPosition(fullBody.client.basic.robot.getJointPosition(rHand),[0.1,0,0]); sphereName = "machin2"
-
-
-r.client.gui.addSphere (sphereName,0.03,[0.1,0.1,0.1,1]) # black
-configSphere = posAtester [::]
-configSphere.extend ([1,0,0,0])
-r.client.gui.applyConfiguration (sphereName,configSphere)
-r.client.gui.addToGroup (sphereName, r.sceneName)
-r.client.gui.refresh ()
-
-
 ## Video recording
 import time
 pp.dt = 0.01
@@ -141,30 +149,5 @@ x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
-
-
-## Export path to BLENDER
-pathId = 0; dt = 0.01; gui.setCaptureTransform ("skeleton_path.yaml", ["skeleton"])
-PL = ps.pathLength(pathId)
-FrameRange = np.arange(0,PL,dt)
-numberFrame = len(FrameRange)
-
-# test frame capture
-q = q_init_test; r (q); gui.refresh (); gui.captureTransform ()
-q = q_goal_test; r (q); gui.refresh (); gui.captureTransform ()
-
-# capture path
-for t in FrameRange:
-        q = ps.configAtParam (pathId, t)#update robot configuration
-        r (q); gui.refresh (); gui.captureTransform ()
-
-r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform ()
-
-cl = tp.rbprmBuilder.client.basic
-plotJointFrame (r, cl, q_init_test, "RFootSphere", 0.15)
-
-q_0 = fullBody.getCurrentConfig()
-q = q_0
-q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.6; r(q)
 """
 

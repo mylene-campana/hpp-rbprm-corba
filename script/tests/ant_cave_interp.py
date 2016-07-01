@@ -113,36 +113,28 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.6
 pp(psf.numberPaths ()-1)
 
-avNorm = fullBody.getnormalAverageVec() # verify that, with new contacts, averageConeNormals did not change too much
-
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)
 
 
+
+## Export for Blender ##
+# First display in Viewer, then export
+# Don't change exported names, because harcoded in fullAnimationSkinning.py
+pathId = psf.numberPaths()-1 # path to export
+plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2")
+plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2")
+plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2")
+pathSamples = plotSampleSubPath (psf, rr, pathId, 70, "sampledPath", [1,0,0,1])
+
+gui.writeNodeFile('cone_wp_group','cones_path.dae')
+gui.writeNodeFile('cone_start','cone_start.dae')
+gui.writeNodeFile('cone_goal','cone_goal.dae')
+writePathSamples (pathSamples, 'path.txt')
+pathJointConfigsToFile (psf, rr, "jointConfigs.txt", pathId, q_goal_test, 0.02)
+
+
 """
-fullBody.interpolateBetweenStates(state1, state2) # TODO tester
-pp(psf.numberPaths ()-1)
-
-fullBody.rotateAlongPath (psf.numberPaths ()-1) # TODO tester
-
-q11 [robot.rankInConfiguration ['RElbow_rx']] = -1.5
-
-# verify given offset position of contact-point
-q = q_init_test
-r(q)
-fullBody.setCurrentConfig (q)
-#posAtester = fullBody.client.basic.robot.computeGlobalPosition(fullBody.client.basic.robot.getJointPosition(rfoot),[0,0,0.2]); sphereName = "machin2"
-posAtester = fullBody.client.basic.robot.computeGlobalPosition(fullBody.client.basic.robot.getJointPosition(rHand),[0.1,0,0]); sphereName = "machin2"
-
-
-r.client.gui.addSphere (sphereName,0.03,[0.1,0.1,0.1,1]) # black
-configSphere = posAtester [::]
-configSphere.extend ([1,0,0,0])
-r.client.gui.applyConfiguration (sphereName,configSphere)
-r.client.gui.addToGroup (sphereName, r.sceneName)
-r.client.gui.refresh ()
-
-
 ## Video recording
 import time
 pp.dt = 0.01
@@ -156,80 +148,9 @@ rr(q_goal_test); time.sleep(2);
 rr.stopCapture ()
 
 ## ffmpeg commands
-ffmpeg -r 30 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
+ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
 x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$(($x+1)); done
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
-
-
-## Export path to BLENDER
-pathId = 0; dt = 0.01; gui.setCaptureTransform ("skeleton_path.yaml", ["skeleton"])
-PL = ps.pathLength(pathId)
-FrameRange = np.arange(0,PL,dt)
-numberFrame = len(FrameRange)
-
-# test frame capture
-q = q_init_test; r (q); gui.refresh (); gui.captureTransform ()
-q = q_goal_test; r (q); gui.refresh (); gui.captureTransform ()
-
-# capture path
-for t in FrameRange:
-        q = ps.configAtParam (pathId, t)#update robot configuration
-        r (q); gui.refresh (); gui.captureTransform ()
-
-r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform ()
-
-
-
-
-
-
-# flexion
-q [fullBody.rankInConfiguration ['ThoraxLFThigh_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFShank_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMThigh_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMShank_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBThigh_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBShank_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBFoot_J2']] = 0.2; rr(q)
-
-q [fullBody.rankInConfiguration ['ThoraxRFThigh_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFShank_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMThigh_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMShank_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBThigh_J2']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBShank_J2']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBFoot_J2']] = 0.2; rr(q)
-
-flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0]
-
-# extending
-q [fullBody.rankInConfiguration ['ThoraxLFThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBThigh_J2']] = 1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBShank_J2']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxLBFoot_J2']] = 0.2; rr(q)
-
-q [fullBody.rankInConfiguration ['ThoraxRFThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRFFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRMFoot_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBThigh_J2']] = -1.1; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBShank_J2']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['ThoraxRBFoot_J2']] = 0.2; rr(q)
-
-extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0]
-
 """
-

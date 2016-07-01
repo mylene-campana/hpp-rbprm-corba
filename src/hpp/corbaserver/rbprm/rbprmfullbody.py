@@ -552,11 +552,5 @@ class FullBody (object):
     def setPose (self, config, query):
         return self.client.rbprm.rbprm.setPose (config, query)
 
-
-    # Get waypoints new cone-normal-average according to new EFORT contacts
-    # to verify that CoM cone is similar than the planning one
-    def getnormalAverageVec (self):
-        return self.client.rbprm.rbprm.getnormalAverageVec ()
-
     def timeParametrizedPath (self, pathId):
      return self.client.rbprm.rbprm.timeParametrizedPath (pathId)

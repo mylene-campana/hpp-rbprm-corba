@@ -92,109 +92,26 @@ for i in range(1,len(pathWaypoints)-1):
         print('problem with waypoints number: ' + str(i))
 
 
-plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone_WP2")
+plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone2")
 plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbprmBuilder, r, "cone_21", "friction_cone2")
 
 
-"""
+
 # Write data to log file
 pfr = rbprmBuilder.getResultValues ()
 if isinstance(t, list):
     timeSec = t[0]* 3600000 + t[1] * 60000 + t[2] * 1000 + t[3]
 f = open('log.txt', 'a')
-f.write("ant_test_path\n")
+f.write("skeleton_desert_path\n")
 f.write("path computation: " + str(timeSec) + "\n")
 f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
-"""
+
 rob = rbprmBuilder.client.basic.robot
 r(q11)
 
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[0] = -8
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
-
-## DEBUG tools ##
-"""
-cl.obstacle.getObstaclePosition('decor_base')
-rbprmBuilder.isConfigValid(q1)
-rbprmBuilder.setCurrentConfig(q1)
-res=rbprmBuilder.distancesToCollision()
-r( ps.configAtParam(0,5) )
-ps.optimizePath (0)
-ps.clearRoadmap ()
-ps.resetGoalConfigs ()
-from numpy import *
-argmin(rbprmBuilder.distancesToCollision()[0])
-rbprmBuilder.getJointNames ()
-rbprmBuilder.getConfigSize ()
-r.client.gui.getNodeList()
-rbprmBuilder.client.rbprm.rbprm.setRbShooter ()
-q = rbprmBuilder.client.rbprm.rbprm.rbShoot ()
-r(q)
-rbprmBuilder.client.rbprm.rbprm.isRbprmValid (q)
-
-rbprmBuilder.client.rbprm.rbprm.setRbShooter ()
-r(rbprmBuilder.client.rbprm.rbprm.rbShoot ())
-
-ps.client.problem.getResultValues ()
-"""
-
-## 3D viewer tools ##
-"""
-plotFrame (r, 'frame_group', [0,0,0], 0.6)
-
-gui.removeFromGroup("path0",r.sceneName)
-gui.getNodeList()
-ps.numberNodes()
-
-pathSamples = plotSampleSubPath (cl, r, pathId, 70, "path0", [0,0,1,1])
-plotCone (q1, cl, r, "cone_first", "friction_cone_SG2"); plotCone (q2, cl, r, "cone_second", "friction_cone_SG2")
-plotConeWaypoints (cl, pathId, r, "cone_wp_group", "friction_cone_WP2")
-
-# Plot cones and edges in viewer
-plotConesRoadmap (cl, r, 'cone_rm_group', "friction_cone2")
-plotEdgesRoadmap (cl, r, 'edgeGroup', 70, [0,1,0.2,1])
-
-gui = r.client.gui
-gui.setCaptureTransform ("frames.yaml ", ["skeleton_trunk_flexible"])
-q = q11
-r (q); cl.rbprmBuilder.setCurrentConfig(q)
-gui.refresh (); gui.captureTransform ()
-
-gui.setVisibility('skeleton_trunk_flexible/thorax_rhand_rom',"OFF")
-
-q = q_goal_test [0:7]
-q[0] = q[0] + 1; q[2] = q[2] + 1
-gui.addLight ("li", r.windowId, 0.0001, [0.9,0.9,0.9,1])
-gui.addToGroup ("li", r.sceneName)
-gui.applyConfiguration ("li", q)
-gui.refresh ()
-
-rbprmBuilder.client.rbprm.rbprm.isRbprmValid (q11) ?? WHY not working ?
-
-
-## Export path to BLENDER
-pathId = 0; dt = 0.01; gui.setCaptureTransform ("skeleton_trunk_path.yaml", ["skeleton_trunk_flexible"])
-PL = ps.pathLength(pathId)
-FrameRange = np.arange(0,PL,dt)
-numberFrame = len(FrameRange)
-
-# test frame capture
-q = q11; r (q); gui.refresh (); gui.captureTransform ()
-q = q22; r (q); gui.refresh (); gui.captureTransform ()
-
-# capture path
-for t in FrameRange:
-        q = ps.configAtParam (pathId, t)#update robot configuration
-        r (q); gui.refresh (); gui.captureTransform ()
-
-r (q_goal); robot.setCurrentConfig(q_goal); gui.refresh (); gui.captureTransform ()
-
-
-"""
-
-
-
 
 

@@ -350,9 +350,6 @@ module hpp
     /// Get vector of parabola result values from parabola-steering-method
     intSeq getResultValues () raises (Error);
 
-    /// Get waypoints new cone-normal-average according to new EFORT contacts
-    /// to verify that CoM cone is similar than the planning one
-    floatSeqSeq getnormalAverageVec ();
 
     /// returns octree transform for a given robot configuration
     /// \param config configuration tested on the robot

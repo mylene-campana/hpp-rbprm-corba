@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="skeleton">
+<robot name="armlessSkeleton">
 
 <!-- Disable collision pairs of inner links -->
 <!-- torso -->

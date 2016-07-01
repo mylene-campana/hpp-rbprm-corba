@@ -1155,7 +1155,6 @@ namespace hpp {
 
 	  std::size_t newPathId = problemSolver_->addPath (newPath);
 	  hppDout (info, "newPath Id is: " << newPathId);
-	  normalAvVec_ = interpolator->getnormalAverageVec ();
 	}
 	catch(std::runtime_error& e)
 	  {
@@ -1535,30 +1534,6 @@ namespace hpp {
 	  (*resultValues) [i] = result;
 	}
 	return resultValues;
-      }
-
-      // ---------------------------------------------------------------
-
-      hpp::floatSeqSeq* RbprmBuilder::getnormalAverageVec ()
-	throw (hpp::Error) {
-	if(normalAvVec_.size () == 0) {
-	  throw std::runtime_error ("No normalAvVec, try to call interpolator");
-	}
-	
-	hpp::floatSeq* vArray;
-	vArray = new hpp::floatSeq ();
-	vArray->length (3);
-	hpp::floatSeqSeq *vSequence;
-	vSequence = new hpp::floatSeqSeq ();
-	vSequence->length ((CORBA::ULong) normalAvVec_.size ());
-	hppDout (info, "normalAvVec_.size= " << normalAvVec_.size ());
-	for (std::size_t i = 0; i < normalAvVec_.size (); i++) {
-	  for (std::size_t k = 0; k < 3; k++) {
-	    (*vArray) [(CORBA::ULong) k] = normalAvVec_ [i][k];
-	  }
-	  (*vSequence) [(CORBA::ULong) i] = *vArray;
-	}
-	return vSequence;
       }
 
     } // namespace impl

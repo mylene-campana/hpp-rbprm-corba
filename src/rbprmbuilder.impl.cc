@@ -971,6 +971,7 @@ namespace hpp {
       hppDout (info, "set problem solver");
         problemSolver_ = problemSolver;
         bindShooter_.problemSolver_ = problemSolver;
+        bindHeuristic_.problemSolver_ =  problemSolver;
         //bind shooter creator to hide problem as a parameter and respect signature
 
         // add rbprmshooter

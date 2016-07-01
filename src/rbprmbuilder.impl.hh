@@ -31,11 +31,58 @@
 # include <hpp/core/straight-path.hh>
 # include <hpp/rbprm/rbprm-path-validation.hh>
 # include <hpp/core/config-validations.hh>
+# include <hpp/model/configuration.hh>
+# include <hpp/core/distance.hh>
+
 namespace hpp {
   namespace rbprm {
     namespace impl {
       using CORBA::Short;
 
+    struct BindHeuristic
+    {
+      BindHeuristic():
+        refConfig_(),conf_()
+      {
+      }
+      
+      double ReferenceHeuristic(const sampling::Sample& sample, const Eigen::Vector3d& /*direction*/, const Eigen::Vector3d& /*normal*/)
+      {
+          // TODO compute distance between refConfig and sample sample.configuration_
+        conf_ = sample.configuration_;
+        // set center at origin
+        conf_[0] = 0.;
+        conf_[1] = 0.;
+        conf_[2] = 0.;
+        conf_[3] = 1.;
+        conf_[4] = 0.;
+        conf_[5] = 0.;
+        conf_[6] = 0.;
+        //core::ConfigurationIn_t test(conf_);
+        //core::ConfigurationIn_t test2(refConfig_);
+        core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
+        //return distance*1000. + sample.staticValue_;
+        return distance;
+      }
+      
+      void setConfig(model::Configuration_t ref){
+        // set center at origin
+        ref[0] = 0.;
+        ref[1] = 0.;
+        ref[2] = 0.;
+        ref[3] = 1.;
+        ref[4] = 0.;
+        ref[5] = 0.;
+        ref[6] = 0.;
+        refConfig_ = ref;
+      }
+      
+      core::Configuration_t refConfig_;
+      core::Configuration_t conf_;
+      hpp::core::ProblemSolverPtr_t problemSolver_;
+      
+    };
+      
     struct BindShooter
     {
         BindShooter(const std::size_t shootLimit = 10000,
@@ -206,6 +253,8 @@ namespace hpp {
 	void setMaxLandingVelocity (const double vmax) throw (hpp::Error);
 	void setFrictionCoef (const double mu) throw (hpp::Error);
 	hpp::intSeq* getResultValues () throw (hpp::Error);
+	void setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error);
+	void addRefConfigHeuristic ()throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -215,6 +264,7 @@ namespace hpp {
         bool romLoaded_;
         bool fullBodyLoaded_;
         BindShooter bindShooter_;
+        BindHeuristic bindHeuristic_;
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;

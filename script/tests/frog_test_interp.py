@@ -28,8 +28,8 @@ Vimplist = tp.Vimplist
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [-4, 5, -2, 2, -0.1, 2.7])
-#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 
 #psf = ProblemSolver( fullBody ); rr = Viewer (psf)
@@ -40,7 +40,7 @@ psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 
 #~ AFTER loading obstacles
 nbSamples = 12000
-cType = "_6_DOF"
+cType = "_3_DOF"
 x = 0.04 # contact surface width
 y = 0.06 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
@@ -48,28 +48,28 @@ y = 0.06 # contact surface length
 rLegId = 'rfoot'
 rLeg = 'RThigh_rx'
 rfoot = 'FrogRFootSphere'
-rLegNormal = [0,0,1]
+rLegNormal = [0,0,-1]
 rLegx = x; rLegy = y
 fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],rLegNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_rx'
 lfoot = 'FrogLFootSphere'
-lLegNormal = [0,0,1]
+lLegNormal = [0,0,-1]
 lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],lLegNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 rarmId = 'rhand'
 rarm = 'RHumerus_rx'
 rHand = 'FrogRHandSphere'
-rArmNormal = [0,0,1] # !! x, not z
+rArmNormal = [0,0,-1] 
 rArmx = x; rArmy = y
 fullBody.addLimb(rarmId,rarm,rHand,[0,0,0],rArmNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 larmId = 'lhand'
 larm = 'LHumerus_rx'
 lHand = 'FrogLHandSphere'
-lArmNormal = [0,0,1] # !! x, not z
+lArmNormal = [0,0,-1]
 lArmx = x; lArmy = y
 fullBody.addLimb(larmId,larm,lHand,[0,0,0],lArmNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 print("Limbs added to fullbody")
@@ -81,12 +81,13 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId
+entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
-#q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
-#q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
+if (ecsSize > 0):
+    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
+    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0

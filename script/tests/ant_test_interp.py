@@ -93,12 +93,12 @@ if (ecsSize > 0):
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, [0,0,-1], True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal,  [0,0,-1], True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
@@ -115,6 +115,7 @@ fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.8
+
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1)
 pp(psf.numberPaths ()-1)

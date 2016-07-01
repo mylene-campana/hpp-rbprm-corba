@@ -27,6 +27,8 @@ Vimplist = tp.Vimplist
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, -0.3, 2.4])
+fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 #psf = ProblemSolver(fullBody); rr = tp.Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps

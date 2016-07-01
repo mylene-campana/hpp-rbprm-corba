@@ -29,8 +29,8 @@ fullBody = FullBody ()
 
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, -0.3, 3])
-#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 #ps = ProblemSolver( fullBody ); rr = Viewer (ps)
 r = tp.r; ps = tp.ps
@@ -80,8 +80,9 @@ entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
-#q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
-#q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
+if (ecsSize > 0):
+    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
+    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
@@ -98,8 +99,8 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lLegId,rLegId])#,larmId,rarmId])
 fullBody.setEndState(q_goal_test,[lLegId,rLegId])#,larmId,rarmId])
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0] # = q_0 + 'RAnkle_J1'=0.6 + 'LAnkle_J1'=0.6
-flexion = q_0
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0,0,0,0,0] # = q_0 + 'RAnkle_J1'=0.6 + 'LAnkle_J1'=0.6
+flexion = q_0 # TODO
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 

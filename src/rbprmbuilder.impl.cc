@@ -58,6 +58,7 @@ namespace hpp {
     , fullBodyLoaded_(false)
     , bindShooter_()
     , analysisFactory_(0)
+    , bindHeuristic_()
     {
         // NOTHING
     }
@@ -970,6 +971,7 @@ namespace hpp {
       hppDout (info, "set problem solver");
         problemSolver_ = problemSolver;
         bindShooter_.problemSolver_ = problemSolver;
+        bindHeuristic_.problemSolver_ =  problemSolver;
         //bind shooter creator to hide problem as a parameter and respect signature
 
         // add rbprmshooter
@@ -1535,6 +1537,18 @@ namespace hpp {
 	}
 	return resultValues;
       }
+
+      
+      void RbprmBuilder::setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error){
+	core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (), dofArray); 
+	bindHeuristic_.setConfig(q);
+      }
+    
+      void RbprmBuilder::addRefConfigHeuristic ()throw (hpp::Error){
+	fullBody_->AddHeuristic("ReferencePose",
+				boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristic_), _1,_2,_3));
+      }
+    
 
     } // namespace impl
   } // namespace rbprm

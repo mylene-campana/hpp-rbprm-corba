@@ -492,14 +492,14 @@
       <child link="RThigh_ry"/>
       <origin rpy="0 0 0" xyz="-0.0943 -0.0367 -0.0844"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.5" upper="1.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.3" upper="0.9" velocity="1.0"/>
    </joint>
    <joint name="RThigh_rz" type="revolute">
       <parent link="RThigh_ry"/>
       <child link="RThigh_rz"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-1.3" upper="1.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="RThigh_rx" type="revolute">
       <parent link="RThigh_rz"/>
@@ -539,14 +539,14 @@
       <child link="LThigh_ry"/>
       <origin rpy="0 0 0" xyz="0.0908 -0.0355 -0.0850"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1.1" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.9" upper="0.3" velocity="1.0"/>
    </joint>
    <joint name="LThigh_rz" type="revolute">
       <parent link="LThigh_ry"/>
       <child link="LThigh_rz"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-1.1" upper="1.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="LThigh_rx" type="revolute">
       <parent link="LThigh_rz"/>

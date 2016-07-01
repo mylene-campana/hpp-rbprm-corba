@@ -26,7 +26,7 @@ V0list = tp.V0list
 Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
-
+robot = fullBody.client.basic.robot
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 10, 170])
 #fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) # BUG !!
@@ -50,17 +50,20 @@ rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'EFORT_Normal')
+fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'forward')
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'forward')
 print("Limbs added to fullbody")
 
-id = r.client.gui.getWindowID("window_hpp_")
-rr.client.gui.attachCameraToNode("spiderman/Thorax",id)
+fullBody.runSampleAnalysis( "manipulability", True)
+
+
+#id = r.client.gui.getWindowID("window_hpp_")
+#rr.client.gui.attachCameraToNode("spiderman/Thorax",id)
 
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
@@ -80,12 +83,13 @@ q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, [0,0,-1], False); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init,[0,0,1], True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, dir_goal, False); rr (q_goal_test)
+fullBody.isConfigValid(q_goal)
+q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], False); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
 fullBody.setStartState(q_init_test,[lLegId,rLegId])
@@ -102,7 +106,7 @@ fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=1
+pp.speed=0.1
 #pp(psf.numberPaths ()-1)
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )

@@ -27,7 +27,7 @@ ecsSize = 4
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 #rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 1, 170])
-rbprmBuilder.setJointBounds ("base_joint_xyz", [10, 160, 80,310, 30, 70])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [30, 160, 80,310, 40, 80])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
@@ -41,8 +41,8 @@ ps = ProblemSolver (rbprmBuilder)
 ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(30)#(8)
-rbprmBuilder.setMaxLandingVelocity(30)
+rbprmBuilder.setMaxTakeoffVelocity(25)#(8)
+rbprmBuilder.setMaxLandingVelocity(25)
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 ps.client.problem.selectSteeringMethod("SteeringParabola")
 
@@ -58,7 +58,8 @@ addLight (r, [-3,0,8,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal 
-q11[0:3] = [15, 125, 49]; r(q11) # mid right roof 
+#q11[0:3] = [15, 125, 49]; r(q11) # mid right roof 
+q11[0:3] = [52, 105, 50.2]; r(q11) # mid-top right roof
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -205,12 +206,17 @@ ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 
 
 """ #### display
+gui.removeFromGroup("rm",r.sceneName)
 id = r.client.gui.getWindowID("window_hpp_")
 r.client.gui.attachCameraToNode("spiderman_trunk/base_link",id)
 
+pp.setSpeed(10)
+r(pp.client.problem.configAtParam(orientedpathId,0))
+pp(orientedpathId)
+
+
 
 ps.clearRoadmap()
-gui.removeFromGroup("path_1_root",r.sceneName)
 ps.solve()
 
 solutionPathId = ps.numberPaths () - 1

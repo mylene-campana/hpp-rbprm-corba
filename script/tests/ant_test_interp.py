@@ -97,7 +97,7 @@ fullBody.isConfigValid(q_init_test)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal,  [0,0,-1], True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
@@ -114,6 +114,7 @@ fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.8
+
 
 avNorm = fullBody.getnormalAverageVec()
 #plotStraightLine(avNorm[4],q_goal_test[0:3],rr,"av4")

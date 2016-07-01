@@ -374,6 +374,13 @@ module hpp
     /// \param isstatic 1 is becomes new static value of database, 0 otherwise
     /// \return min and max values obtained
     floatSeq runLimbSampleAnalysis(in string limbname, in string analysis, in double isstatic) raises (Error);
+    
+    /// set the reference pose of "ReferencePose" heuristic
+    /// \param dofArray configuration of the pose
+    void setReferenceConfig (in floatSeq dofArray) raises (Error);
+    
+    /// add the "ReferencePose" heuristic to the factory
+    void addRefConfigHeuristic () raises (hpp::Error);
 
   }; // interface Robot
   }; // module rbprm

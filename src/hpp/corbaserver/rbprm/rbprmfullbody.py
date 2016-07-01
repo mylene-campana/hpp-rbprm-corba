@@ -560,3 +560,12 @@ class FullBody (object):
 
     def timeParametrizedPath (self, pathId):
      return self.client.rbprm.rbprm.timeParametrizedPath (pathId)
+ 
+    # Set reference pose for the heuristic
+    def setReferenceConfig (self, config):
+     return self.client.rbprm.rbprm.setReferenceConfig (config)
+ 
+    # add the "ReferencePose" heuristic to the factory
+    def addRefConfigHeuristic (self):
+        return self.client.rbprm.rbprm.addRefConfigHeuristic()
+ 

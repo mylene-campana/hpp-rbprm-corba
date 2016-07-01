@@ -110,8 +110,6 @@
       </collision>
    </link>
 
-   <link name="LAntena_rx"/>
-   <link name="LAntena_ry"/>
    <link name="LAntena">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -133,8 +131,6 @@
       </collision>
    </link>
 
-   <link name="LAntenaFoot_rx"/>
-   <link name="LAntenaFoot_ry"/>
    <link name="LAntenaFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -156,8 +152,6 @@
       </collision>
    </link>
    
-   <link name="RAntena_rx"/>
-   <link name="RAntena_ry"/>
    <link name="RAntena">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -179,8 +173,6 @@
       </collision>
    </link>
 
-   <link name="RAntenaFoot_rx"/>
-   <link name="RAntenaFoot_ry"/>
    <link name="RAntenaFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -717,91 +709,28 @@
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
-   <joint name="LAntena_rx" type="revolute">
+   <joint name="LAntena" type="fixed">
       <parent link="Head"/>
-      <child link="LAntena_rx"/>
-      <origin rpy="0 0 0" xyz="0.0176 -0.1027 0.0225"/>
-      <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="LAntena_ry" type="revolute">
-      <parent link="LAntena_rx"/>
-      <child link="LAntena_ry"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="LAntena_rz" type="revolute">
-      <parent link="LAntena_ry"/>
       <child link="LAntena"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <origin rpy="0 0 0" xyz="0.0176 -0.1027 0.0225"/>
    </joint>
-   <joint name="LAntenaFoot_rx" type="revolute">
+   <joint name="LAntenaFoot" type="fixed">
       <parent link="LAntena"/>
-      <child link="LAntenaFoot_rx"/>
-      <origin rpy="0 0 0" xyz="0.0267 -0.0198 0.1006"/>
-      <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="LAntenaFoot_ry" type="revolute">
-      <parent link="LAntenaFoot_rx"/>
-      <child link="LAntenaFoot_ry"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="LAntenaFoot_rz" type="revolute">
-      <parent link="LAntenaFoot_ry"/>
       <child link="LAntenaFoot"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <origin rpy="0 0 0" xyz="0.0267 -0.0198 0.1006"/>
    </joint>
    
-   <joint name="RAntena_rx" type="revolute">
+   <joint name="RAntena" type="fixed">
       <parent link="Head"/>
-      <child link="RAntena_rx"/>
-      <origin rpy="0 0 0" xyz="-0.0168 -0.1029 0.0226"/>
-      <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="RAntena_ry" type="revolute">
-      <parent link="RAntena_rx"/>
-      <child link="RAntena_ry"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="RAntena_rz" type="revolute">
-      <parent link="RAntena_ry"/>
       <child link="RAntena"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <origin rpy="0 0 0" xyz="-0.0168 -0.1029 0.0226"/>
    </joint>
-   <joint name="RAntenaFoot_rx" type="revolute">
+   <joint name="RAntenaFoot" type="fixed">
       <parent link="RAntena"/>
-      <child link="RAntenaFoot_rx"/>
-      <origin rpy="0 0 0" xyz="-0.0279 -0.0202 0.1006"/>
-      <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="RAntenaFoot_ry" type="revolute">
-      <parent link="RAntenaFoot_rx"/>
-      <child link="RAntenaFoot_ry"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
-   </joint>
-   <joint name="RAntenaFoot_rz" type="revolute">
-      <parent link="RAntenaFoot_ry"/>
       <child link="RAntenaFoot"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+      <origin rpy="0 0 0" xyz="-0.0279 -0.0202 0.1006"/>
    </joint>
+
    
    <!-- left side -->
    <joint name="LFThigh_rx" type="revolute">

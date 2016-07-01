@@ -78,8 +78,8 @@ q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 # WARNING: q_init and q_goal may have changed in orientedPath
 entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
-q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
-q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
+q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
+q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
 if (ecsSize > 0):
     q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
     q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]

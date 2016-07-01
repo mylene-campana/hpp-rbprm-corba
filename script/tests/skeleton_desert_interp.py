@@ -30,30 +30,27 @@ fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
 fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
-len(fullBody.getCurrentConfig())
-
 #psf = ProblemSolver(fullBody); rr = tp.Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
-cType = "_6_DOF"
+nbSamples = 10000
+cType = "_3_DOF"
 x = 0.01 # contact surface width
 y = 0.01 # contact surface length
 eps = 0.15
 
-nbSamples = 10000
-#~ AFTER loading obstacles
 rLegId = 'rfoot'
 rLeg = 'RHip_J1'
 rfoot = 'RFootSphere'
-rLegNormal = [-eps, 0, math.sqrt(1-eps**2)]
+rLegNormal = [eps, 0, -math.sqrt(1-eps**2)]
 fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],rLegNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LHip_J1'
 lfoot = 'LFootSphere'
-lLegNormal = [-eps, 0, math.sqrt(1-eps**2)]
+lLegNormal = [eps, 0, -math.sqrt(1-eps**2)]
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],lLegNormal, x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 
@@ -64,8 +61,8 @@ q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 # WARNING: q_init and q_goal may have changed in orientedPath
 entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
-q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
-q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
+q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
+q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
 if (ecsSize > 0):
     q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
     q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
@@ -88,7 +85,7 @@ fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
 
 extending = q_0 # TODO
-flexion = q_0 # TODO
+flexion = q_0 # TODO q [fullBody.rankInConfiguration ['LBFoot_ry']] = 0.2; rr(q)
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
@@ -119,7 +116,7 @@ gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'path.txt')
-pathJointConfigsToFile (psf, rr, "jointConfigs.txt", pathId, q_goal_test, 0.02)
+pathToYamlFile (cl, r, "frames.yaml ", "armlessSkeleton/base_link", pathId, q_goal_test, 0.02)
 
 
 """

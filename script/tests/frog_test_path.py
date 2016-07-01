@@ -91,8 +91,8 @@ for i in range(1,len(pathWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
 
-plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone2")
-plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbprmBuilder, r, "cone_21", "friction_cone2")
+plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
+plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
 
 
 

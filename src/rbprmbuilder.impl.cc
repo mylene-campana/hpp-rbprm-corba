@@ -58,6 +58,7 @@ namespace hpp {
     , fullBodyLoaded_(false)
     , bindShooter_()
     , analysisFactory_(0)
+    , bindHeuristic_()
     {
         // NOTHING
     }
@@ -1560,6 +1561,17 @@ namespace hpp {
 	}
 	return vSequence;
       }
+      
+    void RbprmBuilder::setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error){
+      core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (), dofArray); 
+      bindHeuristic_.setConfig(q);
+    }
+    
+    void RbprmBuilder::addRefConfigHeuristic ()throw (hpp::Error){
+      fullBody_->AddHeuristic("ReferencePose",
+      boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristic_), _1,_2,_3));
+    }
+    
 
     } // namespace impl
   } // namespace rbprm

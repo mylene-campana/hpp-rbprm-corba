@@ -38,6 +38,16 @@ r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody )
 rr = tp.Viewer (psf); gui = rr.client.gui
 
+
+# test heuristic
+""" 
+q= fullBody.getCurrentConfig()
+q[2] = 1
+q[5] = 4
+fullBody.setReferenceConfig(q)
+fullBody.addRefConfigHeuristic()
+"""
+
 #~ AFTER loading obstacles
 nbSamples = 50000
 cType = "_3_DOF"

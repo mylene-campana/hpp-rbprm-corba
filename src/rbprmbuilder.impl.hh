@@ -31,11 +31,33 @@
 # include <hpp/core/straight-path.hh>
 # include <hpp/rbprm/rbprm-path-validation.hh>
 # include <hpp/core/config-validations.hh>
+# include <hpp/model/configuration.hh>
+
 namespace hpp {
   namespace rbprm {
     namespace impl {
       using CORBA::Short;
 
+    struct BindHeuristic
+    {
+      BindHeuristic():
+        refConfig_()
+      {
+      }
+      
+      double ReferenceHeuristic(const sampling::Sample& sample, const Eigen::Vector3d& /*direction*/, const Eigen::Vector3d& /*normal*/)
+      {
+          // TODO compute distance between refConfig and sample sample.configuration_
+          return sample.staticValue_;
+      }
+      
+      void setConfig(model::Configuration_t ref){
+        refConfig_ = ref;
+      }
+      
+      model::Configuration_t refConfig_;
+    };
+      
     struct BindShooter
     {
         BindShooter(const std::size_t shootLimit = 10000,
@@ -207,6 +229,9 @@ namespace hpp {
 	void setFrictionCoef (const double mu) throw (hpp::Error);
 	hpp::intSeq* getResultValues () throw (hpp::Error);
 	hpp::floatSeqSeq* getnormalAverageVec () throw (hpp::Error);
+  
+  void setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error);
+  void addRefConfigHeuristic ()throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -216,6 +241,7 @@ namespace hpp {
         bool romLoaded_;
         bool fullBodyLoaded_;
         BindShooter bindShooter_;
+        BindHeuristic bindHeuristic_;
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;

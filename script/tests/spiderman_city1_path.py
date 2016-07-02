@@ -160,6 +160,8 @@ pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
+r(pp.client.problem.configAtParam(orientedpathId,0))
+
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)

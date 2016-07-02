@@ -63,7 +63,7 @@ q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 #q11[0:7] = [-100,45,0.4, 1, 0, 0, 0]; r(q11) # on floor
 #q11[0:7] = [-105,20,29.4, 1, 0, 0, 0]; r(q11) # roof of house
 #q11[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q11) # floor, right side
-q11[0:7] = [-11.6,38.5,121.1, 1, 0, 0, 0]; r(q11) # highest tower
+q11[0:7] = [-11.6,38.5,121.2, 1, 0, 0, 0]; r(q11) # highest tower
 
 rbprmBuilder.isConfigValid(q11)
 

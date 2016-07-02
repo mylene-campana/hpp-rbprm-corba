@@ -70,7 +70,7 @@ rbprmBuilder.isConfigValid(q11)
 q22 = q11[::]
 #q22[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q22) # floor, right side
 #q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
-q22[0:7] =  [16,45,100.4, 1, 0, 0, 0]; r(q22) #toit en X
+q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
 #q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
 #q22[0:7] = [90,40,20.3, 1, 0, 0, 0]; r(q22) #right house
 

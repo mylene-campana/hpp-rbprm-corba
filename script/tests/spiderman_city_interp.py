@@ -50,7 +50,7 @@ q_jump = [-11.6, 38.5, 121.17, 0.9659, 0, 0.25881, 0, 0, 0, 0.2,
 q_feet = q_jump[27:32]
 
 
-fullBody.addRefConfigHeuristicWeight(q_feet,"RefPoseFeet",[1.,1.,1.,10.,1.,1.])
+fullBody.addRefConfigAnalysisWeight(q_feet,"RefPoseFeet",[1.,1.,1.,5.,1.,1.])
 
 
 #~ AFTER loading obstacles
@@ -65,16 +65,16 @@ rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'RefPoseFeet')
+fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'static')
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'RefPoseFeet')
+fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'static')
 print("Limbs added to fullbody")
 
-fullBody.runSampleAnalysis( "manipulability", True)
+fullBody.runSampleAnalysis( "RefPoseFeet", True)
 
 
 #id = r.client.gui.getWindowID("window_hpp_")

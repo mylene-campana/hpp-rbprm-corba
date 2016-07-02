@@ -34,23 +34,24 @@
 # include <hpp/model/configuration.hh>
 # include <hpp/core/distance.hh>
 
+
 namespace hpp {
   namespace rbprm {
     namespace impl {
       using CORBA::Short;
 
-    struct BindHeuristic
+    struct BindAnalysis
     {
-      BindHeuristic():
+      BindAnalysis():
         refConfig_(),conf_()
       {
       }
-      BindHeuristic(hpp::core::ProblemSolverPtr_t problemSolver):
+      BindAnalysis(hpp::core::ProblemSolverPtr_t problemSolver):
         refConfig_(),conf_(),problemSolver_(problemSolver)
       {
       }
       
-      double ReferenceHeuristic(const sampling::Sample& sample, const Eigen::Vector3d& /*direction*/, const Eigen::Vector3d& /*normal*/)
+      double ReferenceAnalysis(const sampling::SampleDB& sampleDB, const sampling::Sample& sample)
       {
           // TODO compute distance between refConfig and sample sample.configuration_
         conf_ = sample.configuration_;
@@ -259,8 +260,8 @@ namespace hpp {
 	void setFrictionCoef (const double mu) throw (hpp::Error);
 	hpp::intSeq* getResultValues () throw (hpp::Error);
     //void setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error);
-    void addRefConfigHeuristic (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error);
-    void addRefConfigHeuristicWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error);
+    void addRefConfigAnalysis (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error);
+    void addRefConfigAnalysisWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -270,7 +271,7 @@ namespace hpp {
         bool romLoaded_;
         bool fullBodyLoaded_;
         BindShooter bindShooter_;
-        std::map<std::string,BindHeuristic> bindHeuristics_;
+        std::map<std::string,BindAnalysis> bindAnalysis_;
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;

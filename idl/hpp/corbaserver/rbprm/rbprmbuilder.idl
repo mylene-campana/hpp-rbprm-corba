@@ -379,9 +379,9 @@ module hpp
     /// add a "ReferencePose" heuristic to the factory
     /// dofArray : reference configuration of the limb
     /// name of the heuristic
-    void addRefConfigHeuristic (in floatSeq dofArray,in string name) raises (hpp::Error);
+    void addRefConfigAnalysis (in floatSeq dofArray,in string name) raises (hpp::Error);
 
-    void addRefConfigHeuristicWeight (in floatSeq dofArray,in string name, in floatSeq weightArray) raises (hpp::Error);
+    void addRefConfigAnalysisWeight (in floatSeq dofArray,in string name, in floatSeq weightArray) raises (hpp::Error);
 
 
   }; // interface Robot

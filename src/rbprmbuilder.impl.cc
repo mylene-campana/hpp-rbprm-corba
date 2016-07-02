@@ -58,7 +58,7 @@ namespace hpp {
     , fullBodyLoaded_(false)
     , bindShooter_()
     , analysisFactory_(0)
-    , bindHeuristics_()
+    , bindAnalysis_()
     {
         // NOTHING
     }
@@ -1373,6 +1373,9 @@ namespace hpp {
 	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
 	    const vector_t coefs = pp->coefficients ();
 	    const value_type length = pp->length ();
+
+
+
 	    if (fullbody) {
 	      newPath->appendPath
 		(rbprm::BallisticPath::create (robot, waypoints [i],
@@ -1544,7 +1547,7 @@ namespace hpp {
 	bindHeuristic_.setConfig(q);
       }*/
     
-      void RbprmBuilder::addRefConfigHeuristic (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error){
+      void RbprmBuilder::addRefConfigAnalysis (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error){
           std::size_t configDim = (std::size_t)dofArray.length();
           model::Configuration_t config (configDim);// config.resize (configDim);
           for (std::size_t iDof = 0; iDof < configDim; iDof++) {
@@ -1554,14 +1557,14 @@ namespace hpp {
           for(std::size_t iDof = 0; iDof < configDim; iDof++){
               weight[iDof] = 1.;
           }
-          BindHeuristic heuristic(problemSolver_);
-          heuristic.setConfig(config);
-          heuristic.setWeight(weight);
+          BindAnalysis analysis(problemSolver_);
+          analysis.setConfig(config);
+          analysis.setWeight(weight);
           std::string sname(name);
-          bindHeuristics_[sname]=heuristic;
+          bindAnalysis_[sname]=analysis;
           std::cout<<"add heuristic : "<<sname<<std::endl;
-          fullBody_->AddHeuristic(sname,
-                boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristics_[sname]), _1,_2,_3));
+          analysisFactory_->AddAnalysis(sname,
+                boost::bind(&BindAnalysis::ReferenceAnalysis, boost::ref(bindAnalysis_[sname]), _1,_2));
 
 
          /* bindHeuristics_.setConfig(config);
@@ -1571,7 +1574,7 @@ namespace hpp {
 */
       }
 
-      void RbprmBuilder::addRefConfigHeuristicWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error){
+      void RbprmBuilder::addRefConfigAnalysisWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error){
           std::size_t configDim = (std::size_t)dofArray.length();
           model::Configuration_t config (configDim);// config.resize (configDim);
           for (std::size_t iDof = 0; iDof < configDim; iDof++) {
@@ -1581,14 +1584,14 @@ namespace hpp {
           for (std::size_t iDof = 0; iDof < configDim; iDof++) {
               weight [iDof] = (double)weightArray[(_CORBA_ULong)iDof];
           }
-          BindHeuristic heuristic(problemSolver_);
-          heuristic.setConfig(config);
-          heuristic.setWeight(weight);
+          BindAnalysis analysis(problemSolver_);
+          analysis.setConfig(config);
+          analysis.setWeight(weight);
           std::string sname(name);
-          bindHeuristics_[sname]=heuristic;
-          std::cout<<"add heuristic : "<<sname<<std::endl;
-          fullBody_->AddHeuristic(sname,
-                boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristics_[sname]), _1,_2,_3));
+          bindAnalysis_[sname]=analysis;
+          std::cout<<"add analysis : "<<sname<<std::endl;
+          analysisFactory_->AddAnalysis(sname,
+                boost::bind(&BindAnalysis::ReferenceAnalysis, boost::ref(bindAnalysis_[sname]), _1,_2));
 
 
          /* bindHeuristics_.setConfig(config);

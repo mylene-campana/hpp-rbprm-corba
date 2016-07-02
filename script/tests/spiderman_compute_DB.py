@@ -29,7 +29,7 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 
 
 #~ AFTER loading obstacles
-nbSamples = 5000
+nbSamples = 10000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length

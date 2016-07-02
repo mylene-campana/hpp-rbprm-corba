@@ -43,16 +43,18 @@ rr = tp.Viewer (psf); gui = rr.client.gui
 
 q_jump= fullBody.getCurrentConfig()
 q_jump = [-11.6, 38.5, 121.17, 0.9659, 0, 0.25881, 0, 0, 0, 0.2,
- 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, -0.6, -0.6, 0.0, 0.0, 0.4, 0.5,
- 0.7, -0.6, -0.6, 0.0, 0.0, -0.2, 0.3, -1.7, 1.75,-0.5, 0, -0.2, 0.3,
- -1.7, 1.75, -0.5, 0]
+ 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.8, 0.0, 0.0, 0.4, 0.5,
+ 0.7, 0, -0.8, 0.0, 0.0, -0.2, 0.3, -1.7, 1.75,-0.5, 0, -0.2, 0.3,
+ -1.7, 1.75, -0.5, 0] #; rr(q_jump)
 
-fullBody.setReferenceConfig(q_jump)
-fullBody.addRefConfigHeuristic()
+q_feet = q_jump[27:32]
+
+
+fullBody.addRefConfigHeuristic(q_feet,"RefPoseFeet")
 
 
 #~ AFTER loading obstacles
-nbSamples = 50000
+nbSamples = 10000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
@@ -63,13 +65,13 @@ rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'ReferencePose')
+fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'RefPoseFeet')
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'ReferencePose')
+fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'RefPoseFeet')
 print("Limbs added to fullbody")
 
 fullBody.runSampleAnalysis( "manipulability", True)

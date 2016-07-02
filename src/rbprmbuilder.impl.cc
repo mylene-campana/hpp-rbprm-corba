@@ -58,7 +58,7 @@ namespace hpp {
     , fullBodyLoaded_(false)
     , bindShooter_()
     , analysisFactory_(0)
-    , bindHeuristic_()
+    , bindHeuristics_()
     {
         // NOTHING
     }
@@ -971,7 +971,7 @@ namespace hpp {
       hppDout (info, "set problem solver");
         problemSolver_ = problemSolver;
         bindShooter_.problemSolver_ = problemSolver;
-        bindHeuristic_.problemSolver_ =  problemSolver;
+        //bindHeuristics_.problemSolver_ = problemSolver;
         //bind shooter creator to hide problem as a parameter and respect signature
 
         // add rbprmshooter
@@ -1539,14 +1539,31 @@ namespace hpp {
       }
 
       
-      void RbprmBuilder::setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error){
+      /*void RbprmBuilder::setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error){
 	core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (), dofArray); 
 	bindHeuristic_.setConfig(q);
-      }
+      }*/
     
-      void RbprmBuilder::addRefConfigHeuristic ()throw (hpp::Error){
-	fullBody_->AddHeuristic("ReferencePose",
-				boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristic_), _1,_2,_3));
+      void RbprmBuilder::addRefConfigHeuristic (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error){
+          std::size_t configDim = (std::size_t)dofArray.length();
+          model::Configuration_t config (configDim);// config.resize (configDim);
+          for (std::size_t iDof = 0; iDof < configDim; iDof++) {
+              config [iDof] = (double)dofArray[(_CORBA_ULong)iDof];
+          }
+          BindHeuristic heuristic(problemSolver_);
+          heuristic.setConfig(config);
+          std::string sname(name);
+          bindHeuristics_[sname]=heuristic;
+          std::cout<<"add heuristic : "<<sname<<std::endl;
+          fullBody_->AddHeuristic(sname,
+                boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristics_[sname]), _1,_2,_3));
+
+
+         /* bindHeuristics_.setConfig(config);
+          std::cout<<"add heuristic : "<<std::string(name)<<std::endl;
+          fullBody_->AddHeuristic(std::string(name),
+                boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristics_), _1,_2,_3));
+*/
       }
     
 

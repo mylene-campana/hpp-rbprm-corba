@@ -50,11 +50,11 @@ q_jump = [-11.6, 38.5, 121.17, 0.9659, 0, 0.25881, 0, 0, 0, 0.2,
 q_feet = q_jump[27:32]
 
 
-fullBody.addRefConfigHeuristic(q_feet,"RefPoseFeet")
+fullBody.addRefConfigHeuristicWeight(q_feet,"RefPoseFeet",[1.,1.,1.,10.,1.,1.])
 
 
 #~ AFTER loading obstacles
-nbSamples = 10000
+nbSamples = 20000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length

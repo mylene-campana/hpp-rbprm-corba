@@ -55,18 +55,35 @@ namespace hpp {
           // TODO compute distance between refConfig and sample sample.configuration_
         conf_ = sample.configuration_;
         hppDout(info,"reference config = "<<model::displayConfig(refConfig_));
-        hppDout(info,"size of config heuristic : "<<sample.configuration_.size());
-        core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
+        hppDout(info,"current config   = "<<model::displayConfig(conf_));
+        // doesn't work anymore since we only use limb config and not full body
+        //core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
+
+        //compute distance TODO : improve it
+        double distance =0 ;
+        double d =0;
+        for(size_t i = 0 ; i<conf_.size(); i++){
+            d=conf_[i] - refConfig_[i];
+            distance += weight_[i] * d*d;
+        }
+
+
         //return distance*1000. + sample.staticValue_;
-        return distance;
+        hppDout(info,"heuristic value = "<<distance);
+        return -distance;
       }
       
       void setConfig(model::Configuration_t ref){
         refConfig_ = ref;
       }
+
+      void setWeight(model::Configuration_t w){
+          weight_ = w;
+      }
       
       core::Configuration_t refConfig_;
       core::Configuration_t conf_;
+      core::Configuration_t weight_;
       hpp::core::ProblemSolverPtr_t problemSolver_;
       
     };
@@ -243,6 +260,7 @@ namespace hpp {
 	hpp::intSeq* getResultValues () throw (hpp::Error);
     //void setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error);
     void addRefConfigHeuristic (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error);
+    void addRefConfigHeuristicWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.

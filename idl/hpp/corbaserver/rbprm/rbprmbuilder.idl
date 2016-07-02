@@ -381,6 +381,9 @@ module hpp
     /// name of the heuristic
     void addRefConfigHeuristic (in floatSeq dofArray,in string name) raises (hpp::Error);
 
+    void addRefConfigHeuristicWeight (in floatSeq dofArray,in string name, in floatSeq weightArray) raises (hpp::Error);
+
+
   }; // interface Robot
   }; // module rbprm
   }; // module corbaserver

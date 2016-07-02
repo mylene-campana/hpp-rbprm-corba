@@ -1550,8 +1550,40 @@ namespace hpp {
           for (std::size_t iDof = 0; iDof < configDim; iDof++) {
               config [iDof] = (double)dofArray[(_CORBA_ULong)iDof];
           }
+          model::Configuration_t weight(configDim);
+          for(std::size_t iDof = 0; iDof < configDim; iDof++){
+              weight[iDof] = 1.;
+          }
           BindHeuristic heuristic(problemSolver_);
           heuristic.setConfig(config);
+          heuristic.setWeight(weight);
+          std::string sname(name);
+          bindHeuristics_[sname]=heuristic;
+          std::cout<<"add heuristic : "<<sname<<std::endl;
+          fullBody_->AddHeuristic(sname,
+                boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristics_[sname]), _1,_2,_3));
+
+
+         /* bindHeuristics_.setConfig(config);
+          std::cout<<"add heuristic : "<<std::string(name)<<std::endl;
+          fullBody_->AddHeuristic(std::string(name),
+                boost::bind(&BindHeuristic::ReferenceHeuristic, boost::ref(bindHeuristics_), _1,_2,_3));
+*/
+      }
+
+      void RbprmBuilder::addRefConfigHeuristicWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error){
+          std::size_t configDim = (std::size_t)dofArray.length();
+          model::Configuration_t config (configDim);// config.resize (configDim);
+          for (std::size_t iDof = 0; iDof < configDim; iDof++) {
+              config [iDof] = (double)dofArray[(_CORBA_ULong)iDof];
+          }
+          model::Configuration_t weight (configDim);// config.resize (configDim);
+          for (std::size_t iDof = 0; iDof < configDim; iDof++) {
+              weight [iDof] = (double)weightArray[(_CORBA_ULong)iDof];
+          }
+          BindHeuristic heuristic(problemSolver_);
+          heuristic.setConfig(config);
+          heuristic.setWeight(weight);
           std::string sname(name);
           bindHeuristics_[sname]=heuristic;
           std::cout<<"add heuristic : "<<sname<<std::endl;

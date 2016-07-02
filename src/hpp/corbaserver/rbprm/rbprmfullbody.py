@@ -562,4 +562,8 @@ class FullBody (object):
     # add the "ReferencePose" heuristic to the factory
     def addRefConfigHeuristic (self,config,name):
         return self.client.rbprm.rbprm.addRefConfigHeuristic(config,name)
+
+    # add the "ReferencePose" heuristic to the factory
+    def addRefConfigHeuristicWeight (self,config, name,weight):
+        return self.client.rbprm.rbprm.addRefConfigHeuristicWeight(config,name,weight)
  

@@ -58,8 +58,8 @@ namespace hpp {
         conf_[4] = 0.;
         conf_[5] = 0.;
         conf_[6] = 0.;
-        //core::ConfigurationIn_t test(conf_);
-        //core::ConfigurationIn_t test2(refConfig_);
+        hppDout(info,"reference config = "<<model::displayConfig(refConfig_));
+        hppDout(info,"size of config heuristic : "<<sample.configuration_.size());
         core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
         //return distance*1000. + sample.staticValue_;
         return distance;

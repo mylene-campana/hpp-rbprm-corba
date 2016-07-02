@@ -40,13 +40,16 @@ rr = tp.Viewer (psf); gui = rr.client.gui
 
 
 # test heuristic
-""" 
-q= fullBody.getCurrentConfig()
-q[2] = 1
-q[5] = 4
-fullBody.setReferenceConfig(q)
+
+q_jump= fullBody.getCurrentConfig()
+q_jump = [-11.6, 38.5, 121.17, 0.9659, 0, 0.25881, 0, 0, 0, 0.2,
+ 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, -0.6, -0.6, 0.0, 0.0, 0.4, 0.5,
+ 0.7, -0.6, -0.6, 0.0, 0.0, -0.2, 0.3, -1.7, 1.75,-0.5, 0, -0.2, 0.3,
+ -1.7, 1.75, -0.5, 0]
+
+fullBody.setReferenceConfig(q_jump)
 fullBody.addRefConfigHeuristic()
-"""
+
 
 #~ AFTER loading obstacles
 nbSamples = 50000
@@ -60,13 +63,13 @@ rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'forward')
+fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'ReferencePose')
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'forward')
+fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'ReferencePose')
 print("Limbs added to fullbody")
 
 fullBody.runSampleAnalysis( "manipulability", True)

@@ -491,14 +491,14 @@
       <parent link="Pelvis"/>
       <child link="RThigh_ry"/>
       <origin rpy="0 0 0" xyz="-0.0943 -0.0367 -0.0844"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.9" velocity="1.0"/>
+      <axis xyz="0 -1 0"/>
+      <limit effort="0" lower="-0.9" upper="0.3" velocity="1.0"/>
    </joint>
    <joint name="RThigh_rz" type="revolute">
       <parent link="RThigh_ry"/>
       <child link="RThigh_rz"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 0 1"/>
+      <axis xyz="0 0 -1"/>
       <limit effort="0" lower="-0.2" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="RThigh_rx" type="revolute">
@@ -585,15 +585,15 @@
       <parent link="Thorax"/>
       <child link="RHumerus_ry"/>
       <origin rpy="0 0 0" xyz="-0.1938 0.0528 0.3355"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.7" upper="2.4" velocity="1.0"/>
+      <axis xyz="0 -1 0"/>
+      <limit effort="0" lower="-2.4" upper="0.7" velocity="1.0"/>
    </joint>
    <joint name="RHumerus_rz" type="revolute">
       <parent link="RHumerus_ry"/>
       <child link="RHumerus_rz"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-1.4" upper="2.3" velocity="1.0"/>
+      <axis xyz="0 0 -1"/>
+      <limit effort="0" lower="-2.1" upper="1.4" velocity="1.0"/>
    </joint>
    <joint name="RHumerus_rx" type="revolute">
       <parent link="RHumerus_rz"/>
@@ -613,7 +613,7 @@
       <parent link="RForearm_rx"/>
       <child link="RForearm"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 0 1"/>
+      <axis xyz="0 0 -1"/>
       <limit effort="0" lower="-0.6" upper="3.3" velocity="1.0"/>
    </joint>
    <joint name="RHand_rx" type="revolute">

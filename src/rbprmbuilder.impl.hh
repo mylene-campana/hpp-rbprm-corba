@@ -34,51 +34,57 @@
 # include <hpp/model/configuration.hh>
 # include <hpp/core/distance.hh>
 
+
 namespace hpp {
   namespace rbprm {
     namespace impl {
       using CORBA::Short;
 
-    struct BindHeuristic
+    struct BindAnalysis
     {
-      BindHeuristic():
+      BindAnalysis():
         refConfig_(),conf_()
       {
       }
+      BindAnalysis(hpp::core::ProblemSolverPtr_t problemSolver):
+        refConfig_(),conf_(),problemSolver_(problemSolver)
+      {
+      }
       
-      double ReferenceHeuristic(const sampling::Sample& sample, const Eigen::Vector3d& /*direction*/, const Eigen::Vector3d& /*normal*/)
+      double ReferenceAnalysis(const sampling::SampleDB& sampleDB, const sampling::Sample& sample)
       {
           // TODO compute distance between refConfig and sample sample.configuration_
         conf_ = sample.configuration_;
-        // set center at origin
-        conf_[0] = 0.;
-        conf_[1] = 0.;
-        conf_[2] = 0.;
-        conf_[3] = 1.;
-        conf_[4] = 0.;
-        conf_[5] = 0.;
-        conf_[6] = 0.;
-        //core::ConfigurationIn_t test(conf_);
-        //core::ConfigurationIn_t test2(refConfig_);
-        core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
+        hppDout(info,"reference config = "<<model::displayConfig(refConfig_));
+        hppDout(info,"current config   = "<<model::displayConfig(conf_));
+        // doesn't work anymore since we only use limb config and not full body
+        //core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
+
+        //compute distance TODO : improve it
+        double distance =0 ;
+        double d =0;
+        for(size_t i = 0 ; i<conf_.size(); i++){
+            d=conf_[i] - refConfig_[i];
+            distance += weight_[i] * d*d;
+        }
+
+
         //return distance*1000. + sample.staticValue_;
-        return distance;
+        hppDout(info,"heuristic value = "<<distance);
+        return -distance;
       }
       
       void setConfig(model::Configuration_t ref){
-        // set center at origin
-        ref[0] = 0.;
-        ref[1] = 0.;
-        ref[2] = 0.;
-        ref[3] = 1.;
-        ref[4] = 0.;
-        ref[5] = 0.;
-        ref[6] = 0.;
         refConfig_ = ref;
+      }
+
+      void setWeight(model::Configuration_t w){
+          weight_ = w;
       }
       
       core::Configuration_t refConfig_;
       core::Configuration_t conf_;
+      core::Configuration_t weight_;
       hpp::core::ProblemSolverPtr_t problemSolver_;
       
     };
@@ -253,8 +259,9 @@ namespace hpp {
 	void setMaxLandingVelocity (const double vmax) throw (hpp::Error);
 	void setFrictionCoef (const double mu) throw (hpp::Error);
 	hpp::intSeq* getResultValues () throw (hpp::Error);
-	void setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error);
-	void addRefConfigHeuristic ()throw (hpp::Error);
+    //void setReferenceConfig (const hpp::floatSeq& dofArray)throw (hpp::Error);
+    void addRefConfigAnalysis (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error);
+    void addRefConfigAnalysisWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -264,7 +271,7 @@ namespace hpp {
         bool romLoaded_;
         bool fullBodyLoaded_;
         BindShooter bindShooter_;
-        BindHeuristic bindHeuristic_;
+        std::map<std::string,BindAnalysis> bindAnalysis_;
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;

@@ -133,6 +133,7 @@ install(FILES
   data/urdf/desert.urdf
   data/urdf/high_plateforms.urdf
   data/urdf/etang_envir.urdf
+  data/urdf/cliff.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -203,6 +204,7 @@ install(FILES
   data/srdf/desert.srdf
   data/srdf/high_plateforms.srdf
   data/srdf/cubeWorld.srdf
+  data/srdf/cliff.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
   )
 install(FILES
@@ -249,9 +251,12 @@ install(FILES
 	data/meshes/cave.stl
 	data/meshes/desert.stl
 	data/meshes/cubeWorld.stl
+	data/meshes/cubeWorld_panel.stl
 	data/meshes/high_plateforms.stl	
 	data/meshes/etang_envir.dae
-	data/meshes/etang_envir.stl
+	data/meshes/etang_envir.stl	
+    data/meshes/cliff.stl
+    data/meshes/cliff_panel.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
 install(FILES

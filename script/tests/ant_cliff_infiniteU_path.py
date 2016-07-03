@@ -18,30 +18,32 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'spiderman_trunk'
-urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere','SpidermanLHandSphere','SpidermanRHandSphere']
+urdfName = 'ant_trunk'
+urdfNameRoms = ['LFFootSphere','LMFootSphere','LBFootSphere','RFFootSphere','RMFootSphere','RBFootSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-10, 10, -10, 10, 0, 10])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [-10, 10, -10, 10, 0, 20])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
-rbprmBuilder.setNormalFilter('SpidermanLFootSphere', [0,0,1], -1)
-rbprmBuilder.setNormalFilter('SpidermanRFootSphere', [0,0,1], -1)
-rbprmBuilder.setNormalFilter('SpidermanLHandSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('SpidermanRHandSphere', [0,0,1], filterRange)
-rbprmBuilder.setContactSize (0.03,0.08)
+rbprmBuilder.setNormalFilter('LFFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('LMFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('LBFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RFFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RMFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RBFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setContactSize (0.03,0.03)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 ps = ProblemSolver (rbprmBuilder)
 ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-rbprmBuilder.setFrictionCoef(1.2)
+rbprmBuilder.setFrictionCoef(10000)
 rbprmBuilder.setMaxTakeoffVelocity(15)#(8)
 rbprmBuilder.setMaxLandingVelocity(15)
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
@@ -53,66 +55,65 @@ r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
-r.loadObstacleModel ("hpp-rbprm-corba", "cubeWorld", "cubeWorld")
+r.loadObstacleModel ("hpp-rbprm-corba", "cliff", "cliff")
 r.addLandmark(r.sceneName,2)
-r.addLandmark("spiderman_trunk/base_link",1)
-
+r.addLandmark("ant_trunk/base_link",1)
+addLight (r, [-3,0,8,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 
-q11[0:7] = [-2.9,0,4.2, 0.9537, 0, 0.3, 0]; r(q11) # edge middle
+q11[0:7] = [0,0,4.1, 1, 0, 0, 0]; r(q11) # edge middle
+
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
 
-q22[0:7] =  [-8,0,2.6, 1, 0, 0, 0]; r(q22) # back plateform
-#q22[0:7] =  [-1,7,2.6, 1, 0, 0, 0]; r(q22) # side plateform
-#q22[0:7] =  [8,0,2.6, 1, 0, 0, 0]; r(q22) # front plateform
+
+q22[0:7] =  [10,0,0.6, 1, 0, 0, 0]; r(q22) # side plateform
+
 rbprmBuilder.isConfigValid(q22)
 
 
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
-#r.solveAndDisplay("rm",1,1)
-
 ## manually add way point (faster computation for test, work without but it's slow (~ <1minute )
-"""
-q_side = q11[::]
-q_back = q11[::]
-q_side[0:7] =  [-1,7,2.6, 1, 0, 0, 0]
-q_back[0:7] =  [-7.2,0,2.6, 1, 0, 0, 0]
-waypoints = [q_back,q_side]
+
+q_land = q11[::]
+
+q_land[0:7] =  [3,0,0.6, 0.9537, 0, 0, 0]
+
+waypoints = [q_land]
 pbCl = rbprmBuilder.client.basic.problem
 pbCl.prepareSolveStepByStep()
 q11 = ps.node(0) # retrieve updated contact normal 
 q22 = ps.node(1)
 pbCl.addConfigToRoadmap (waypoints[0])
-pbCl.addConfigToRoadmap (waypoints[1])
 ps.directPath (q11, waypoints[0],False)
 pathIds0 = ps.numberPaths () - 1
-ps.directPath (waypoints[0], waypoints[1],False)
-pathId01 = ps.numberPaths () - 1
-ps.directPath (waypoints[1], q22,False)
+ps.directPath (waypoints[0], q22,False)
 pathId2g = ps.numberPaths () - 1
 pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
-pbCl.addEdgeToRoadmap (waypoints[0], waypoints[1], pathId01, True)
-pbCl.addEdgeToRoadmap (waypoints[1], q22, pathId2g, True)
+pbCl.addEdgeToRoadmap (waypoints[0], q22, pathId2g, True)
 ##########
-"""
 
 t = ps.solve ()
 
 
 q11 = ps.node(0) # retrieve updated contact normal 
 q22 = ps.node(1)
-plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
+plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); 
+plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
+
+plotCone (ps.node(2), ps, r, "cone_Mid", "friction_cone_SG2")
 
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
+
+##############################
 
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1

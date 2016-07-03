@@ -67,9 +67,9 @@ rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
 
-#q22[0:7] =  [-7.2,0,2.6, 1, 0, 0, 0]; r(q22) # back plateform
+q22[0:7] =  [-7.2,0,2.6, 1, 0, 0, 0]; r(q22) # back plateform
 #q22[0:7] =  [-1,7,2.6, 1, 0, 0, 0]; r(q22) # side plateform
-q22[0:7] =  [8,0,2.6, 1, 0, 0, 0]; r(q22) # front plateform
+#q22[0:7] =  [8,0,2.6, 1, 0, 0, 0]; r(q22) # front plateform
 rbprmBuilder.isConfigValid(q22)
 
 

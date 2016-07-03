@@ -6,6 +6,9 @@
       <geometry>
         <mesh filename="package://hpp-rbprm-corba/meshes/cubeWorld.stl"/>
       </geometry>
+      <material name="white">
+        <color rgba="1 1 1 1"/>
+      </material>
     </visual>
     <collision>
       <origin xyz="0 0 0"/>

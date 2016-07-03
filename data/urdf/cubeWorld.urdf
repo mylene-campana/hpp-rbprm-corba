@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="cubeWorld">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hpp-rbprm-corba/meshes/cubeWorld.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hpp-rbprm-corba/meshes/cubeWorld.stl"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

@@ -17,7 +17,7 @@ meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
 ##
 #  Information to retrieve urdf and srdf files.
-urdfName = "spiderman"
+urdfName = "spiderman_limit"
 urdfSuffix = ""
 srdfSuffix = ""
 
@@ -45,7 +45,7 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 
 
 #~ AFTER loading obstacles
-nbSamples = 50000
+nbSamples = 10000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length

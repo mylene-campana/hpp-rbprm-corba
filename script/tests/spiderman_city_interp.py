@@ -123,8 +123,8 @@ fullBody.isConfigValid(q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
-fullBody.setStartState(q_init_test,[lLegId,rLegId])
-fullBody.setEndState(q_goal_test,[lLegId,rLegId])
+fullBody.setStartState(q_init_test,[lLegId,rLegId,lArmId,rArmId])
+fullBody.setEndState(q_goal_test,[lLegId,rLegId,lArmId,rArmId])
 
 extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0] # = q_0 + 'RAnkle_J1'=0.6 + 'LAnkle_J1'=0.6
 flexion = q_0
@@ -133,12 +133,14 @@ fullBody.setPose (flexion, "flexion")
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.03)
+fullBody.interpolateBallisticPath(0, 0.01)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.1
-#pp(psf.numberPaths ()-1)
+pathId = psf.numberPaths () -1
+rr(pp.client.problem.configAtParam(pathId,0))
+
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)

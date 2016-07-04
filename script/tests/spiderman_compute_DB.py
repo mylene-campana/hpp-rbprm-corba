@@ -45,7 +45,7 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 
 
 #~ AFTER loading obstacles
-nbSamples = 20000
+nbSamples = 50000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
@@ -104,9 +104,10 @@ def runallArm(lid, dbName):
 
 
 
-
+print("Run all legs : ")
 runallLeg(lLegId, './Spiderman_lleg.db')
 runallLeg(rLegId, './Spiderman_rleg.db')
+print("Run all arms : ")
 runallArm(larmId, './Spiderman_larm.db')
 runallArm(rarmId, './Spiderman_rarm.db')
 

@@ -1316,7 +1316,7 @@ namespace hpp {
       // --------------------------------------------------------------------
 
       void RbprmBuilder::rotateAlongPath (const CORBA::UShort pathId,
-					  const bool fullbody)
+                      const bool fullbody, const bool trunkOrientation)
 	throw (hpp::Error) {
 	std::size_t pid = (std::size_t) pathId;
 	if(problemSolver_->paths().size() <= pid) {
@@ -1373,32 +1373,34 @@ namespace hpp {
 
 
       // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
-      Eigen::Vector3d yTheta;
-      Eigen::Quaterniond qr ,qi,qf;
+      if(trunkOrientation){
+          Eigen::Vector3d yTheta;
+          Eigen::Quaterniond qr ,qi,qf;
 
-      for(std::size_t i = 0 ; i< waypoints.size() -1 ; i++ ){
-          alpha_i = (boost::dynamic_pointer_cast<ParabolaPath>((*path).pathAtRank (i)))->coefficients()[4];
-          theta_i = waypoints[i][index+3];
+          for(std::size_t i = 0 ; i< waypoints.size() -1 ; i++ ){
+              alpha_i = (boost::dynamic_pointer_cast<ParabolaPath>((*path).pathAtRank (i)))->coefficients()[4];
+              theta_i = waypoints[i][index+3];
+              yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
+              qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
+              qi = Eigen::Quaterniond(waypoints [i][3],waypoints [i][4],waypoints [i][5],waypoints [i][6]);
+              qf = qr*qi;
+
+              waypoints [i][3]= qf.w();
+              waypoints [i][4]= qf.x();
+              waypoints [i][5]= qf.y();
+              waypoints [i][6]= qf.z();
+          }
+          // goal state : use last alpha and theta value
           yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
           qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-          qi = Eigen::Quaterniond(waypoints [i][3],waypoints [i][4],waypoints [i][5],waypoints [i][6]);
+          qi = Eigen::Quaterniond(waypoints [waypoints.size () - 1][3],waypoints [waypoints.size () - 1][4],waypoints [waypoints.size () - 1][5],waypoints [waypoints.size () - 1][6]);
           qf = qr*qi;
 
-          waypoints [i][3]= qf.w();
-          waypoints [i][4]= qf.x();
-          waypoints [i][5]= qf.y();
-          waypoints [i][6]= qf.z();
+          waypoints [waypoints.size () - 1][3]= qf.w();
+          waypoints [waypoints.size () - 1][4]= qf.x();
+          waypoints [waypoints.size () - 1][5]= qf.y();
+          waypoints [waypoints.size () - 1][6]= qf.z();
       }
-      // goal state : use last alpha and theta value
-      yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
-      qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-      qi = Eigen::Quaterniond(waypoints [waypoints.size () - 1][3],waypoints [waypoints.size () - 1][4],waypoints [waypoints.size () - 1][5],waypoints [waypoints.size () - 1][6]);
-      qf = qr*qi;
-
-      waypoints [waypoints.size () - 1][3]= qf.w();
-      waypoints [waypoints.size () - 1][4]= qf.x();
-      waypoints [waypoints.size () - 1][5]= qf.y();
-      waypoints [waypoints.size () - 1][6]= qf.z();
       // end test Pierre
 
 

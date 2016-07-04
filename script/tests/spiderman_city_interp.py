@@ -18,7 +18,7 @@ meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
 ##
 #  Information to retrieve urdf and srdf files.
-urdfName = "spiderman_limit"
+urdfName = "spiderman"
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 0 # tp.ecsSize

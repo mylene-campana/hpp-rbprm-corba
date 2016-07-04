@@ -17,7 +17,7 @@ meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
 ##
 #  Information to retrieve urdf and srdf files.
-urdfName = "spiderman_limit"
+urdfName = "spiderman"
 urdfSuffix = ""
 srdfSuffix = ""
 
@@ -35,8 +35,8 @@ q_jump = [0, 0, 0, 1, 0,0, 0, 0, 0, 0.2,
  0.7, 0, -0.6, 0.0, 0.0, -0.2, 0.3, -1.9, 1.9,-0.6, 0, -0.2, 0.3,
  -1.9, 1.9, -0.6, 0] #; rr(q_jump)
 
-q_feet = q_jump[27:32]
-q_arm = q_jump[13:19]
+q_feet = q_jump[27:33]
+q_arm = q_jump[13:20]
 
 
 fullBody.addRefConfigAnalysisWeight(q_feet,"RefPoseFeet",[1.,1.,1.,5.,1.,1.])
@@ -45,7 +45,7 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 
 
 #~ AFTER loading obstacles
-nbSamples = 10000
+nbSamples = 50000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
@@ -56,13 +56,13 @@ rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0.02],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0.02],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 print("Legs added to fullbody")
 

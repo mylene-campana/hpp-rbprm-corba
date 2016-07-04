@@ -61,6 +61,7 @@ namespace hpp {
         //core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
 
         //compute distance TODO : improve it
+        assert(conf_.size() == refConfig_.size());
         double distance =0 ;
         double d =0;
         for(size_t i = 0 ; i<conf_.size(); i++){

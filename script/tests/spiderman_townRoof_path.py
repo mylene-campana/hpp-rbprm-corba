@@ -59,12 +59,12 @@ addLight (r, [-3,0,8,1,0,0,0], "li");
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal 
 #q11[0:3] = [15, 125, 49]; r(q11) # mid right roof 
-q11[0:3] = [52, 105, 50.2]; r(q11) # mid-top right roof
+q11[0:3] = [15, -60, 25.9]; r(q11) # mid-top right roof
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-q22[0:3] = [140, 272, 47.5]; r(q22) # top left roof
+q22[0:3] = [150, 89, 24.1]; r(q22) # top left roof
 
 rbprmBuilder.isConfigValid(q22)
 

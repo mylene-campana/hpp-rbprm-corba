@@ -40,7 +40,7 @@ rr = tp.Viewer (psf); gui = rr.client.gui
 
 
 # test heuristic
-
+"""
 q_jump= fullBody.getCurrentConfig()
 q_jump = [-11.6, 38.5, 121.17, 0.9659, 0, 0.25881, 0, 0, 0, 0.2,
  0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5,
@@ -48,10 +48,12 @@ q_jump = [-11.6, 38.5, 121.17, 0.9659, 0, 0.25881, 0, 0, 0, 0.2,
  -1.9, 1.9, -0.6, 0] #; rr(q_jump)
 
 q_feet = q_jump[27:32]
+q_arm = q_jump[13:19]
 
 
 fullBody.addRefConfigAnalysisWeight(q_feet,"RefPoseFeet",[1.,1.,1.,5.,1.,1.])
-
+fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
+"""
 
 #~ AFTER loading obstacles
 nbSamples = 20000
@@ -72,9 +74,23 @@ lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
 fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'static')
+
+rarmId = 'rhand'
+rLeg = 'RHumerus_ry'
+rfoot = 'SpidermanRHandSphere'
+rarmx = x; rarmy = y
+fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,'static')
+
+larmId = 'lhand'
+lLeg = 'LHumerus_ry'
+lfoot = 'SpidermanLHandSphere'
+larmx = x; larmy = y
+fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,'static')
+
+
 print("Limbs added to fullbody")
 
-fullBody.runSampleAnalysis( "RefPoseFeet", True)
+#fullBody.runSampleAnalysis( "RefPoseFeet", True) #done in compute_db now
 
 
 #id = r.client.gui.getWindowID("window_hpp_")
@@ -104,7 +120,7 @@ fullBody.isConfigValid(q_init_test)
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
 fullBody.isConfigValid(q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], False); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
 fullBody.setStartState(q_init_test,[lLegId,rLegId])

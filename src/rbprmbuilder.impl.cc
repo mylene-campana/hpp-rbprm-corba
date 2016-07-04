@@ -1392,33 +1392,49 @@ namespace hpp {
 
 
       // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
+	  core::Configuration_t qTmp;
+	  core::ValidationReportPtr_t report;
       if(trunkOrientation){
           Eigen::Vector3d yTheta;
           Eigen::Quaterniond qr ,qi,qf;
 
           for(std::size_t i = 0 ; i< waypoints.size() -1 ; i++ ){
+	    qTmp = waypoints[i];
               alpha_i = (boost::dynamic_pointer_cast<ParabolaPath>((*path).pathAtRank (i)))->coefficients()[4];
-              theta_i = waypoints[i][index+3];
+              theta_i = qTmp[index+3];
               yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
               qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-              qi = Eigen::Quaterniond(waypoints [i][3],waypoints [i][4],waypoints [i][5],waypoints [i][6]);
+              qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
               qf = qr*qi;
 
-              waypoints [i][3]= qf.w();
-              waypoints [i][4]= qf.x();
-              waypoints [i][5]= qf.y();
-              waypoints [i][6]= qf.z();
+              qTmp[3]= qf.w();
+              qTmp[4]= qf.x();
+              qTmp[5]= qf.y();
+              qTmp[6]= qf.z();
+	      if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+		hppDout (info, "waypoint with alpha orientation is valid");
+		waypoints[i] = qTmp;
+	      } else {
+		hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+	      }
           }
           // goal state : use last alpha and theta value
+	  qTmp = waypoints[waypoints.size () - 1];
           yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
           qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-          qi = Eigen::Quaterniond(waypoints [waypoints.size () - 1][3],waypoints [waypoints.size () - 1][4],waypoints [waypoints.size () - 1][5],waypoints [waypoints.size () - 1][6]);
+          qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
           qf = qr*qi;
 
-          waypoints [waypoints.size () - 1][3]= qf.w();
-          waypoints [waypoints.size () - 1][4]= qf.x();
-          waypoints [waypoints.size () - 1][5]= qf.y();
-          waypoints [waypoints.size () - 1][6]= qf.z();
+          qTmp[3]= qf.w();
+          qTmp[4]= qf.x();
+          qTmp[5]= qf.y();
+          qTmp[6]= qf.z();
+	  if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+	    hppDout (info, "waypoint with alpha orientation is valid");
+	    waypoints[waypoints.size () - 1] = qTmp;
+	  } else {
+	    hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+	  }
       }
       // end test Pierre
 

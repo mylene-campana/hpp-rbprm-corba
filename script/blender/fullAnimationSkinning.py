@@ -212,19 +212,29 @@ class JointConfiguration(object):
         self.name = name
         self.rotation_euler = rotation_euler
 
+def quaternionListProduct (a, b): # from https://en.wikipedia.org/wiki/Quaternion#Ordered_list_form
+	# product of two quaternions expressed as lists
+	r1 = a[0]*b[0] - a[1]*b[1] - a[2]*b[2] - a[3]*b[3]
+	r2 = a[0]*b[1] + a[1]*b[0] + a[2]*b[3] - a[3]*b[2]
+	r3 = a[0]*b[2] - a[1]*b[3] + a[2]*b[0] + a[3]*b[1]
+	r4 = a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[0]
+	return [r1, r2, r3, r4]
 
-def loadMotionArmature (filename, startFrame): # TODO ! x y z ? rotations according to parent frame
-	armature = bpy.data.objects["Armature"] # WARNING: armature name hardcoded to "Armature"
+def loadMotionArmature (filename, startFrame):
 	print ("loadMotionArmature")
+	armature = bpy.data.objects["Armature"] # WARNING: armature name has to be hardcoded to "Armature"
+	offsetArmatureQuarternion = [armature.rotation_quaternion[0],armature.rotation_quaternion[1],armature.rotation_quaternion[2],armature.rotation_quaternion[3]]
 	totalLineNumber = file_len(filename)
-	print ("totalLineNumber= " + str(totalLineNumber))
-	fromRadianToDegree = 180 / pi
+	totalFrameNumber = 0
+	#print ("totalLineNumber= " + str(totalLineNumber))
 	with open (filename) as f:
-		lineNB = 0
-		totalFrameNumber = 0
-		lines=f.readlines()
-		nbInnerJoints = int (lines[0]) #map (int, lines [0])
-		print ("nbInnerJoints= " + str(nbInnerJoints))
+		lines=f.readlines() # lines [0] = nbInnerJoints ; lines [1] = freeflyerName
+		nbInnerJoints = int (lines[0])
+		#print ("nbInnerJoints= " + str(nbInnerJoints))
+		freeflyerName = lines[1].strip ('\n')
+		print ("freeflyerName= " + freeflyerName+'\n') # TEST
+		freeflyerBone = armature.pose.bones[freeflyerName] # not used for now
+		lineNB = 1
 		while (lineNB + 1 < totalLineNumber):
 			lineNB = lineNB + 1
 			line = lines [lineNB] # frame number line
@@ -236,10 +246,11 @@ def loadMotionArmature (filename, startFrame): # TODO ! x y z ? rotations accord
 				lineNB = lineNB + 1
 				line = lines [lineNB]
 				st = line.strip ('\n').split (',')
-				freeflyerPosRot = list(map (float, st)) # map not subscriptable in Python 3
-				#print ("freeflyerPosRot= " + str(freeflyerPosRot)+'\n')
+				freeflyerPosRot = list(map (float, st))
+				#freeflyerBone = armature.pose.bones[freeflyerName] # not used for now
 				armature.location = freeflyerPosRot[0:3]
-				armature.rotation_quaternion = freeflyerPosRot[3:7]
+				quatProd = quaternionListProduct (freeflyerPosRot[3:7],offsetArmatureQuarternion)
+				armature.rotation_quaternion = quatProd
 				armature.keyframe_insert (data_path="location", frame=frameId+startFrame)
 				armature.keyframe_insert (data_path="rotation_quaternion", frame=frameId+startFrame)
 				lineNB = lineNB + 1
@@ -248,15 +259,13 @@ def loadMotionArmature (filename, startFrame): # TODO ! x y z ? rotations accord
 					line = lines[lineNB + i] # joint line
 					st = line.strip ('\n').split (' ')
 					jointName = st [0]
-					if jointName[0:2] == 'A_':
-						jointName = jointName[2:len(jointName)]
 					jointConfigStr = st [1]
-					jointConfig = float (jointConfigStr) #* fromRadianToDegree # map not subscriptable in Python 3
-					print ("jointConfig= " + str(jointConfig))
+					jointConfig = float (jointConfigStr)
+					#print ("jointConfig= " + str(jointConfig))
 					shortJointName = jointName[0:len(jointName)-3] # remove "_rx" or "_ry" or "_rz...
-					print ('shortJointName= ' + shortJointName)
+					#print ('shortJointName= ' + shortJointName)
 					jointRotationName = jointName[len(jointName)-1:len(jointName)] # "x" or "y" or "z"
-					print ('jointRotationName= ' + jointRotationName)
+					#print ('jointRotationName= ' + jointRotationName)
 					
 					if (shortJointName == lastShortJointName): # still same Joint but other rotation, continue to fill config
 						fullJointConfig = lastFullJointConfig
@@ -266,16 +275,16 @@ def loadMotionArmature (filename, startFrame): # TODO ! x y z ? rotations accord
 							fullJointConfig [0] = -jointConfig
 						if (jointRotationName == "z"):
 							fullJointConfig [2] = jointConfig
-						print ("same joint = " + shortJointName)
-						print ("same joint fullJointConfig= " + str(fullJointConfig))
+						#print ("same joint = " + shortJointName)
+						#print ("same joint fullJointConfig= " + str(fullJointConfig))
 					else: # new joint, add previous before erase, then fill new joint full config
-						print ("currentBone name= " + lastShortJointName)
+						#print ("currentBone name= " + lastShortJointName)
 						if (lastShortJointName != ''):
 							currentBone = armature.pose.bones[lastShortJointName]
-							currentBone.rotation_mode = 'XYZ'
+							currentBone.rotation_mode = 'ZYX'
 							currentBone.rotation_euler = lastFullJointConfig
-							print ("lastShortJointName= " + lastShortJointName)
-							print ("rotation euler= " + str(currentBone.rotation_euler))
+							#print ("lastShortJointName= " + lastShortJointName)
+							#print ("rotation euler= " + str(currentBone.rotation_euler))
 							bpy.ops.object.mode_set(mode='OBJECT')
 							currentBone.keyframe_insert (data_path="rotation_euler", frame=frameId+startFrame)
 						fullJointConfig= 3*[0] # zero by default
@@ -285,8 +294,8 @@ def loadMotionArmature (filename, startFrame): # TODO ! x y z ? rotations accord
 							fullJointConfig [0] = -jointConfig
 						if (jointRotationName == "z"):
 							fullJointConfig [2] = jointConfig
-						print ("new joint = " + shortJointName)
-						print ("new joint fullJointConfig= " + str(fullJointConfig))
+						#print ("new joint = " + shortJointName)
+						#print ("new joint fullJointConfig= " + str(fullJointConfig))
 					lastShortJointName = shortJointName
 					lastFullJointConfig = fullJointConfig
 		

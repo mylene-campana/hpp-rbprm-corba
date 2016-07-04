@@ -95,8 +95,8 @@ def plotFrame (r, frameGroupName, framePosition, ampl):
 def plotConeWaypoints (ps, nPath, r, coneGroupName, coneURDFname, skip=1):
     wp = ps.getWaypoints (nPath)
     r.client.gui.createGroup (coneGroupName)
-    for i in np.arange(1, len(wp)-1, 1): # avoid (re-)plot start and goal
-        index = int(i/4)
+    for i in np.arange(1, len(wp)-1, skip): # avoid (re-)plot start and goal
+        index = int(i)
         coneName = coneGroupName+'_'+"cone_"+str(index)
         plotCone (wp[index], ps, r, coneName, coneURDFname)
         r.client.gui.addToGroup (coneName, coneGroupName) # visually not needed, but names for Blender ?
@@ -477,6 +477,7 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
     iFrame = 0 # int
     jointNames = robot.getJointNames ()
     rootJointName = robot.getAllJointNames() [3] # virtualPelvis or virtualTorso or virtualThorax
+    rootJointNameBlender = rootJointName[7:len(rootJointName)] # remove "virtual"
     nbInnerJoints = len(jointNames) - 2
     f = open(fileName,'a')   # 
     print (str(nbInnerJoints))
@@ -487,12 +488,15 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
         q = ps.configAtParam (pathId, t)
         ps.robot.setCurrentConfig(q)
         rootPosRot = robot.getLinkPosition(rootJointName)
-        print (str(rootPosRot).strip('[]'))
-        f.write (str(rootPosRot).strip('[]') + "\n")
+        print (rootJointNameBlender + ',' + str(rootPosRot).strip('[]'))
+        f.write (rootJointNameBlender+ ',' + str(rootPosRot).strip('[]') + "\n")
         for jointName in jointNames:
             if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
+                jointNameBlender = jointName
+                if jointName[0:2] == 'A_':
+                    jointNameBlender = jointName[2:len(jointName)]
                 qJoint = q [robot.rankInConfiguration [jointName]]
-                f.write (jointName + " " + str(qJoint) + "\n")
+                f.write (jointNameBlender + " " + str(qJoint) + "\n")
         iFrame = iFrame + 1
     
     f.write ("Frame " + str(iFrame) + "\n")

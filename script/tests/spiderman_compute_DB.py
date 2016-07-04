@@ -28,6 +28,22 @@ fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName
 fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 
 
+
+q_jump= fullBody.getCurrentConfig()
+q_jump = [0, 0, 0, 1, 0,0, 0, 0, 0, 0.2,
+ 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5,
+ 0.7, 0, -0.6, 0.0, 0.0, -0.2, 0.3, -1.9, 1.9,-0.6, 0, -0.2, 0.3,
+ -1.9, 1.9, -0.6, 0] #; rr(q_jump)
+
+q_feet = q_jump[27:32]
+q_arm = q_jump[13:19]
+
+
+fullBody.addRefConfigAnalysisWeight(q_feet,"RefPoseFeet",[1.,1.,1.,5.,1.,1.])
+fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
+
+
+
 #~ AFTER loading obstacles
 nbSamples = 20000
 cType = "_3_DOF"
@@ -47,24 +63,52 @@ lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
-print("Limbs added to fullbody")
 
+print("Legs added to fullbody")
 
+rarmId = 'rhand'
+rLeg = 'RHumerus_ry'
+rfoot = 'SpidermanRHandSphere'
+rarmx = x; rarmy = y
+fullBody.addLimb(rarmId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
+larmId = 'lhand'
+lLeg = 'LHumerus_ry'
+lfoot = 'SpidermanLHandSphere'
+larmx = x; larmy = y
+fullBody.addLimb(larmId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
-def runall(lid, dbName):
+print("Arms added to fullbody")
+
+def runallLeg(lid, dbName):
 
 	fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
 	fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
 	fullBody.runLimbSampleAnalysis(lid, "jointLimitsDistance", False)
 	fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
 	fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
-	fullBody.runLimbSampleAnalysis(lid, "manipulability", True)
+	fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
+	fullBody.runLimbSampleAnalysis(lid, "RefPoseFeet", True)
 	fullBody.saveLimbDatabase(lid, dbName)
 
-runall(lLegId, './Spiderman_lleg.db')
-runall(rLegId, './Spiderman_rleg.db')
+def runallArm(lid, dbName):
 
+	fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
+	fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
+	fullBody.runLimbSampleAnalysis(lid, "jointLimitsDistance", False)
+	fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
+	fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
+	fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
+	fullBody.runLimbSampleAnalysis(lid, "RefPoseArm", True)
+	fullBody.saveLimbDatabase(lid, dbName)
+
+
+
+
+runallLeg(lLegId, './Spiderman_lleg.db')
+runallLeg(rLegId, './Spiderman_rleg.db')
+runallArm(larmId, './Spiderman_larm.db')
+runallArm(rarmId, './Spiderman_rarm.db')
 
 
 

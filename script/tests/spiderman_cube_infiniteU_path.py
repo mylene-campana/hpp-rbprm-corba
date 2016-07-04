@@ -19,20 +19,21 @@ rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 urdfName = 'spiderman_trunk'
-urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere']
+urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere','SpidermanLHandSphere','SpidermanRHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-#rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 1, 170])
-rbprmBuilder.setJointBounds ("base_joint_xyz", [30, 160, 80,310, 40, 80])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [-10, 10, -5, 15, 0, 20])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
-rbprmBuilder.setNormalFilter('SpidermanLFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('SpidermanRFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('SpidermanLFootSphere', [0,0,1], -1)
+rbprmBuilder.setNormalFilter('SpidermanRFootSphere', [0,0,1], -1)
+rbprmBuilder.setNormalFilter('SpidermanLHandSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('SpidermanRHandSphere', [0,0,1], filterRange)
 rbprmBuilder.setContactSize (0.03,0.08)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
@@ -40,9 +41,9 @@ rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.1
 ps = ProblemSolver (rbprmBuilder)
 ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(25)#(8)
-rbprmBuilder.setMaxLandingVelocity(25)
+rbprmBuilder.setFrictionCoef(10000)
+rbprmBuilder.setMaxTakeoffVelocity(12)#(8)
+rbprmBuilder.setMaxLandingVelocity(15)
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 ps.client.problem.selectSteeringMethod("SteeringParabola")
 
@@ -52,38 +53,73 @@ r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
-r.loadObstacleModel ("iai_maps", "town", "town")
+r.loadObstacleModel ("hpp-rbprm-corba", "cubeWorld", "cubeWorld")
+r.addLandmark(r.sceneName,2)
+r.addLandmark("spiderman_trunk/base_link",1)
 addLight (r, [-3,0,8,1,0,0,0], "li");
-
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
-q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal 
-#q11[0:3] = [15, 125, 49]; r(q11) # mid right roof 
-q11[0:3] = [15, -60, 25.9]; r(q11) # mid-top right roof
+q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
+
+q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
+#q11[0:7] = [-2.7,0,4.4, 0.9537, 0, 0.3, 0]; r(q11) # cube
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-q22[0:3] = [150, 89, 24.1]; r(q22) # top left roof
 
+#q22[0:7] =  [-7.2,0,2.6, 1, 0, 0, 0]; r(q22) # back plateform
+q22[0:7] =  [-2.8,8,0.8, 1, 0, 0, 0]; r(q22) # side plateform
+#q22[0:7] =   [5,0,3.8,  0.9537, 0, 0.3, 0]; r(q22) # front plateform
 rbprmBuilder.isConfigValid(q22)
 
 
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
-r.solveAndDisplay("rm",1,1)
+## manually add way point (faster computation for test, work without but it's slow (~ <1minute )
+
+q_cube = q11[::]
+
+q_cube[0:7] =  [-2.7,0,4.4, 0.9537, 0, 0.3, 0]
+
+waypoints = [q_cube]
+pbCl = rbprmBuilder.client.basic.problem
+pbCl.prepareSolveStepByStep()
+q11 = ps.node(0) # retrieve updated contact normal 
+q22 = ps.node(1)
+pbCl.addConfigToRoadmap (waypoints[0])
+ps.directPath (q11, waypoints[0],False)
+pathIds0 = ps.numberPaths () - 1
+ps.directPath (waypoints[0], q22,False)
+pathId2g = ps.numberPaths () - 1
+pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
+pbCl.addEdgeToRoadmap (waypoints[0], q22, pathId2g, True)
+##########
+
+t = ps.solve ()
 
 
-#t = ps.solve ()
+q11 = ps.node(0) # retrieve updated contact normal 
+q22 = ps.node(1)
+plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); 
+plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
+qCone = [-2.7, 0.0, 4.4, 0.9537, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0,
+ 0.0, 0.0, -0.8689669946343358, -0.00045459419059697023,0.4948698370079671, 0.0]
+
+plotCone (qCone, ps, r, "cone_Mid", "friction_cone_SG2")
 
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
 
+##############################
+
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
+r(pp.client.problem.configAtParam(orientedpathId,0))
+
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
@@ -142,11 +178,16 @@ gui.getNodeList()
 ps.numberNodes()
 
 pathSamples = plotSampleSubPath (cl, r, pathId, 70, "path0", [0,0,1,1])
-plotCone (q1, cl, r, "cone_first", "friction_cone_SG2"); plotCone (q2, cl, r, "cone_second", "friction_cone_SG2")
-plotConeWaypoints (cl, pathId, r, "cone_wp_group", "friction_cone_WP2")
+
+q11 = ps.node(0) # retrieve updated contact normal 
+q22 = ps.node(1)
+plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
+plotCone (ps.node(2), ps, r, "cone_2", "friction_cone_SG2")
+plotCone (ps.node(3), ps, r, "cone_3", "friction_cone_SG2")
+plotConeWaypoints (ps, pathId, r, "cone_wp_group", "friction_cone_WP2")
 
 # Plot cones and edges in viewer
-plotConesRoadmap (cl, r, 'cone_rm_group', "friction_cone2")
+plotConesRoadmap (ps, r, 'cone_rm_group', "friction_coneSG2")
 plotEdgesRoadmap (cl, r, 'edgeGroup', 70, [0,1,0.2,1])
 
 gui = r.client.gui
@@ -206,17 +247,12 @@ ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 
 
 """ #### display
-gui.removeFromGroup("rm",r.sceneName)
 id = r.client.gui.getWindowID("window_hpp_")
 r.client.gui.attachCameraToNode("spiderman_trunk/base_link",id)
 
-pp.setSpeed(10)
-r(pp.client.problem.configAtParam(orientedpathId,0))
-pp(orientedpathId)
-
-
 
 ps.clearRoadmap()
+gui.removeFromGroup("path_1_root",r.sceneName)
 ps.solve()
 
 solutionPathId = ps.numberPaths () - 1

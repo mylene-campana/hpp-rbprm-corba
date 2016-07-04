@@ -324,8 +324,8 @@ class Builder (object):
     def getsubPathsV0Vimp (self, Vquery, pathId):
         return self.client.rbprm.rbprm.getsubPathsV0Vimp (Vquery, pathId)
 
-    def rotateAlongPath (self, pathId):
-        return self.client.rbprm.rbprm.rotateAlongPath (pathId, False)
+    def rotateAlongPath (self, pathId,trunkOrientation = False):
+        return self.client.rbprm.rbprm.rotateAlongPath (pathId, False, trunkOrientation)
 
     def computeConfigGIWC (self, config, contactLength, contactWidth):
         return self.client.rbprm.rbprm.computeConfigGIWC (config, contactLength, contactWidth)

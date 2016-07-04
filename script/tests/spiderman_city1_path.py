@@ -19,7 +19,7 @@ rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 urdfName = 'spiderman_trunk'
-urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere']
+urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere','SpidermanLHandSphere','SpidermanRHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
@@ -33,6 +33,8 @@ rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
 rbprmBuilder.setNormalFilter('SpidermanLFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('SpidermanRFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('SpidermanLHandSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('SpidermanRHandSphere', [0,0,1], filterRange)
 rbprmBuilder.setContactSize (0.03,0.08)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
@@ -63,7 +65,7 @@ q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 #q11[0:7] = [-100,45,0.4, 1, 0, 0, 0]; r(q11) # on floor
 #q11[0:7] = [-105,20,29.4, 1, 0, 0, 0]; r(q11) # roof of house
 #q11[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q11) # floor, right side
-q11[0:7] = [-11.6,38.5,121.2, 1, 0, 0, 0]; r(q11) # highest tower
+q11[0:7] = [-11.8,38.2,121.2, 1, 0, 0, 0]; r(q11) # highest tower
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -72,7 +74,7 @@ q22 = q11[::]
 #q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
 q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
 #q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
-#q22[0:7] = [90,40,20.3, 1, 0, 0, 0]; r(q22) #right house
+#q22[0:7] = [90,40,20.5, 1, 0, 0, 0]; r(q22) #right house
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -157,7 +159,7 @@ solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
 
-rbprmBuilder.rotateAlongPath (solutionPathId)
+rbprmBuilder.rotateAlongPath (solutionPathId,True)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 r(pp.client.problem.configAtParam(orientedpathId,0))
@@ -298,6 +300,11 @@ rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1
 r(pp.client.problem.configAtParam(orientedpathId,0))
 pp(orientedpathId)
+
+q11 = ps.node(0)
+q22 = ps.node(1)
+plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); 
+plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
 """
 
 

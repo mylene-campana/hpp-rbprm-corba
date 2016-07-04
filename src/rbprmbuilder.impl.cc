@@ -373,10 +373,29 @@ namespace hpp {
             model::Configuration_t config = dofArrayToConfig (fullBody_->device_, configuration);
             rbprm::State state = rbprm::ComputeContacts(fullBody_,config,
                                             problemSolver_->collisionObstacles(), dir);
+            core::Configuration_t q = state.configuration_;
+	    std::queue<std::string> contactStack = state.contactOrder_;
+	    fcl::Vec3f normalAv = (0,0,0);
+	    while(!contactStack.empty())
+	      {
+		const std::string name = contactStack.front();
+		contactStack.pop();
+		const fcl::Vec3f& normal = state.contactNormals_.at(name);
+		for (std::size_t j = 0; j < 3; j++)
+		  normalAv [j] += normal [j]/contactStack.size ();
+	      }
+	    normalAv.normalize ();
+	    hppDout (info, "normed normalAv= " << normalAv);
+	    // If robot has ECS, fill new average-normal in it
+	    if (fullBody_->device_->extraConfigSpace ().dimension () > 3) {
+	      const std::size_t indexECS = fullBody_->device_->configSize () - fullBody_->device_->extraConfigSpace ().dimension ();
+	      for (std::size_t i = 0; i < 3; i++)
+		q [indexECS + i] = normalAv [i];
+	    }
             hpp::floatSeq* dofArray = new hpp::floatSeq();
-            dofArray->length(_CORBA_ULong(state.configuration_.rows()));
-            for(std::size_t i=0; i< _CORBA_ULong(config.rows()); i++)
-              (*dofArray)[(_CORBA_ULong)i] = state.configuration_ [i];
+            dofArray->length(_CORBA_ULong(q.rows()));
+            for(std::size_t i=0; i< _CORBA_ULong(q.rows()); i++)
+              (*dofArray)[(_CORBA_ULong)i] = q [i];
             return dofArray;
         } catch (const std::exception& exc) {
         throw hpp::Error (exc.what ());
@@ -1348,7 +1367,7 @@ namespace hpp {
 
 	  // update theta values
 	  value_type theta_i;
-      value_type alpha_i;
+	  value_type alpha_i;
 	  for (std::size_t i = 0; i < waypoints.size () - 1; i++) {
 	    // theta_(i,i+1)
 	    theta_i = atan2 (waypoints [i+1][1]-waypoints [i][1],

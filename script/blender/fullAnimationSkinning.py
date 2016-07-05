@@ -220,7 +220,7 @@ def quaternionListProduct (a, b): # from https://en.wikipedia.org/wiki/Quaternio
 	r4 = a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[0]
 	return [r1, r2, r3, r4]
 
-def loadMotionArmature (filename, startFrame):
+def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 	print ("loadMotionArmature")
 	armature = bpy.data.objects["Armature"] # WARNING: armature name has to be hardcoded to "Armature"
 	offsetArmatureQuarternion = [armature.rotation_quaternion[0],armature.rotation_quaternion[1],armature.rotation_quaternion[2],armature.rotation_quaternion[3]]
@@ -233,7 +233,7 @@ def loadMotionArmature (filename, startFrame):
 		#print ("nbInnerJoints= " + str(nbInnerJoints))
 		freeflyerName = lines[1].strip ('\n')
 		print ("freeflyerName= " + freeflyerName+'\n') # TEST
-		freeflyerBone = armature.pose.bones[freeflyerName] # not used for now
+		#freeflyerBone = armature.pose.bones[freeflyerName] # not used for now
 		lineNB = 1
 		while (lineNB + 1 < totalLineNumber):
 			lineNB = lineNB + 1
@@ -249,6 +249,7 @@ def loadMotionArmature (filename, startFrame):
 				freeflyerPosRot = list(map (float, st))
 				#freeflyerBone = armature.pose.bones[freeflyerName] # not used for now
 				armature.location = freeflyerPosRot[0:3]
+				#print ("freeflyerPosRot= " + str(freeflyerPosRot))
 				quatProd = quaternionListProduct (freeflyerPosRot[3:7],offsetArmatureQuarternion)
 				armature.rotation_quaternion = quatProd
 				armature.keyframe_insert (data_path="location", frame=frameId+startFrame)
@@ -269,31 +270,47 @@ def loadMotionArmature (filename, startFrame):
 					
 					if (shortJointName == lastShortJointName): # still same Joint but other rotation, continue to fill config
 						fullJointConfig = lastFullJointConfig
-						if (jointRotationName == "x"): # x HPP -> y Blender
-							fullJointConfig [1] = jointConfig
-						if (jointRotationName == "y"): # y HPP -> -x Blender
-							fullJointConfig [0] = -jointConfig
-						if (jointRotationName == "z"):
-							fullJointConfig [2] = jointConfig
+						if (reOrientFrames):
+							if (jointRotationName == "x"): # x HPP -> y Blender
+								fullJointConfig [1] = jointConfig
+							if (jointRotationName == "y"): # y HPP -> -x Blender
+								fullJointConfig [0] = -jointConfig
+							if (jointRotationName == "z"):
+								fullJointConfig [2] = jointConfig
+						else:
+							if (jointRotationName == "x"):
+								fullJointConfig [0] = jointConfig
+							if (jointRotationName == "y"):
+								fullJointConfig [1] = jointConfig
+							if (jointRotationName == "z"):
+								fullJointConfig [2] = jointConfig
 						#print ("same joint = " + shortJointName)
 						#print ("same joint fullJointConfig= " + str(fullJointConfig))
 					else: # new joint, add previous before erase, then fill new joint full config
 						#print ("currentBone name= " + lastShortJointName)
 						if (lastShortJointName != ''):
 							currentBone = armature.pose.bones[lastShortJointName]
-							currentBone.rotation_mode = 'ZYX'
+							#currentBone.rotation_mode = rotationOrder # not so important ?
 							currentBone.rotation_euler = lastFullJointConfig
 							#print ("lastShortJointName= " + lastShortJointName)
 							#print ("rotation euler= " + str(currentBone.rotation_euler))
 							bpy.ops.object.mode_set(mode='OBJECT')
 							currentBone.keyframe_insert (data_path="rotation_euler", frame=frameId+startFrame)
 						fullJointConfig= 3*[0] # zero by default
-						if (jointRotationName == "x"): # x HPP -> y Blender
-							fullJointConfig [1] = jointConfig
-						if (jointRotationName == "y"): # y HPP -> -x Blender
-							fullJointConfig [0] = -jointConfig
-						if (jointRotationName == "z"):
-							fullJointConfig [2] = jointConfig
+						if (reOrientFrames):
+							if (jointRotationName == "x"): # x HPP -> y Blender
+								fullJointConfig [1] = jointConfig
+							if (jointRotationName == "y"): # y HPP -> -x Blender
+								fullJointConfig [0] = -jointConfig
+							if (jointRotationName == "z"):
+								fullJointConfig [2] = jointConfig
+						else:
+							if (jointRotationName == "x"):
+								fullJointConfig [0] = jointConfig
+							if (jointRotationName == "y"):
+								fullJointConfig [1] = jointConfig
+							if (jointRotationName == "z"):
+								fullJointConfig [2] = jointConfig
 						#print ("new joint = " + shortJointName)
 						#print ("new joint fullJointConfig= " + str(fullJointConfig))
 					lastShortJointName = shortJointName
@@ -458,14 +475,22 @@ def main ():
 def mainTest ():
 	# Parameters that do not change from one problem to another
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
-	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' 
-	#jointConfigsFileName = daeFilePath + 'jointConfigs.txt' # SPIDERMAN
-	jointConfigsFileName = daeFilePath + 'ant_jointConfigs.txt' # ANT
+	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
+	scriptFilePath = '/local/mcampana/devel/hpp/src/hpp-rbprm-corba/script/tests/'
+	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
+	pathName = 'path'
 	initFrame = 0
 	beginMotionFrame = 0
 	print ("--------  load motion armature  --------")
-	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame) # for inner joints
+	#fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZYX' # ANT
+	fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # FROG
+	#fileName = 'spid_jointConfigs.txt'; reOrientFrames = False; rotationOrder = '' # SPIDERMAN
+	jointConfigsFileName = daeFilePath + fileName
+	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for inner joints
 	print ("endMotionFrame joints= " + str(endMotionFrame))
+	pathFileName = scriptFilePath + 'path.txt'
+	#pathPoints = parsePathPoints (pathFileName)
+	#plotPath (pathPoints, pathName, matPath)
 
 #---------------------------------------------------------------------------#
 #main  ()

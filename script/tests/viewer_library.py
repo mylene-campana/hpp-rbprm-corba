@@ -479,17 +479,19 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
     rootJointName = robot.getAllJointNames() [3] # virtualPelvis or virtualTorso or virtualThorax
     rootJointNameBlender = rootJointName[7:len(rootJointName)] # remove "virtual"
     nbInnerJoints = len(jointNames) - 2
-    f = open(fileName,'a')   # 
+    f = open(fileName,'a')
     print (str(nbInnerJoints))
     f.write(str(nbInnerJoints) + "\n")
+    print (rootJointNameBlender)
+    f.write (rootJointNameBlender + "\n")
     for t in FrameRange:
         print ("Frame " + str(iFrame))
         f.write ("Frame " + str(iFrame) + "\n")
         q = ps.configAtParam (pathId, t)
         ps.robot.setCurrentConfig(q)
         rootPosRot = robot.getLinkPosition(rootJointName)
-        print (rootJointNameBlender + ',' + str(rootPosRot).strip('[]'))
-        f.write (rootJointNameBlender+ ',' + str(rootPosRot).strip('[]') + "\n")
+        print (str(rootPosRot).strip('[]'))
+        f.write (str(rootPosRot).strip('[]') + "\n")
         for jointName in jointNames:
             if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
                 jointNameBlender = jointName
@@ -508,6 +510,7 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
         if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
             qJoint = q [robot.rankInConfiguration [jointName]]
             f.write (jointName + " " + str(qJoint) + "\n")
+
 
 # --------------------------------------------------------------------#
 

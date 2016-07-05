@@ -27,7 +27,13 @@ r = Viewer (ps)
 q_0 = fullBody.getCurrentConfig (); r(q_0)
 
 # Verify that normals will be correct
-#cl = fullBody.client.basic
+cl = fullBody.client.basic
+plotJointFrame (r, cl, q_0, "RHumerus_ry", 0.4)
+plotJointFrame (r, cl, q_0, "RForearm_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RHand_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LHumerus_ry", 0.4)
+plotJointFrame (r, cl, q_0, "LForearm_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LHand_rx", 0.4)
 #plotJointFrame (r, cl, q_0, "SpidermanRFootSphere", 0.15); plotJointFrame (r, cl, q_0, "SpidermanLFootSphere", 0.15)
 #plotJointFrame (r, cl, q_0, "SpidermanRHandSphere", 0.15); plotJointFrame (r, cl, q_0, "SpidermanLHandSphere", 0.15)
 

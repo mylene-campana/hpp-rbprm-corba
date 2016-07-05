@@ -72,9 +72,9 @@ rbprmBuilder.isConfigValid(q11)
 q22 = q11[::]
 #q22[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q22) # floor, right side
 #q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
-q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
+#q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
 #q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
-#q22[0:7] = [90,40,20.5, 1, 0, 0, 0]; r(q22) #right house
+q22[0:7] = [90,40,20.49, 1, 0, 0, 0]; r(q22) #right house
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -153,6 +153,7 @@ pbCl.addEdgeToRoadmap (waypoints[2], q22, pathId2g, True)
 ##########
 """
 
+ps.client.problem.setRandomSeed(348)
 t = ps.solve ()
 
 solutionPathId = ps.numberPaths () - 1
@@ -287,7 +288,7 @@ ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 
 """ #### display
 id = r.client.gui.getWindowID("window_hpp_")
-r.client.gui.attachCameraToNode("spiderman_trunk/base_link",id)
+r.client.gui.attachCameraToNode("spiderman/Thorax",id)
 
 
 ps.clearRoadmap()

@@ -126,10 +126,27 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[rLegId,lLegId])
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0] # = q_0 + 'RAnkle_J1'=0.6 + 'LAnkle_J1'=0.6
+extending = [0,0,0,
+ 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
+ 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
+ -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
 flexion = q_0
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
+
+
+"""
+qe = extending[::]
+qe[0:7] = [-2.025129887082707,
+40.59097542330351,
+128.97577375406138,
+ 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
+ 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
+ -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
+
+rr(qe)
+"""
+
 
 
 print("Start ballistic-interpolation")
@@ -140,6 +157,8 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.1
 pathId = psf.numberPaths () -1
 rr(pp.client.problem.configAtParam(pathId,0))
+
+
 
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )

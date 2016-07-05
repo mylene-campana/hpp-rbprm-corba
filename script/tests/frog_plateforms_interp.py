@@ -94,11 +94,8 @@ pp.speed=0.4
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)
 
-pathSamples = plotSampleSubPath (psf, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
-writePathSamples (pathSamples, 'path.txt')
-pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0.02)
 
-"""
+
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
@@ -106,14 +103,14 @@ pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2",4)
-pathSamples = plotSampleSubPath (psf, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
+pathSamples = plotSampleSubPath (psf, rr, pathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'path.txt')
 pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0.02)
-"""
+
 
 
 """
@@ -136,7 +133,7 @@ ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
 """
-"""
+
 # flexion
 q = q_0; q[2] = 0.5
 q [fullBody.rankInConfiguration ['LThigh_rx']] = -0.3; rr(q)
@@ -226,4 +223,4 @@ q [fullBody.rankInConfiguration ['RHand_ry']] = 0.3; rr(q)
 q [fullBody.rankInConfiguration ['RHand_rz']] = -0.1; rr(q)
 
 fullBody.isConfigValid(q)
-"""
+

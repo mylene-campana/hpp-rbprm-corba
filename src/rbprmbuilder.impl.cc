@@ -375,14 +375,16 @@ namespace hpp {
                                             problemSolver_->collisionObstacles(), dir);
             core::Configuration_t q = state.configuration_;
 	    std::queue<std::string> contactStack = state.contactOrder_;
+	    const std::size_t contactNumber = contactStack.size ();
 	    fcl::Vec3f normalAv = (0,0,0);
 	    while(!contactStack.empty())
 	      {
 		const std::string name = contactStack.front();
 		contactStack.pop();
 		const fcl::Vec3f& normal = state.contactNormals_.at(name);
-		for (std::size_t j = 0; j < 3; j++)
-		  normalAv [j] += normal [j]/contactStack.size ();
+		for (std::size_t j = 0; j < 3; j++) {
+		  normalAv [j] += normal [j]/contactNumber;
+		}
 	      }
 	    normalAv.normalize ();
 	    hppDout (info, "normed normalAv= " << normalAv);

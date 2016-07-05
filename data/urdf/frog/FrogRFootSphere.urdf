@@ -42,21 +42,21 @@
       <child link="Head_rx"/>
       <origin rpy="0 0 0" xyz="0.0296 0.0000897 0.0205"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    <joint name="Head_ry" type="revolute">
       <parent link="Head_rx"/>
       <child link="Head_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    <joint name="Head_rz" type="revolute">
       <parent link="Head_ry"/>
       <child link="Head"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
 </robot>
 

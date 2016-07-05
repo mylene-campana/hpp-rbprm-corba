@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.70.0 commit date:2014-03-19, commit time:05:02, hash:19e627c</authoring_tool>
     </contributor>
-    <created>2016-06-27T18:15:41</created>
-    <modified>2016-06-27T18:15:41</modified>
+    <created>2016-07-04T21:14:03</created>
+    <modified>2016-07-04T21:14:03</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -82,6 +82,32 @@
   </library_lights>
   <library_images/>
   <library_effects>
+    <effect id="Material-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.8 0 0 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
     <effect id="innerMouth-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -217,6 +243,9 @@
     </effect>
   </library_effects>
   <library_materials>
+    <material id="Material-material" name="Material">
+      <instance_effect url="#Material-effect"/>
+    </material>
     <material id="innerMouth-material" name="innerMouth">
       <instance_effect url="#innerMouth-effect"/>
     </material>
@@ -234,6 +263,39 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Cube-mesh" name="Cube">
+      <mesh>
+        <source id="Cube-mesh-positions">
+          <float_array id="Cube-mesh-positions-array" count="24">-1.363595 -1.035506 -0.9948506 -1.363595 0.9644945 -0.9948506 0.636405 0.9644945 -0.9948506 0.636405 -1.035506 -0.9948506 -1.363595 -1.035506 1.005149 -1.363595 0.9644945 1.005149 0.636405 0.9644945 1.005149 0.636405 -1.035506 1.005149</float_array>
+          <technique_common>
+            <accessor source="#Cube-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube-mesh-normals">
+          <float_array id="Cube-mesh-normals-array" count="36">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1 -1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube-mesh-normals-array" count="12" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube-mesh-vertices">
+          <input semantic="POSITION" source="#Cube-mesh-positions"/>
+        </vertices>
+        <polylist material="Material-material" count="12">
+          <input semantic="VERTEX" source="#Cube-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>4 0 5 0 1 0 5 1 6 1 2 1 6 2 7 2 3 2 7 3 4 3 0 3 0 4 1 4 2 4 7 5 6 5 5 5 0 6 4 6 1 6 1 7 5 7 2 7 2 8 6 8 3 8 3 9 7 9 0 9 3 10 0 10 2 10 4 11 7 11 5 11</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="Figure_2_007-mesh" name="Figure_2.007">
       <mesh>
         <source id="Figure_2_007-mesh-positions">
@@ -347,6 +409,16 @@
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
+      <node id="Torso_box" name="Torso_box" type="NODE">
+        <matrix sid="transform">0.07020585 0 -0.001536984 0 0 0.06983225 0 0 0.001838725 0 0.05868485 0 0 0 0 1</matrix>
+        <instance_geometry url="#Cube-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material-material" target="#Material-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
       <node id="Torso" name="Torso" type="NODE">
         <matrix sid="transform">-1.50728e-7 -2.60336e-7 3.44825 0 3.44825 -1.13796e-14 1.50728e-7 0 0 3.44825 2.60336e-7 0 0 0 0 1</matrix>
         <instance_geometry url="#Figure_2_007-mesh">

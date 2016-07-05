@@ -428,21 +428,21 @@
       <child link="Head_rx"/>
       <origin rpy="0 0 0" xyz="0.0296 0.0000897 0.0205"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    <joint name="Head_ry" type="revolute">
       <parent link="Head_rx"/>
       <child link="Head_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    <joint name="Head_rz" type="revolute">
       <parent link="Head_ry"/>
       <child link="Head"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
    
    <!-- left side -->
@@ -465,7 +465,7 @@
       <child link="LThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.6" upper="0.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.3" upper="0.2" velocity="1.0"/>
    </joint>
   <joint name="LShank_rx" type="revolute">
       <parent link="LThigh"/>
@@ -479,14 +479,14 @@
       <child link="LShank_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.3" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="LShank_rz" type="revolute">
       <parent link="LShank_ry"/>
       <child link="LShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.8" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="1.1" velocity="1.0"/>
    </joint>
   <joint name="LFoot_rx" type="revolute">
       <parent link="LShank"/>
@@ -507,7 +507,7 @@
       <child link="LFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1.3" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="FrogLFootSphere" type="fixed">
       <parent link="LFoot"/>
@@ -562,7 +562,7 @@
       <child link="LHand_rx"/>
       <origin rpy="0 0 0" xyz="0.0314 -0.0127 -0.0189"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.45" upper="0.45" velocity="1.0"/>
    </joint>
    <joint name="LHand_ry" type="revolute">
       <parent link="LHand_rx"/>
@@ -604,7 +604,7 @@
       <child link="RThigh"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.2" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-0.2" upper="1.3" velocity="1.0"/>
    </joint>
   <joint name="RShank_rx" type="revolute">
       <parent link="RThigh"/>
@@ -618,14 +618,14 @@
       <child link="RShank_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.3" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="RShank_rz" type="revolute">
       <parent link="RShank_ry"/>
       <child link="RShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.5" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1.1" upper="0.8" velocity="1.0"/>
    </joint>
   <joint name="RFoot_rx" type="revolute">
       <parent link="RShank"/>
@@ -646,7 +646,7 @@
       <child link="RFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.8" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="1.3" velocity="1.0"/>
    </joint>
    <joint name="FrogRFootSphere" type="fixed">
       <parent link="RFoot"/>
@@ -701,7 +701,7 @@
       <child link="RHand_rx"/>
       <origin rpy="0 0 0" xyz="0.0318 0.0138 -0.0191"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.45" upper="0.45" velocity="1.0"/>
    </joint>
    <joint name="RHand_ry" type="revolute">
       <parent link="RHand_rx"/>

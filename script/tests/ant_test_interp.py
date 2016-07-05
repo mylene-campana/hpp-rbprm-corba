@@ -159,4 +159,6 @@ x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$
 avconv -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 avconv -i video.mp4 -vcodec mpeg4 -crf 24 untitled.mp4
+rm capture*.png
+rm video.mp4
 """

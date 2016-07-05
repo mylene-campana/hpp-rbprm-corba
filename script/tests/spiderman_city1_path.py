@@ -72,9 +72,9 @@ rbprmBuilder.isConfigValid(q11)
 q22 = q11[::]
 #q22[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q22) # floor, right side
 #q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
-#q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
+q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
 #q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
-q22[0:7] = [90,40,20.49, 1, 0, 0, 0]; r(q22) #right house
+#q22[0:7] = [90,40,20.49, 1, 0, 0, 0]; r(q22) #right house
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -153,14 +153,14 @@ pbCl.addEdgeToRoadmap (waypoints[2], q22, pathId2g, True)
 ##########
 """
 
-ps.client.problem.setRandomSeed(348)
+ps.client.problem.setRandomSeed(0)
 t = ps.solve ()
 
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
 
-rbprmBuilder.rotateAlongPath (solutionPathId,True)
+rbprmBuilder.rotateAlongPath (solutionPathId,False)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 r(pp.client.problem.configAtParam(orientedpathId,0))

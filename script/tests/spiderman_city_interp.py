@@ -133,7 +133,7 @@ fullBody.setPose (flexion, "flexion")
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(0, 0.03)
+fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)

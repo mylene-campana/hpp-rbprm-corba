@@ -46,7 +46,7 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_3_DOF"
+cType = "_6_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
@@ -56,13 +56,13 @@ rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0.02],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0.02],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 print("Legs added to fullbody")
 

@@ -69,7 +69,7 @@ ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(8)#(8)
+rbprmBuilder.setMaxTakeoffVelocity(5)#(8)
 rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)

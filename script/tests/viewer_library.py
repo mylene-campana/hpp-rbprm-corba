@@ -575,7 +575,7 @@ def writeSkipList (ps, fileName):
 # dt: time step
 #q = [0, 0, 0, 1, 0,0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, -0.2, 0.3, -1.9, 1.9,-0.6, 0, -0.2, 0.3, -1.9, 1.9, -0.6, 0]
 #pathJointConfigsToFile (ps, r, "spiderman_jointConfigs.txt", q)
-def pathJointConfigsToFile (ps, r, fileName, config):
+def jointConfigsToFile (ps, r, fileName, config):
     robot = ps.robot
     pathToFile = '/local/mcampana/devel/hpp/videos/' # WARNING!
     gui = r.client.gui

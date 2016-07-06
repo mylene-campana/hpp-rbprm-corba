@@ -290,7 +290,7 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 						#print ("currentBone name= " + lastShortJointName)
 						if (lastShortJointName != ''):
 							currentBone = armature.pose.bones[lastShortJointName]
-							#currentBone.rotation_mode = rotationOrder # not so important ?
+							currentBone.rotation_mode = rotationOrder # not so important ?
 							currentBone.rotation_euler = lastFullJointConfig
 							#print ("lastShortJointName= " + lastShortJointName)
 							#print ("rotation euler= " + str(currentBone.rotation_euler))
@@ -377,7 +377,6 @@ def main ():
 	yamlFileName = viewerFilePath + 'frames.yaml'
 	scriptFilePath = '/local/mcampana/devel/hpp/src/hpp-rbprm-corba/script/tests/'
 	edgeRMFilename = scriptFilePath + 'edges.txt'
-	pathFileName = scriptFilePath + 'path.txt'
 	indexesFileName = scriptFilePath + 'indexes.txt'
 	jointConfigsFileName = scriptFilePath + 'jointConfigs.txt'
 	edgeNamePrefix = 'edge'; coneNamePrefix = 'Cone_'; coneWpNamePrefix = 'Cone_WP_'; pathName = 'path'
@@ -391,6 +390,10 @@ def main ():
 	cameraFollowPose = [-2.80,0.782,0.683,82.7,0,254]
 	#robotName = 'skeleton/base_link'; # for Skeleton
 	robotName = 'Armature'; # for Spiderman, ant, frog
+	pathFileName = viewerFilePath + 'frog_path.txt'
+	#fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZYX' # ANT
+	fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # FROG
+	#fileName = 'spid_jointConfigs.txt'; reOrientFrames = False; rotationOrder = '' # SPIDERMAN
 
 	# Materials
 	matConeSG = getOrCreateMaterial ("coneSG", 'SURFACE', [0,0.3,0], 0.4, True, False, False)
@@ -432,7 +435,8 @@ def main ():
 		endMotionFrame = loadMotionBodies (yamlFileName, beginMotionFrame) # for skeleton
 		print ("endMotionFrame bodies= " + str(endMotionFrame))
 	else:
-		endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame) # for skinning (spiderman, frog, ant)
+		jointConfigsFileName = viewerFilePath + fileName
+		endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for skinning (spiderman, frog, ant)
 		print ("endMotionFrame joints= " + str(endMotionFrame))
 	bpy.data.scenes["Scene"].frame_end = endMotionFrame + 50
 	
@@ -476,7 +480,6 @@ def mainTest ():
 	# Parameters that do not change from one problem to another
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
-	scriptFilePath = '/local/mcampana/devel/hpp/src/hpp-rbprm-corba/script/tests/'
 	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
 	pathName = 'path'
 	initFrame = 0
@@ -488,7 +491,7 @@ def mainTest ():
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for inner joints
 	print ("endMotionFrame joints= " + str(endMotionFrame))
-	pathFileName = scriptFilePath + 'path.txt'
+	pathFileName = daeFilePath + 'frog_path.txt'
 	#pathPoints = parsePathPoints (pathFileName)
 	#plotPath (pathPoints, pathName, matPath)
 

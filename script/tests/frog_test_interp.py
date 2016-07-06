@@ -38,8 +38,8 @@ r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
-#extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.2, 0, 0, -0.3, 0, 0, 0.3, 0.2, -0.3, -0.2, 0, 0, 0.3, 0, 0, -0.3, 0, 0, 0, 0]
-extending = [0, 0, 0, 1, 0, 0, 0, 0.0, 0.0, 0.0, 0.09958275081570388, 0.28862644331000115, -0.32395215403472644, -0.30139993862314146, 0.47692316634437215, 0.31228156146233976, 0.10393580096025755, 0.18427338212927494, 0.21392005799055103, -0.41270822492088577, 0.20206514643601384, 0.32084980677852865, 0.4273146567062077, 0.4891614613538428, -0.2985038081177062, 0.014145693329230739, 0.2359809332229108, 0.21414083871717604, 0.157905645322942, -0.7795444651877249, 0.17367448693778115, 0.09728754572444016, -0.22661082201013844, -0.20607416178382665, -0.2390574126686237, 0.011098673665476346, 0.7937469705444514, -0.20327363261174114, -0.7994011591651483, -0.1609162028696929, -0.05748413408057957, -0.24337810554698952, 0.20254206061481597, 0.22998449421952688, -0.044371450619945046, 0.08632858744185816, 0.0, 0.0, 0.0, -2.2671611988154177]
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.2, 0, 0, -0.3, 0, 0, 0.3, 0.2, -0.3, -0.2, 0, 0, 0.3, 0, 0, -0.3, 0, 0, 0, 0]
+#extending = [0, 0, 0, 1, 0, 0, 0, 0.0, 0.0, 0.0, 0.09958275081570388, 0.28862644331000115, -0.32395215403472644, -0.30139993862314146, 0.47692316634437215, 0.31228156146233976, 0.10393580096025755, 0.18427338212927494, 0.21392005799055103, -0.41270822492088577, 0.20206514643601384, 0.32084980677852865, 0.4273146567062077, 0.4891614613538428, -0.2985038081177062, 0.014145693329230739, 0.2359809332229108, 0.21414083871717604, 0.157905645322942, -0.7795444651877249, 0.17367448693778115, 0.09728754572444016, -0.22661082201013844, -0.20607416178382665, -0.2390574126686237, 0.011098673665476346, 0.7937469705444514, -0.20327363261174114, -0.7994011591651483, -0.1609162028696929, -0.05748413408057957, -0.24337810554698952, 0.20254206061481597, 0.22998449421952688, -0.044371450619945046, 0.08632858744185816, 0.0, 0.0, 0.0, -2.2671611988154177]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, 0, 0, -1.2, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0, 0, 1.2, 0, 0, 0, 0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
@@ -94,9 +94,9 @@ pp.speed=0.4
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)
 
-pathSamples = plotSampleSubPath (psf, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
-writePathSamples (pathSamples, 'path.txt')
-pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0.02)
+pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", psf.numberPaths ()-1, q_goal_test, 0.01)
+
+
 
 """
 ## Export for Blender ##
@@ -105,13 +105,14 @@ pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0
 pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2")
-plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2",4)
+pathInterpWaypoints = ps.getWaypoints(pathId)
+plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2",1)
 pathSamples = plotSampleSubPath (psf, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
-writePathSamples (pathSamples, 'path.txt')
+writePathSamples (pathSamples, 'frog_path.txt')
 pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0.02)
 """
 

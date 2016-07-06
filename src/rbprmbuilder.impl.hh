@@ -280,6 +280,8 @@ namespace hpp {
         sampling::AnalysisFactory* analysisFactory_;
 	core::Configuration_t extendingPose_;
 	core::Configuration_t flexionPose_;
+  core::Configuration_t contactPose_;
+  
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

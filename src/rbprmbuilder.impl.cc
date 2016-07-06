@@ -1172,6 +1172,10 @@ namespace hpp {
 	    interpolator->flexionPose (flexionPose_);
 	  else
 	    hppDout (info, "no flexion pose was provided to interpolator");
+    if (contactPose_.rows() > 0)
+	    interpolator->contactPose (contactPose_);
+	  else
+	    hppDout (info, "no flexion pose was provided to interpolator");
 
 	  if (subPathNumber == 1)
 	    newPath = interpolator->InterpolateDirectPath(u_offset);
@@ -1582,18 +1586,22 @@ namespace hpp {
 				  const char* poseQuery) throw (hpp::Error){
 	std::string query_str = std::string(poseQuery);
 	if(query_str.compare ("extending") != 0 && 
-	   query_str.compare ("flexion") != 0)
-	  throw std::runtime_error ("Query problem, ask for extending or flexion");
+	   query_str.compare ("flexion") != 0 && 
+     query_str.compare ("contact") != 0)
+	  throw std::runtime_error ("Query problem, ask for extending, flexion or contact");
 	core::DevicePtr_t robot = problemSolver_->robot ();
 	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
 	if (query_str.compare ("extending") == 0) {
 	  extendingPose_ = q;
 	  hppDout (info, "extendingPose_= " << displayConfig(extendingPose_));
 	}
-	else {
+	else if (query_str.compare ("flexion") == 0){
 	  flexionPose_ = q;
 	  hppDout (info, "flexionPose_= " << displayConfig(flexionPose_));
-	}
+	}else if (query_str.compare ("flexion") == 0){
+    contactPose_ = q;
+	  hppDout (info, "contactPose= " << displayConfig(contactPose_));
+  }
       }
 
       // ---------------------------------------------------------------

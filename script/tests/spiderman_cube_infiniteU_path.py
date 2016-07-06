@@ -61,8 +61,8 @@ addLight (r, [-3,0,8,1,0,0,0], "li");
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 
-q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
-#q11[0:7] = [-2.7,0,4.4, 0.9537, 0, 0.3, 0]; r(q11) # cube
+#q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
+q11[0:7] = [-2.7,0,4.4, 0.9537, 0, 0.3, 0]; r(q11) # cube
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -86,7 +86,7 @@ q_cube[0:7] =  [-2.7,0,4.4, 0.9537, 0, 0.3, 0]
 waypoints = [q_cube]
 pbCl = rbprmBuilder.client.basic.problem
 pbCl.prepareSolveStepByStep()
-q11 = ps.node(0) # retrieve updated contact normal 
+q11 = ps.node(0) # retrieve updated contact normal
 q22 = ps.node(1)
 pbCl.addConfigToRoadmap (waypoints[0])
 ps.directPath (q11, waypoints[0],False)

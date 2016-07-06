@@ -1598,7 +1598,7 @@ namespace hpp {
 	else if (query_str.compare ("flexion") == 0){
 	  flexionPose_ = q;
 	  hppDout (info, "flexionPose_= " << displayConfig(flexionPose_));
-	}else if (query_str.compare ("flexion") == 0){
+	}else if (query_str.compare ("contact") == 0){
     contactPose_ = q;
 	  hppDout (info, "contactPose= " << displayConfig(contactPose_));
   }

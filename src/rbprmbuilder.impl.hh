@@ -60,6 +60,9 @@ namespace hpp {
         // doesn't work anymore since we only use limb config and not full body
         //core::value_type distance = (*(problemSolver_->problem()->distance())) (conf_,refConfig_);
 
+        assert(refConfig_.size() == conf_.size());
+        assert(weight_.size() == conf_.size());
+        
         //compute distance TODO : improve it
         assert(conf_.size() == refConfig_.size());
         double distance =0 ;
@@ -71,7 +74,7 @@ namespace hpp {
 
 
         //return distance*1000. + sample.staticValue_;
-        hppDout(info,"heuristic value = "<<distance);
+        hppDout(info,"heuristic value = "<<-distance);
         return -distance;
       }
       

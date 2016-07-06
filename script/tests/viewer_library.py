@@ -508,8 +508,11 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
     f.write (str(rootPosRot).strip('[]') + "\n")
     for jointName in jointNames:
         if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
-            qJoint = q [robot.rankInConfiguration [jointName]]
-            f.write (jointName + " " + str(qJoint) + "\n")
+            jointNameBlender = jointName
+            if jointName[0:2] == 'A_':
+                jointNameBlender = jointName[2:len(jointName)]
+        qJoint = q [robot.rankInConfiguration [jointName]]
+        f.write (jointNameBlender + " " + str(qJoint) + "\n")
 
 
 # --------------------------------------------------------------------#
@@ -561,4 +564,40 @@ def writeSkipList (ps, fileName):
     f.write(str(l1).strip('[]')+'\n')
     f.write(str(l2).strip('[]')+'\n')
     f.close()
+
+# --------------------------------------------------------------------#
+
+## Write one config to file ##
+## Parameters:
+# ps: Problem Solver
+# fileName: name (string) of the file where samples will be written 'jointConfigs.txt'
+# goalConfig: final config of path
+# dt: time step
+#q = [0, 0, 0, 1, 0,0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, -0.2, 0.3, -1.9, 1.9,-0.6, 0, -0.2, 0.3, -1.9, 1.9, -0.6, 0]
+#pathJointConfigsToFile (ps, r, "spiderman_jointConfigs.txt", q)
+def pathJointConfigsToFile (ps, r, fileName, config):
+    robot = ps.robot
+    pathToFile = '/local/mcampana/devel/hpp/videos/' # WARNING!
+    gui = r.client.gui
+    jointNames = robot.getJointNames ()
+    rootJointName = robot.getAllJointNames() [3] # virtualPelvis or virtualTorso or virtualThorax
+    rootJointNameBlender = rootJointName[7:len(rootJointName)] # remove "virtual"
+    nbInnerJoints = len(jointNames) - 2
+    f = open(fileName,'a')
+    print (str(nbInnerJoints))
+    f.write(str(nbInnerJoints) + "\n")
+    print (rootJointNameBlender)
+    f.write (rootJointNameBlender + "\n")
+    f.write ("Frame " + str(0) + "\n")
+    q = config
+    ps.robot.setCurrentConfig(q)
+    rootPosRot = robot.getLinkPosition(rootJointName)
+    f.write (str(rootPosRot).strip('[]') + "\n")
+    for jointName in jointNames:
+        if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
+            jointNameBlender = jointName
+            if jointName[0:2] == 'A_':
+                jointNameBlender = jointName[2:len(jointName)];
+            qJoint = q [robot.rankInConfiguration [jointName]]
+            f.write (jointNameBlender + " " + str(qJoint) + "\n")
 

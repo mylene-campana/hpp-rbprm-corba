@@ -18,7 +18,7 @@
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
       <child link="Thorax"/>
-      <origin rpy="0 0 1.570796" xyz="0.001 -0.0382 -0.1982"/>
+      <origin rpy="0 0 1.570796" xyz="0 0 0"/>
    </joint>
 
   <link name="virtualThorax"/> <!-- for Blender Armature export -->
@@ -669,7 +669,7 @@
   <joint name="Abdomen_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="Abdomen_rx"/>
-      <origin rpy="0 0 0" xyz="0 0.15853 0.19806"/>
+      <origin rpy="0 0 0" xyz="0 0.1203 -0.0006"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
@@ -690,7 +690,7 @@
    <joint name="Head_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="Head_rx"/>
-      <origin rpy="0 0 0" xyz="0 -0.06471 0.21279"/>
+      <origin rpy="0 0 0" xyz="0 -0.1029 0.0142"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
    </joint>
@@ -736,7 +736,7 @@
    <joint name="LFThigh_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="LFThigh_rx"/>
-      <origin rpy="0 0 0" xyz="0.0743 -0.0223 0.1894"/>
+      <origin rpy="0 0 0" xyz="0.0743 -0.0605 -0.0092"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
@@ -800,7 +800,7 @@
    <joint name="LMThigh_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="LMThigh_rx"/>
-      <origin rpy="0 0 0" xyz="0.07469 0.03933 0.19123"/>
+      <origin rpy="0 0 0" xyz="0.0747 0.0011 -0.0074"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
@@ -864,7 +864,7 @@
    <joint name="LBThigh_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="LBThigh_rx"/>
-      <origin rpy="0 0 0" xyz="0.06238 0.08879 0.18588"/>
+      <origin rpy="0 0 0" xyz="0.0624 0.0506 -0.0127"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
@@ -929,7 +929,7 @@
    <joint name="RFThigh_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="RFThigh_rx"/>
-      <origin rpy="0 0 0" xyz="-0.07030 -0.02046 0.18987"/>
+      <origin rpy="0 0 0" xyz="-0.0703 -0.0587 -0.0088"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
@@ -993,7 +993,7 @@
    <joint name="RMThigh_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="RMThigh_rx"/>
-      <origin rpy="0 0 0" xyz="-0.07457 0.03980 0.19130"/>
+      <origin rpy="0 0 0" xyz="-0.0746 0.0016 -0.0073"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>
@@ -1057,7 +1057,7 @@
    <joint name="RBThigh_rx" type="revolute">
       <parent link="Thorax"/>
       <child link="RBThigh_rx"/>
-      <origin rpy="0 0 0" xyz="-0.06230 0.08906 0.18543"/>
+      <origin rpy="0 0 0" xyz="-0.0623 0.0509 -0.0132"/>
       <axis xyz="1 0 0"/>
       <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
    </joint>

@@ -2,8 +2,9 @@
 
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
+from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 from hpp.gepetto import Viewer
-
+from viewer_library import *
 
 import quaternion as quat
 
@@ -20,14 +21,23 @@ fullBody = FullBody ()
  
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 
-from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 
-nbSamples = 10000
 
 ps = ProblemSolver( fullBody )
-
 r = Viewer (ps)
+q_0 = fullBody.getCurrentConfig (); r(q_0)
 
+# Verify that normals will be correct
+cl = fullBody.client.basic
+plotJointFrame (r, cl, q_0, "LFThigh_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RBThigh_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LMShank_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RFShank_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LFFoot_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RMFoot_rx", 0.4)
+
+
+nbSamples = 10000
 x = 0.006 # contact surface width
 y = 0.006 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,1]

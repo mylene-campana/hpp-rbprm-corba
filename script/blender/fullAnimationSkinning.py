@@ -287,7 +287,7 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 						#print ("currentBone name= " + lastShortJointName)
 						if (lastShortJointName != ''):
 							currentBone = armature.pose.bones[lastShortJointName]
-							currentBone.rotation_mode = rotationOrder # not so important ?
+							currentBone.rotation_mode = rotationOrder
 							currentBone.rotation_euler = lastFullJointConfig
 							#print ("lastShortJointName= " + lastShortJointName)
 							#print ("rotation euler= " + str(currentBone.rotation_euler))
@@ -482,9 +482,9 @@ def mainTest ():
 	initFrame = 0
 	beginMotionFrame = 0
 	print ("--------  load motion armature  --------")
-	fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZYX' # ANT
-	#fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # FROG
-	#fileName = 'spid_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # SPIDERMAN
+	fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
+	#fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
+	#fileName = 'spid_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # SPIDERMAN
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for inner joints
 	print ("endMotionFrame joints= " + str(endMotionFrame))

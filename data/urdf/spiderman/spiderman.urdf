@@ -214,6 +214,26 @@
          </geometry>
       </collision>
    </link>
+   <link name="RFootToe">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.72029"/>
+         <inertia ixx="0.0035454" ixy="0.00043767" ixz="0" iyy="0.00074844" iyz="-0.00016575" izz="0.0033563"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RFootToe.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-RFootToe.stl"/>
+         </geometry>
+      </collision>
+   </link>
   <link name="SpidermanRFootSphere">
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -283,6 +303,26 @@
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="LFootToe">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.72029"/>
+         <inertia ixx="0.0035454" ixy="0.00043767" ixz="0" iyy="0.00074844" iyz="-0.00016575" izz="0.0033563"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LFootToe.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-LFootToe.stl"/>
          </geometry>
       </collision>
    </link>
@@ -527,10 +567,17 @@
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
-  <joint name="SpidermanRFootSphere" type="fixed">
+   <joint name="RFootToe_rx" type="revolute">
       <parent link="RFoot"/>
+      <child link="RFootToe"/>
+      <origin rpy="0 0 0" xyz="-0.0047 -0.1259 -0.0639"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.7" upper="0.2" velocity="1.0"/>
+   </joint>
+  <joint name="SpidermanRFootSphere" type="fixed">
+      <parent link="RFootToe"/>
       <child link="SpidermanRFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.00134 -0.1 -0.09568"/>
+      <origin rpy="0 0 0" xyz="0.0022 -0.0229 -0.0306"/>
    </joint>
    <joint name="LThigh_rx" type="revolute">
       <parent link="Pelvis"/>
@@ -574,10 +621,17 @@
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
-  <joint name="SpidermanLFootSphere" type="fixed">
+   <joint name="LFootToe_rx" type="revolute">
       <parent link="LFoot"/>
+      <child link="LFootToe"/>
+      <origin rpy="0 0 0" xyz="0.0052 -0.1277 -0.0646"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.7" upper="0.2" velocity="1.0"/>
+   </joint>
+  <joint name="SpidermanLFootSphere" type="fixed">
+      <parent link="LFootToe"/>
       <child link="SpidermanLFootSphere"/>
-      <origin rpy="0 0 0" xyz="0.00134 -0.1 -0.09568"/>
+      <origin rpy="0 0 0" xyz="-0.0001 -0.0229 -0.0306"/>
    </joint>
    <joint name="RHumerus_rx" type="revolute">
       <parent link="Thorax"/>

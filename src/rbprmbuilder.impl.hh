@@ -244,7 +244,7 @@ namespace hpp {
 	  throw (hpp::Error);
 
 	void rotateAlongPath (const CORBA::UShort pathId,
-                  const bool fullbody,const bool trunkOrientation) throw (hpp::Error);
+                  const bool fullbody, const bool trunkOrientation, const bool getCloseToContact) throw (hpp::Error);
   
   void timeParametrizedPath (const CORBA::UShort pathId) throw (hpp::Error);
 

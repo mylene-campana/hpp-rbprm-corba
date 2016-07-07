@@ -56,7 +56,7 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 """
 
 #~ AFTER loading obstacles
-nbSamples = 20000
+nbSamples = 5000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
@@ -161,7 +161,7 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.1
 pathId = psf.numberPaths () -1
 rr(pp.client.problem.configAtParam(pathId,0))
-
+pp(pathId)
 
 
 

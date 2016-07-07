@@ -1341,7 +1341,7 @@ namespace hpp {
       // --------------------------------------------------------------------
 
       void RbprmBuilder::rotateAlongPath (const CORBA::UShort pathId,
-                      const bool fullbody, const bool trunkOrientation)
+                      const bool fullbody, const bool trunkOrientation, const bool getCloseToContact)
 	throw (hpp::Error) {
 	std::size_t pid = (std::size_t) pathId;
 	if(problemSolver_->paths().size() <= pid) {
@@ -1445,25 +1445,27 @@ namespace hpp {
       // end test Pierre
 
     // now that the correct orientaion is set, we try to set the trunk as close as possible as the obstacle : 
-      Eigen::Vector3d normal;
-      for(std::size_t i = 0 ; i< waypoints.size() ; i++ ){
-        normal = Eigen::Vector3d(waypoints [i][index],waypoints [i][index+1],waypoints [i][index+2]);
-        normal = normal*0.01;
-        hppDout(notice,"Direction of motion for getting close to contact :"<<normal[0] << " , "<<normal[1] << " , "<<normal[2]);
-        qTmp = waypoints[i];
-        qTmp[0] = qTmp[0] - normal[0];
-        qTmp[1] = qTmp[1] - normal[1];
-        qTmp[2] = qTmp[2] - normal[2];
-        while(problemSolver_->problem ()->configValidations()->validate(qTmp,report)){
+    if(getCloseToContact){
+        Eigen::Vector3d normal;
+        for(std::size_t i = 0 ; i< waypoints.size() ; i++ ){
+          normal = Eigen::Vector3d(waypoints [i][index],waypoints [i][index+1],waypoints [i][index+2]);
+          normal = normal*0.01;
+          hppDout(notice,"Direction of motion for getting close to contact :"<<normal[0] << " , "<<normal[1] << " , "<<normal[2]);
+          qTmp = waypoints[i];
           qTmp[0] = qTmp[0] - normal[0];
           qTmp[1] = qTmp[1] - normal[1];
           qTmp[2] = qTmp[2] - normal[2];
-          hppDout(notice,"new config =  :"<<displayConfig(qTmp));          
+          while(problemSolver_->problem ()->configValidations()->validate(qTmp,report)){
+            qTmp[0] = qTmp[0] - normal[0];
+            qTmp[1] = qTmp[1] - normal[1];
+            qTmp[2] = qTmp[2] - normal[2];
+            hppDout(notice,"new config =  :"<<displayConfig(qTmp));          
+          }
+          waypoints[i][0] = qTmp[0] + normal[0];
+          waypoints[i][1] = qTmp[1] + normal[1];
+          waypoints[i][2] = qTmp[2] + normal[2];
         }
-        waypoints[i][0] = qTmp[0] + normal[0];
-        waypoints[i][1] = qTmp[1] + normal[1];
-        waypoints[i][2] = qTmp[2] + normal[2];
-      }
+    }
 
 	  // loop to construct new path vector with parabPath constructor
 	  for (std::size_t i = 0; i < num_subpaths; i++) {

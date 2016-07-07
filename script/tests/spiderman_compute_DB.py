@@ -30,7 +30,12 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 
 
 q_jump= fullBody.getCurrentConfig()
-q_jump = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0.7, 0.0, 0.0, -0.7, 0.4,0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0,0.0, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0] #; rr(q_jump)
+q_jump  = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0, 0.0, 0.0, 0, -1.5, 0.4, -0.7, -0.5, -1.2, -0.4,0.1, -1.5, 0.4, -0.7, -0.5, -1.2, -0.4,0.1, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0] #; rr(q_jump)
+
+
+
+# q_jump[0:7] = q_init_test[0:7] ; rr(q_jump)
+
 
 q_feet = q_jump[27:33]
 q_arm = q_jump[13:20]
@@ -43,7 +48,7 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_6_DOF"
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]

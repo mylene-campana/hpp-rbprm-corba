@@ -62,7 +62,7 @@ q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 
 #q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
-q11[0:7] = [-2.7,0,4.4, 0.9537, 0, 0.3, 0]; r(q11) # cube
+q11[0:7] =  [-2.7,0,3.9, 1, 0, 0, 0]; r(q11) # cube
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -78,7 +78,7 @@ ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
 ## manually add way point (faster computation for test, work without but it's slow (~ <1minute )
-
+"""
 q_cube = q11[::]
 
 q_cube[0:7] =  [-2.7,0,4.4, 0.9537, 0, 0.3, 0]
@@ -86,7 +86,7 @@ q_cube[0:7] =  [-2.7,0,4.4, 0.9537, 0, 0.3, 0]
 waypoints = [q_cube]
 pbCl = rbprmBuilder.client.basic.problem
 pbCl.prepareSolveStepByStep()
-q11 = ps.node(0) # retrieve updated contact normal
+q11 = ps.node(0)
 q22 = ps.node(1)
 pbCl.addConfigToRoadmap (waypoints[0])
 ps.directPath (q11, waypoints[0],False)
@@ -96,15 +96,16 @@ pathId2g = ps.numberPaths () - 1
 pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
 pbCl.addEdgeToRoadmap (waypoints[0], q22, pathId2g, True)
 ##########
+"""
 
 t = ps.solve ()
 
 
-q11 = ps.node(0) # retrieve updated contact normal 
+q11 = ps.node(0)
 q22 = ps.node(1)
-plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); 
+#plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); 
 plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
-qCone = [-2.7, 0.0, 4.4, 0.9537, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0,
+qCone = [-2.7, 0.0, 3.9, 0.9537, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0,
  0.0, 0.0, -0.8689669946343358, -0.00045459419059697023,0.4948698370079671, 0.0]
 
 plotCone (qCone, ps, r, "cone_Mid", "friction_cone_SG2")
@@ -179,7 +180,7 @@ ps.numberNodes()
 
 pathSamples = plotSampleSubPath (cl, r, pathId, 70, "path0", [0,0,1,1])
 
-q11 = ps.node(0) # retrieve updated contact normal 
+q11 = ps.node(0)
 q22 = ps.node(1)
 plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
 plotCone (ps.node(2), ps, r, "cone_2", "friction_cone_SG2")

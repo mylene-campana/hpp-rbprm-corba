@@ -90,6 +90,20 @@ fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,'static')
 
 print("Limbs added to fullbody")
 
+extending = [0,0,0,
+ 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
+ 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
+ -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
+flexion = [0,0, 0, 1, 0, 0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, -0.3,
+ -0.3, -2, 0, -0.6, 0.0, 0.0, -0.3, -0.3, -2, 0, -0.6, 0.0,
+ 0.0, -0.2, 0.3, -1.9, 1.9, -0.6, 0, -0.2, 0.3, -1.9, 1.9,-0.6, 0]
+q_contact = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0.7, 0.0, 0.0, -0.7, 0.4,0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0,0.0, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0]
+
+fullBody.setPose (extending, "extending")
+fullBody.setPose (flexion, "flexion")
+fullBody.setPose (q_contact, "contact")
+
+
 #fullBody.runSampleAnalysis( "RefPoseFeet", True) #done in compute_db now
 
 
@@ -126,18 +140,6 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[rLegId,lLegId])
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
-extending = [0,0,0,
- 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
- 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
- -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
-flexion = [0,0, 0, 1, 0, 0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, -0.3,
- -0.3, -2, 0, -0.6, 0.0, 0.0, -0.3, -0.3, -2, 0, -0.6, 0.0,
- 0.0, -0.2, 0.3, -1.9, 1.9, -0.6, 0, -0.2, 0.3, -1.9, 1.9,-0.6, 0]
-q_contact = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0.7, 0.0, 0.0, -0.7, 0.4,0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0,0.0, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0]
-
-fullBody.setPose (extending, "extending")
-fullBody.setPose (flexion, "flexion")
-fullBody.setPose (q_contact, "contact")
 
 """
 qe = extending[::]

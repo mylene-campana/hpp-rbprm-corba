@@ -56,13 +56,15 @@ pp = PathPlayer (rbprmBuilder.client.basic, r)
 r.loadObstacleModel ("hpp-rbprm-corba", "cubeWorld", "cubeWorld")
 r.addLandmark(r.sceneName,2)
 r.addLandmark("spiderman_trunk/base_link",1)
-addLight (r, [-3,0,8,1,0,0,0], "li");
+addLight (r, [-10,0,5,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 
 #q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
-q11[0:7] =  [-2.7,0,3.9, 1, 0, 0, 0]; r(q11) # cube
+#q11[0:7] =  [-2.7,0,3.9, 1, 0, 0, 0]; r(q11) # cube WORKING CONTACT
+q11[0:7] =  [-2.7,0,3.9, 0.9512, 0.1677, 0.0449, 0.2549]
+
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -103,16 +105,18 @@ t = ps.solve ()
 
 q11 = ps.node(0)
 q22 = ps.node(1)
-#plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); 
+#plotCone (q11, ps, r, "cone_first", "friction_cone_SG2");
+solutionPathId = ps.numberPaths () - 1
+""" 
 plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
 qCone = [-2.7, 0.0, 3.9, 0.9537, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0,
  0.0, 0.0, -0.8689669946343358, -0.00045459419059697023,0.4948698370079671, 0.0]
 
 plotCone (qCone, ps, r, "cone_Mid", "friction_cone_SG2")
 
-solutionPathId = ps.numberPaths () - 1
-pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
+pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+"""
 
 ##############################
 

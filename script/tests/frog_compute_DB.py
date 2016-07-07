@@ -36,16 +36,14 @@ q_larm = flexion[10:19]
 q_rfeet = flexion[37:46]
 q_rarm = flexion[19:28]
 
-#fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,5.,1.,1.,4.,1.,1.,4.])
-#fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,5.,1.,1.,4.,1.,1.,4.])
-fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,2.,1.,1.,1.,1.,1.,1.])
-fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,2.,1.,1.,1.,1.,1.,1.])
+fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,5.,1.,1.,4.,1.,1.,4.])
+fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,5.,1.,1.,4.,1.,1.,4.])
 fullBody.addRefConfigAnalysis(q_larm,"RefPoseLArm")
 fullBody.addRefConfigAnalysis(q_rarm,"RefPoseRArm")
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_6_DOF"
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.04 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
@@ -66,16 +64,16 @@ fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulabi
 print("Legs added to fullbody")
 
 rarmId = 'rhand'
-rLeg = 'RHumerus_rx'
-rfoot = 'FrogRHandSphere'
+rArm = 'RHumerus_rx'
+rHand = 'FrogRHandSphere'
 rarmx = x; rarmy = y
-fullBody.addLimb(rarmId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(rarmId,rArm,rHand,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 larmId = 'lhand'
-lLeg = 'LHumerus_rx'
-lfoot = 'FrogLHandSphere'
+lArm = 'LHumerus_rx'
+lHand = 'FrogLHandSphere'
 larmx = x; larmy = y
-fullBody.addLimb(larmId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(larmId,lArm,lHand,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 print("Arms added to fullbody")
 

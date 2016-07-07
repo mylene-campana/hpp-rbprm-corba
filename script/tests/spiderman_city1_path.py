@@ -65,7 +65,7 @@ q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 #q11[0:7] = [-100,45,0.4, 1, 0, 0, 0]; r(q11) # on floor
 #q11[0:7] = [-105,20,29.4, 1, 0, 0, 0]; r(q11) # roof of house
 #q11[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q11) # floor, right side
-q11[0:7] = [-11.8,38.2,121.2, 1, 0, 0, 0]; r(q11) # highest tower
+q11[0:7] = [-11.8,38.2,121.06, 1, 0, 0, 0]; r(q11) # highest tower
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -74,7 +74,7 @@ q22 = q11[::]
 #q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
 q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
 #q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
-#q22[0:7] = [90,40,20.5, 1, 0, 0, 0]; r(q22) #right house
+#q22[0:7] = [90,40,20.49, 1, 0, 0, 0]; r(q22) #right house
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -153,13 +153,14 @@ pbCl.addEdgeToRoadmap (waypoints[2], q22, pathId2g, True)
 ##########
 """
 
+ps.client.problem.setRandomSeed(0)
 t = ps.solve ()
 
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
 
-rbprmBuilder.rotateAlongPath (solutionPathId,True)
+rbprmBuilder.rotateAlongPath (solutionPathId,False)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 r(pp.client.problem.configAtParam(orientedpathId,0))
@@ -287,7 +288,7 @@ ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 
 """ #### display
 id = r.client.gui.getWindowID("window_hpp_")
-r.client.gui.attachCameraToNode("spiderman_trunk/base_link",id)
+r.client.gui.attachCameraToNode("spiderman/Thorax",id)
 
 
 ps.clearRoadmap()

@@ -36,7 +36,7 @@ psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 #~ AFTER loading obstacles
-nbSamples = 10000
+nbSamples = 50000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
@@ -45,33 +45,33 @@ y = 0.03 # contact surface length
 lfLegId = 'lffoot'
 lfLeg = 'LFThigh_rx'
 lffoot = 'LFFootSphere'
-fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lmLegId = 'lmfoot'
 lmLeg = 'LMThigh_rx'
 lmfoot = 'LMFootSphere'
-fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 lbLegId = 'lbfoot'
 lbLeg = 'LBThigh_rx'
 lbfoot = 'LBFootSphere'
-fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 rfLegId = 'rffoot'
 rfLeg = 'RFThigh_rx'
 rffoot = 'RFFootSphere'
-fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 
 rmLegId = 'rmfoot'
 rmLeg = 'RMThigh_rx'
 rmfoot = 'RMFootSphere'
-fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 rbLegId = 'rbfoot'
 rbLeg = 'RBThigh_rx'
 rbfoot = 'RBFootSphere'
-fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,-1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
+fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 print("Limbs added to fullbody")
 
 
@@ -110,14 +110,17 @@ fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.03)
+fullBody.interpolateBallisticPath(entryPathId, 0.01)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.8
+pid = pp.client.problem.numberPaths() -1
+pp(pid)
 
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1)
+pp.speed=0.05
 pp(psf.numberPaths ()-1)
 
 
@@ -141,7 +144,7 @@ pathJointConfigsToFile (psf, rr, "jointConfigs.txt", pathId, q_goal_test, 0.02)
 ## Video recording
 import time
 pp.dt = 0.01
-pp.speed=0.5
+pp.speed=0.1
 rr(q_init_test)
 rr.startCapture ("capture","png")
 rr(q_init_test); time.sleep(2)
@@ -150,10 +153,12 @@ pp(psf.numberPaths ()-1)
 rr(q_goal_test); time.sleep(2);
 rr.stopCapture ()
 
-## ffmpeg commands
-ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
+## avconv commands
+avconv -r 50 -i capture_0_%d.png -r 15 -vcodec mpeg4 video.mp4
 x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$(($x+1)); done
-ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
+avconv -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
-ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
+avconv -i video.mp4 -vcodec mpeg4 -crf 24 untitled.mp4
+rm capture*.png
+rm video.mp4
 """

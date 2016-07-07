@@ -30,13 +30,15 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 
 
 q_jump= fullBody.getCurrentConfig()
-q_jump = [0, 0, 0, 1, 0,0, 0, 0, 0, 0.2,
- 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5,
- 0.7, 0, -0.6, 0.0, 0.0, -0.2, 0.3, -1.9, 1.9,-0.6, 0, -0.2, 0.3,
- -1.9, 1.9, -0.6, 0] #; rr(q_jump)
+q_jump  = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0, 0.0, 0.0, 0, -1.5, 0.4, -0.7, -0.5, -1.2, -0.4,0.1, -1.5, 0.4, -0.7, -0.5, -1.2, -0.4,0.1, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0] #; rr(q_jump)
 
-q_feet = q_jump[27:32]
-q_arm = q_jump[13:19]
+
+
+# q_jump[0:7] = q_init_test[0:7] ; rr(q_jump)
+
+
+q_feet = q_jump[27:33]
+q_arm = q_jump[13:20]
 
 
 fullBody.addRefConfigAnalysisWeight(q_feet,"RefPoseFeet",[1.,1.,1.,5.,1.,1.])
@@ -45,7 +47,7 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 
 
 #~ AFTER loading obstacles
-nbSamples = 20000
+nbSamples = 50000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
@@ -56,13 +58,13 @@ rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 print("Legs added to fullbody")
 
@@ -104,9 +106,10 @@ def runallArm(lid, dbName):
 
 
 
-
+print("Run all legs : ")
 runallLeg(lLegId, './Spiderman_lleg.db')
 runallLeg(rLegId, './Spiderman_rleg.db')
+print("Run all arms : ")
 runallArm(larmId, './Spiderman_larm.db')
 runallArm(rarmId, './Spiderman_rarm.db')
 

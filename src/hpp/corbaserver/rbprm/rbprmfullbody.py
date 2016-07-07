@@ -545,8 +545,8 @@ class FullBody (object):
     ##\}
 
     # Rotate waypoints according to path directions.
-    def rotateAlongPath (self, pathId):
-        return self.client.rbprm.rbprm.rotateAlongPath (pathId, True)
+    def rotateAlongPath (self, pathId,trunkOrientation = False, getCloseToContact =  False):
+        return self.client.rbprm.rbprm.rotateAlongPath (pathId, True, trunkOrientation,getCloseToContact)
 
     # Set extending or flexion pose
     def setPose (self, config, query):

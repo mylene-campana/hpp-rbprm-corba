@@ -373,7 +373,11 @@ namespace hpp {
             model::Configuration_t config = dofArrayToConfig (fullBody_->device_, configuration);
             rbprm::State state = rbprm::ComputeContacts(fullBody_,config,
                                             problemSolver_->collisionObstacles(), dir);
-            core::Configuration_t q = state.configuration_;
+           core::Configuration_t q;
+           if(contactPose_.size() > 0)
+             q = rbprm::computeContactPose(state,contactPose_,fullBody_);
+           else 
+             q = state.configuration_;
 	    std::queue<std::string> contactStack = state.contactOrder_;
 	    const std::size_t contactNumber = contactStack.size ();
 	    fcl::Vec3f normalAv = (0,0,0);
@@ -1172,6 +1176,10 @@ namespace hpp {
 	    interpolator->flexionPose (flexionPose_);
 	  else
 	    hppDout (info, "no flexion pose was provided to interpolator");
+    if (contactPose_.rows() > 0)
+	    interpolator->contactPose (contactPose_);
+	  else
+	    hppDout (info, "no flexion pose was provided to interpolator");
 
 	  if (subPathNumber == 1)
 	    newPath = interpolator->InterpolateDirectPath(u_offset);
@@ -1337,7 +1345,7 @@ namespace hpp {
       // --------------------------------------------------------------------
 
       void RbprmBuilder::rotateAlongPath (const CORBA::UShort pathId,
-                      const bool fullbody, const bool trunkOrientation)
+                      const bool fullbody, const bool trunkOrientation, const bool getCloseToContact)
 	throw (hpp::Error) {
 	std::size_t pid = (std::size_t) pathId;
 	if(problemSolver_->paths().size() <= pid) {
@@ -1396,50 +1404,72 @@ namespace hpp {
       // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
 	  core::Configuration_t qTmp;
 	  core::ValidationReportPtr_t report;
-      if(trunkOrientation){
-          Eigen::Vector3d yTheta;
-          Eigen::Quaterniond qr ,qi,qf;
-
-          for(std::size_t i = 0 ; i< waypoints.size() -1 ; i++ ){
-	    qTmp = waypoints[i];
-              alpha_i = (boost::dynamic_pointer_cast<ParabolaPath>((*path).pathAtRank (i)))->coefficients()[4];
-              theta_i = qTmp[index+3];
-              yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
-              qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-              qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
-              qf = qr*qi;
-
-              qTmp[3]= qf.w();
-              qTmp[4]= qf.x();
-              qTmp[5]= qf.y();
-              qTmp[6]= qf.z();
-	      if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
-		hppDout (info, "waypoint with alpha orientation is valid");
-		waypoints[i] = qTmp;
-	      } else {
-		hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
-	      }
-          }
-          // goal state : use last alpha and theta value
-	  qTmp = waypoints[waypoints.size () - 1];
-          yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
-          qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-          qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
-          qf = qr*qi;
-
-          qTmp[3]= qf.w();
-          qTmp[4]= qf.x();
-          qTmp[5]= qf.y();
-          qTmp[6]= qf.z();
-	  if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
-	    hppDout (info, "waypoint with alpha orientation is valid");
-	    waypoints[waypoints.size () - 1] = qTmp;
-	  } else {
-	    hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
-	  }
+    if(trunkOrientation){
+      Eigen::Vector3d yTheta;
+      Eigen::Quaterniond qr ,qi,qf;
+      
+      for(std::size_t i = 0 ; i< waypoints.size() -1 ; i++ ){
+        qTmp = waypoints[i];
+        alpha_i = (boost::dynamic_pointer_cast<ParabolaPath>((*path).pathAtRank (i)))->coefficients()[4];
+        theta_i = qTmp[index+3];
+        yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
+        qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
+        qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
+        qf = qr*qi;
+        
+        qTmp[3]= qf.w();
+        qTmp[4]= qf.x();
+        qTmp[5]= qf.y();
+        qTmp[6]= qf.z();
+        if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+          hppDout (info, "waypoint with alpha orientation is valid");
+          waypoints[i] = qTmp;
+        } else {
+          hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+        }
       }
+      // goal state : use last alpha and theta value
+      qTmp = waypoints[waypoints.size () - 1];
+      yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
+      qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
+      qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
+      qf = qr*qi;
+      
+      qTmp[3]= qf.w();
+      qTmp[4]= qf.x();
+      qTmp[5]= qf.y();
+      qTmp[6]= qf.z();
+      if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+        hppDout (info, "waypoint with alpha orientation is valid");
+        waypoints[waypoints.size () - 1] = qTmp;
+      } else {
+        hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+      }
+    }
       // end test Pierre
 
+    // now that the correct orientaion is set, we try to set the trunk as close as possible as the obstacle : 
+    if(getCloseToContact){
+        Eigen::Vector3d normal;
+        for(std::size_t i = 0 ; i< waypoints.size() ; i++ ){
+          normal = Eigen::Vector3d(waypoints [i][index],waypoints [i][index+1],waypoints [i][index+2]);
+          normal = normal*0.01;
+          hppDout(notice,"Direction of motion for getting close to contact :"<<normal[0] << " , "<<normal[1] << " , "<<normal[2]);
+          qTmp = waypoints[i];
+          qTmp[0] = qTmp[0] - normal[0];
+          qTmp[1] = qTmp[1] - normal[1];
+          qTmp[2] = qTmp[2] - normal[2];
+          while(problemSolver_->problem ()->configValidations()->validate(qTmp,report)){
+            qTmp[0] = qTmp[0] - normal[0];
+            qTmp[1] = qTmp[1] - normal[1];
+            qTmp[2] = qTmp[2] - normal[2];
+            hppDout(notice,"new config =  :"<<displayConfig(qTmp));          
+          }
+          waypoints[i][0] = qTmp[0] + normal[0];
+          waypoints[i][1] = qTmp[1] + normal[1];
+          waypoints[i][2] = qTmp[2] + normal[2];
+        }
+    }
 
 	  // loop to construct new path vector with parabPath constructor
 	  for (std::size_t i = 0; i < num_subpaths; i++) {
@@ -1562,18 +1592,22 @@ namespace hpp {
 				  const char* poseQuery) throw (hpp::Error){
 	std::string query_str = std::string(poseQuery);
 	if(query_str.compare ("extending") != 0 && 
-	   query_str.compare ("flexion") != 0)
-	  throw std::runtime_error ("Query problem, ask for extending or flexion");
+	   query_str.compare ("flexion") != 0 && 
+     query_str.compare ("contact") != 0)
+	  throw std::runtime_error ("Query problem, ask for extending, flexion or contact");
 	core::DevicePtr_t robot = problemSolver_->robot ();
 	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
 	if (query_str.compare ("extending") == 0) {
 	  extendingPose_ = q;
 	  hppDout (info, "extendingPose_= " << displayConfig(extendingPose_));
 	}
-	else {
+	else if (query_str.compare ("flexion") == 0){
 	  flexionPose_ = q;
 	  hppDout (info, "flexionPose_= " << displayConfig(flexionPose_));
-	}
+	}else if (query_str.compare ("contact") == 0){
+    contactPose_ = q;
+	  hppDout (info, "contactPose= " << displayConfig(contactPose_));
+  }
       }
 
       // ---------------------------------------------------------------

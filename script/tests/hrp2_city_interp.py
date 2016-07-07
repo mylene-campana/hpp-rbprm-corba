@@ -9,17 +9,17 @@ from hpp.gepetto import Viewer, PathPlayer
 import numpy as np
 from viewer_library import *
 
-import spiderman_city1_path as tp
+import hrp2_city1_path as tp
 
 
 
-packageName = 'hpp-rbprm-corba'
-meshPackageName = 'hpp-rbprm-corba'
+packageName = "hrp2_14_description"
+meshPackageName = "hrp2_14_description"
 rootJointType = "freeflyer"
 ##
 #  Information to retrieve urdf and srdf files.
-urdfName = "spiderman"
-urdfSuffix = ""
+urdfName = "hrp2_14"
+urdfSuffix = "_reduced"
 srdfSuffix = ""
 ecsSize = 0 # tp.ecsSize
 V0list = tp.V0list
@@ -56,37 +56,34 @@ fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 """
 
 #~ AFTER loading obstacles
-nbSamples = 5000
+nbSamples = 20000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
-
 #~ AFTER loading obstacles
-rLegId = 'rfoot'
-rLeg = 'RThigh_ry'
-rfoot = 'SpidermanRFootSphere'
-rLegx = x; rLegy = y
-fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'static')
+rLegId = '0rLeg'
+rLeg = 'RLEG_JOINT0'
+rLegOffset = [0,-0.105,0,]
+rLegNormal = [0,1,0]
+rLegx = 0.09; rLegy = 0.05
+fullBody.addLimb(rLegId,rLeg,'',rLegOffset,rLegNormal, rLegx, rLegy, 10000, "manipulability", 0.1)
 
-lLegId = 'lfoot'
-lLeg = 'LThigh_ry'
-lfoot = 'SpidermanLFootSphere'
-lLegx = x; lLegy = y
-fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'static')
+lLegId = '1lLeg'
+lLeg = 'LLEG_JOINT0'
+lLegOffset = [0,-0.105,0]
+lLegNormal = [0,1,0]
+lLegx = 0.09; lLegy = 0.05
+fullBody.addLimb(lLegId,lLeg,'',lLegOffset,rLegNormal, lLegx, lLegy, 10000, "manipulability", 0.1)
 
-rarmId = 'rhand'
-rLeg = 'RHumerus_ry'
-rfoot = 'SpidermanRHandSphere'
-rarmx = x; rarmy = y
-fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,'static')
-
-larmId = 'lhand'
-lLeg = 'LHumerus_ry'
-lfoot = 'SpidermanLHandSphere'
-larmx = x; larmy = y
-fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,'static')
-
+rarmId = '3Rarm'
+rarm = 'RARM_JOINT0'
+rHand = 'RARM_JOINT5'
+rArmOffset = [0,0,-0.1]
+rArmNormal = [0,0,1]
+rArmx = 0.024; rArmy = 0.024
+#disabling collision for hook
+fullBody.addLimb(rarmId,rarm,rHand,rArmOffset,rArmNormal, rArmx, rArmy, 10000, "manipulability", 0.05, "_6_DOF", True)
 
 print("Limbs added to fullbody")
 
@@ -112,6 +109,7 @@ q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
+
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init,[0,0,1], True); rr (q_init_test)
@@ -126,44 +124,21 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[rLegId,lLegId])
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
-extending = [0,0,0,
- 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
- 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
- -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
-flexion = [0,0, 0, 1, 0, 0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, -0.3,
- -0.3, -2, 0, -0.6, 0.0, 0.0, -0.3, -0.3, -2, 0, -0.6, 0.0,
- 0.0, -0.2, 0.3, -1.9, 1.9, -0.6, 0, -0.2, 0.3, -1.9, 1.9,-0.6, 0]
-q_contact = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0.7, 0.0, 0.0, -0.7, 0.4,0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0,0.0, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0]
-
-fullBody.setPose (extending, "extending")
-fullBody.setPose (flexion, "flexion")
-fullBody.setPose (q_contact, "contact")
-
-"""
-qe = extending[::]
-qe[0:7] = [-2.025129887082707,
-40.59097542330351,
-128.97577375406138,
- 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
- 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
- -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
-
-rr(qe)
-"""
-
+#extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0] # = q_0 + 'RAnkle_J1'=0.6 + 'LAnkle_J1'=0.6
+flexion = q_0
+#fullBody.setPose (extending, "extending")
+#fullBody.setPose (flexion, "flexion")
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
+fullBody.interpolateBallisticPath(0, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.1
 pathId = psf.numberPaths () -1
 rr(pp.client.problem.configAtParam(pathId,0))
-pp(pathId)
-
-
+pp.client.problem.pathLength(pathId)
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)

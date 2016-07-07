@@ -513,14 +513,14 @@
       <child link="RShank"/>
       <origin rpy="0 0 0" xyz="0.0012 0.0385 -0.4586"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.05" upper="1.9" velocity="1.0"/>
+      <limit effort="0" lower="-0.05" upper="2.1" velocity="1.0"/>
    </joint>
    <joint name="RFoot_rx" type="revolute">
       <parent link="RShank"/>
       <child link="RFoot_rx"/>
       <origin rpy="0 0 0" xyz="0.0070 0.0310 -0.4016"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.6" upper="1.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="1.1" velocity="1.0"/>
    </joint>
    <joint name="RFoot_rz" type="revolute">
       <parent link="RFoot_rx"/>
@@ -532,7 +532,7 @@
   <joint name="SpidermanRFootSphere" type="fixed">
       <parent link="RFoot"/>
       <child link="SpidermanRFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.00134 -0.1 -0.09568"/>
+      <origin rpy="0 0 0" xyz="-0.00134 -0.17 -0.09568"/>
    </joint>
    <joint name="LThigh_ry" type="revolute">
       <parent link="Pelvis"/>
@@ -560,14 +560,14 @@
       <child link="LShank"/>
       <origin rpy="0 0 0" xyz="0 0.0308 -0.4471"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.05" upper="1.9" velocity="1.0"/>
+      <limit effort="0" lower="-0.05" upper="2.1" velocity="1.0"/>
    </joint>
    <joint name="LFoot_rx" type="revolute">
       <parent link="LShank"/>
       <child link="LFoot_rx"/>
       <origin rpy="0 0 0" xyz="0.0026 0.0393 -0.4117"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.6" upper="1.1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="1.1" velocity="1.0"/>
    </joint>
    <joint name="LFoot_rz" type="revolute">
       <parent link="LFoot_rx"/>
@@ -579,7 +579,7 @@
   <joint name="SpidermanLFootSphere" type="fixed">
       <parent link="LFoot"/>
       <child link="SpidermanLFootSphere"/>
-      <origin rpy="0 0 0" xyz="0.00134 -0.1 -0.09568"/>
+      <origin rpy="0 0 0" xyz="0.00134 -0.17 -0.09568"/>
    </joint>
    <joint name="RHumerus_ry" type="revolute">
       <parent link="Thorax"/>
@@ -607,14 +607,14 @@
       <child link="RForearm_rx"/>
       <origin rpy="0 0 0" xyz="-0.2007 -0.0213 -0.1671"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.1" upper="2.9" velocity="1.0"/>
+      <limit effort="0" lower="-2.9" upper="0.1" velocity="1.0"/>
    </joint>
    <joint name="RForearm_rz" type="revolute">
       <parent link="RForearm_rx"/>
       <child link="RForearm"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 -1"/>
-      <limit effort="0" lower="-0.6" upper="3.3" velocity="1.0"/>
+      <limit effort="0" lower="-2.3" upper="0.6" velocity="1.0"/>
    </joint>
    <joint name="RHand_rx" type="revolute">
       <parent link="RForearm"/>
@@ -627,13 +627,13 @@
       <parent link="RHand_rx"/>
       <child link="RHand"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.6" upper="0.5" velocity="1.0"/>
+      <axis xyz="0 -1 0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
   <joint name="SpidermanRHandSphere" type="fixed">
       <parent link="RHand"/>
       <child link="SpidermanRHandSphere"/>
-      <origin rpy="0 0.2 -0.2" xyz="0 -0.0434 -0.08"/>
+      <origin rpy="0 0.2 -0.2" xyz="-0.01 -0.0384 -0.07"/>
    </joint>
    <joint name="LHumerus_ry" type="revolute">
       <parent link="Thorax"/>
@@ -668,7 +668,7 @@
       <child link="LForearm"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-3.3" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-2.3" upper="0.6" velocity="1.0"/>
    </joint>
    <joint name="LHand_rx" type="revolute">
       <parent link="LForearm"/>
@@ -682,11 +682,11 @@
       <child link="LHand"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.5" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-0.6" upper="0.6" velocity="1.0"/>
    </joint>
   <joint name="SpidermanLHandSphere" type="fixed">
       <parent link="LHand"/>
       <child link="SpidermanLHandSphere"/>
-      <origin rpy="0 0.2 3.3415" xyz="0 -0.0434 -0.08"/>
+      <origin rpy="0 0.2 -0.2" xyz="0.01 -0.0384 -0.07"/>
    </joint>
 </robot>

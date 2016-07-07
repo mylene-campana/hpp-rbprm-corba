@@ -18,28 +18,35 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'spiderman_trunk'
-urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere']
+urdfName = 'hrp2_trunk_flexible'
+urdfNameRoms =  ['hrp2_lleg_rom','hrp2_rleg_rom']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 1, 170])
-#rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 20, 170])
+#rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 1, 170])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 10, 170])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
-rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = 0.6
-rbprmBuilder.setNormalFilter('SpidermanLFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('SpidermanRFootSphere', [0,0,1], filterRange)
+
+
+
 rbprmBuilder.setContactSize (0.03,0.08)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 ps = ProblemSolver (rbprmBuilder)
 ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-rbprmBuilder.setNumberFilterMatch(2)
+ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
+rbprmBuilder.setFrictionCoef(1.2)
+rbprmBuilder.setMaxTakeoffVelocity(30)#(8)
+rbprmBuilder.setMaxLandingVelocity(30)
+ps.client.problem.selectConFigurationShooter("RbprmShooter")
+ps.client.problem.selectSteeringMethod("SteeringParabola")
+
+
+rbprmBuilder.setNumberFilterMatch(0)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
@@ -55,40 +62,105 @@ q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 #q11[0:7] = [-100,45,0.4, 1, 0, 0, 0]; r(q11) # on floor
 #q11[0:7] = [-105,20,29.4, 1, 0, 0, 0]; r(q11) # roof of house
 #q11[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q11) # floor, right side
-q11[0:7] = [-11.6,38.5,121.05, 1, 0, 0, 0]; r(q11) # highest tower
+q11[0:7] = [-11.8,38.2,120.9, 1, 0, 0, 0]; r(q11) # highest tower
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-
-q22[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q22) # floor, right side
+#q22[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q22) # floor, right side
 #q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
-#q22[0:7] =  [16,45,100, 1, 0, 0, 0]; r(q22) #toit en X
+q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
 #q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
+#q22[0:7] = [90,40,20.5, 1, 0, 0, 0]; r(q22) #right house
 
 rbprmBuilder.isConfigValid(q22)
 
-ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"
-ps.client.problem.selectConFigurationShooter("RbprmShooter")
-rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(30)#(8)
-rbprmBuilder.setMaxLandingVelocity(30)
+
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
-#ps.client.problem.prepareSolveStepByStep()
+#r.solveAndDisplay("rm",1,1)
 
-#t = ps.solve ()
-r.solveAndDisplay("rm",1,1)
+## manually add way point (faster computation for test, work without but it's slow (~ <1minute )
+"""
+waypoints = [[20.075492263329966,
+ 45.67270834760806,
+ 100.0368335278786,
+ 1,
+ 0,
+ 0,
+ 0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0] ,
+ [4,
+ 24,
+ 72.36757488910698,
+ 0.6025437481958323,
+ -0.014994289380592305,
+ 0.36339178566529046,
+ -0.7103960957853586,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0],
+ [17.90089886471105,
+ 20.51569231026736,
+ 37.4,
+ 0.9780744240181991,
+ -0.009709317338437355,
+ 0.023538837001709934,
+ 0.20669318660975794,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0]]
+
+pbCl = rbprmBuilder.client.basic.problem
+pbCl.addConfigToRoadmap (waypoints[0])
+pbCl.addConfigToRoadmap (waypoints[1])
+pbCl.addConfigToRoadmap (waypoints[2])
+ps.directPath (q11, waypoints[0],True); pathIds0 = ps.numberPaths () - 1
+ps.directPath (waypoints[0], waypoints[1],True); pathId01 = ps.numberPaths () - 1
+ps.directPath (waypoints[1], waypoints[2],True); pathId12 = ps.numberPaths () - 1
+ps.directPath (waypoints[2], q22,True); pathId2g = ps.numberPaths () - 1
+pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
+pbCl.addEdgeToRoadmap (waypoints[0], waypoints[1], pathId01, True)
+pbCl.addEdgeToRoadmap (waypoints[1], waypoints[2], pathId12, True)
+pbCl.addEdgeToRoadmap (waypoints[2], q22, pathId2g, True)
+##########
+"""
+
+t = ps.solve ()
+
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
-pp.setSpeed(10)
-pp(solutionPathId)
 
-rbprmBuilder.rotateAlongPath (solutionPathId)
+rbprmBuilder.rotateAlongPath (solutionPathId,True)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
+r(pp.client.problem.configAtParam(orientedpathId,0))
+
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
@@ -99,26 +171,15 @@ for i in range(1,len(pathWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
 
-plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone_WP2")
-plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbprmBuilder, r, "cone_21", "friction_cone2")
+#plotConeWaypoints (rbprmBuilder, solutionPathId, r, "cone_wp_group", "friction_cone_WP2")
+#plotCone (q11, rbprmBuilder, r, "cone_11", "friction_cone2"); plotCone (q22, rbprmBuilder, r, "cone_21", "friction_cone2")
 
 
-"""
-# Write data to log file
-pfr = rbprmBuilder.getResultValues ()
-if isinstance(t, list):
-    timeSec = t[0]* 3600000 + t[1] * 60000 + t[2] * 1000 + t[3]
-f = open('log.txt', 'a')
-f.write("ant_test_path\n")
-f.write("path computation: " + str(timeSec) + "\n")
-f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
-f.close()
-"""
 rob = rbprmBuilder.client.basic.robot
 r(q11)
 
 # Move RB-robot away in viewer
-qAway = q11 [::]; qAway[0] = -6.5; qAway[1] = -2
+qAway = q11 [::]; qAway[2] = -5; 
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 
@@ -219,7 +280,9 @@ pbCl.saveRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 """
 
-####
+
+
+""" #### display
 id = r.client.gui.getWindowID("window_hpp_")
 r.client.gui.attachCameraToNode("spiderman_trunk/base_link",id)
 
@@ -234,4 +297,12 @@ rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1
 r(pp.client.problem.configAtParam(orientedpathId,0))
 pp(orientedpathId)
+
+q11 = ps.node(0)
+q22 = ps.node(1)
+plotCone (q11, ps, r, "cone_first", "friction_cone_SG2"); 
+plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
+"""
+
+
 

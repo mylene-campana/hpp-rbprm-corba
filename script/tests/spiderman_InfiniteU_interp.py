@@ -9,7 +9,7 @@ from hpp.gepetto import Viewer, PathPlayer
 import numpy as np
 from viewer_library import *
 
-import spiderman_city1_path as tp
+import spiderman_cube_infiniteU_path as tp
 
 
 
@@ -28,64 +28,47 @@ Vimplist = tp.Vimplist
 fullBody = FullBody ()
 robot = fullBody.client.basic.robot
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-fullBody.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 10, 170])
-#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize) 
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
-#ps = ProblemSolver( fullBody ); r = Viewer (ps)
+
+
 r = tp.r; ps = tp.ps
 
 psf = tp.ProblemSolver( fullBody )
 rr = tp.Viewer (psf); gui = rr.client.gui
 
 
-# test heuristic
-"""
-q_jump= fullBody.getCurrentConfig()
-q_jump = [-11.6, 38.5, 121.17, 0.9659, 0, 0.25881, 0, 0, 0, 0.2,
- 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5,
- 0.7, 0, -0.6, 0.0, 0.0, -0.2, 0.3, -1.9, 1.9,-0.6, 0, -0.2, 0.3,
- -1.9, 1.9, -0.6, 0] #; rr(q_jump)
-
-q_feet = q_jump[27:32]
-q_arm = q_jump[13:19]
-
-
-fullBody.addRefConfigAnalysisWeight(q_feet,"RefPoseFeet",[1.,1.,1.,5.,1.,1.])
-fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
-"""
 
 #~ AFTER loading obstacles
-nbSamples = 5000
+nbSamples = 50000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
-
+heuristicName = "static"
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'static')
+fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,heuristicName)
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'static')
+fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,heuristicName)
 
 rarmId = 'rhand'
 rLeg = 'RHumerus_ry'
 rfoot = 'SpidermanRHandSphere'
 rarmx = x; rarmy = y
-fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,'static')
+fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,heuristicName)
 
 larmId = 'lhand'
 lLeg = 'LHumerus_ry'
 lfoot = 'SpidermanLHandSphere'
 larmx = x; larmy = y
-fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,'static')
+fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,heuristicName)
 
 
 print("Limbs added to fullbody")
@@ -103,7 +86,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathId # tp.orientedpathId
+entryPathId = tp.solutionPathId # tp.orientedpathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
@@ -114,7 +97,7 @@ q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init,[0,0,1], True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init,[0,0,-1], True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
@@ -123,8 +106,8 @@ fullBody.isConfigValid(q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
-fullBody.setStartState(q_init_test,[rLegId,lLegId])
-fullBody.setEndState(q_goal_test,[rLegId,lLegId])
+fullBody.setStartState(q_init_test,[rLegId,lLegId,rarmId,larmId])
+fullBody.setEndState(q_goal_test,[rLegId,lLegId,rarmId,larmId])
 
 extending = [0,0,0,
  1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
@@ -161,7 +144,7 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.1
 pathId = psf.numberPaths () -1
 rr(pp.client.problem.configAtParam(pathId,0))
-pp(pathId)
+
 
 
 

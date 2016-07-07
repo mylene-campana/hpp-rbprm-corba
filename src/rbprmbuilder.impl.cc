@@ -373,7 +373,11 @@ namespace hpp {
             model::Configuration_t config = dofArrayToConfig (fullBody_->device_, configuration);
             rbprm::State state = rbprm::ComputeContacts(fullBody_,config,
                                             problemSolver_->collisionObstacles(), dir);
-            core::Configuration_t q = state.configuration_;
+           core::Configuration_t q;
+           if(contactPose_.size() > 0)
+             q = rbprm::computeContactPose(state,contactPose_,fullBody_);
+           else 
+             q = state.configuration_;
 	    std::queue<std::string> contactStack = state.contactOrder_;
 	    const std::size_t contactNumber = contactStack.size ();
 	    fcl::Vec3f normalAv = (0,0,0);

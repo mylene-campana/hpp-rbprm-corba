@@ -234,3 +234,9 @@ q = q_0
 q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.6; r(q)
 """
 
+"""
+rr.startCapture("screen/spiderman_assymetric_reference","png") ; rr.stopCapture()
+
+
+"""
+

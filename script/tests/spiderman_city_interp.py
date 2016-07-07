@@ -64,25 +64,25 @@ y = 0.08 # contact surface length
 
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
-rLeg = 'RThigh_ry'
+rLeg = 'RThigh_rx'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
 fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,'static')
 
 lLegId = 'lfoot'
-lLeg = 'LThigh_ry'
+lLeg = 'LThigh_rx'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
 fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,'static')
 
 rarmId = 'rhand'
-rLeg = 'RHumerus_ry'
+rLeg = 'RHumerus_rx'
 rfoot = 'SpidermanRHandSphere'
 rarmx = x; rarmy = y
 fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,'static')
 
 larmId = 'lhand'
-lLeg = 'LHumerus_ry'
+lLeg = 'LHumerus_rx'
 lfoot = 'SpidermanLHandSphere'
 larmx = x; larmy = y
 fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,'static')
@@ -90,15 +90,19 @@ fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,'static')
 
 print("Limbs added to fullbody")
 
-extending = [0,0,0,
- 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
- 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
- -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
-flexion = [0,0, 0, 1, 0, 0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, -0.3,
- -0.3, -2, 0, -0.6, 0.0, 0.0, -0.3, -0.3, -2, 0, -0.6, 0.0,
- 0.0, -0.2, 0.3, -1.9, 1.9, -0.6, 0, -0.2, 0.3, -1.9, 1.9,-0.6, 0]
-q_contact = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0.7, 0.0, 0.0, -0.7, 0.4,0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0,0.0, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0]
+extending = [0, 0, 0, 1, 0, 0, 0, 0.8, 0.0, 0, -0.6, 0.0, 0,0.4, -0.9, 0.9, 0, 0, 0.0, 0.0, 0.4, 0.9, -0.9, 0, 0, 0.0,-0.0, -2, -0.5, 0.3, 2.2, 0.7, 0, 0.0, -2, 0.5, -0.3, 2.2, 0.7, 0.0, 0.0]
 
+flexion = [0, 0, 0, 1, 0, 0, 0,  0.0, 0, 0, 0.0, 0.0, 0.0, -2, 0.3, -0.3, 0, -0.6, 0.0, 0.0, -2, -0.3, 0.3, 0, 0.6, 0.0,-0.0, -1.9, -0.3, -0.2, 1.9, -0.6, 0, 0.0, -1.9, 0.3, 0.2, 1.9, -0.6, 0, 0.0]
+q_contact = [0, 0, 0, 1, 0.0, 0.0, 0.0, 0.7, 0, 0, -0.7, 0.0,0, 0.5, 0.7, 0.5, 0, -0.6, 0.0, 0.0, 0.5, -0.7, -0.5, 0,0.6, 0.0, -0.0, -1.2, -0.3, -0.2, 2.2, -0.9, 0, 0.0, -1.2,0.3, 0.2, 2.2, -0.9, 0, 0.0]
+
+
+
+"""
+extending[0:7] = q_init_test[0:7] ; rr(extending)
+flexion[0:7] = q_init_test[0:7] ; rr(flexion)
+q_contact[0:7] = q_init_test[0:7] ; rr(q_contact)
+
+"""
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 fullBody.setPose (q_contact, "contact")

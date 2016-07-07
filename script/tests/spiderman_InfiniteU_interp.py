@@ -73,6 +73,23 @@ fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,heuristicName)
 
 print("Limbs added to fullbody")
 
+
+
+
+extending = [0, 0, 0, 1, 0, 0, 0, 0.8, 0.0, 0, -0.6, 0.0, 0,0.4, -0.9, 0.9, 0, 0, 0.0, 0.0, 0.4, 0.9, -0.9, 0, 0, 0.0,-0.0, -2, -0.5, 0.3, 2.2, 0.7, 0, 0.0, -2, 0.5, -0.3, 2.2, 0.7, 0.0, 0.0]
+
+flexion = [0, 0, 0, 1, 0, 0, 0,  0.0, 0, 0, 0.0, 0.0, 0.0, -2, 0.3, -0.3, 0, -0.6, 0.0, 0.0, -2, -0.3, 0.3, 0, 0.6, 0.0,-0.0, -1.9, -0.3, -0.2, 1.9, -0.6, 0, 0.0, -1.9, 0.3, 0.2, 1.9, -0.6, 0, 0.0]
+q_contact = [0, 0, 0, 1, 0.0, 0.0, 0.0, 0.7, 0, 0, -0.7, 0.0,0, 0.5, 0.7, 0.5, 0, -0.6, 0.0, 0.0, 0.5, -0.7, -0.5, 0,0.6, 0.0, -0.0, -1.2, -0.3, -0.2, 2.2, -0.9, 0, 0.0, -1.2,0.3, 0.2, 2.2, -0.9, 0, 0.0]
+
+
+
+fullBody.setPose (extending, "extending")
+fullBody.setPose (flexion, "flexion")
+fullBody.setPose (q_contact, "contact")
+
+
+
+
 #fullBody.runSampleAnalysis( "RefPoseFeet", True) #done in compute_db now
 
 
@@ -97,7 +114,7 @@ q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init,[0,0,-1], True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init,[0,0,1], True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
@@ -107,20 +124,8 @@ q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], True); rr (q_goal_test
 fullBody.isConfigValid(q_goal_test)
 
 fullBody.setStartState(q_init_test,[rLegId,lLegId,rarmId,larmId])
-fullBody.setEndState(q_goal_test,[rLegId,lLegId,rarmId,larmId])
+fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
-extending = [0,0,0,
- 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
- 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
- -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
-flexion = [0,0, 0, 1, 0, 0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, -0.3,
- -0.3, -2, 0, -0.6, 0.0, 0.0, -0.3, -0.3, -2, 0, -0.6, 0.0,
- 0.0, -0.2, 0.3, -1.9, 1.9, -0.6, 0, -0.2, 0.3, -1.9, 1.9,-0.6, 0]
-q_contact = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0.7, 0.0, 0.0, -0.7, 0.4,0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0,0.0, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0]
-
-fullBody.setPose (extending, "extending")
-fullBody.setPose (flexion, "flexion")
-fullBody.setPose (q_contact, "contact")
 
 """
 qe = extending[::]
@@ -214,4 +219,7 @@ q_0 = fullBody.getCurrentConfig()
 q = q_0
 q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.6; r(q)
 """
+rr.addLandmark('spiderman/SpidermanLHandSphere',1)
+
+
 

@@ -476,14 +476,11 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
     FrameRange = np.arange(0, ps.pathLength(pathId), dt)
     iFrame = 0 # int
     jointNames = robot.getJointNames ()
-    rootJointName = robot.getAllJointNames() [3] # virtualPelvis or virtualTorso or virtualThorax
-    rootJointNameBlender = rootJointName[7:len(rootJointName)] # remove "virtual"
+    rootJointName = robot.getJointNames () [0]
     nbInnerJoints = len(jointNames) - 2
     f = open(fileName,'a')
     print (str(nbInnerJoints))
     f.write(str(nbInnerJoints) + "\n")
-    print (rootJointNameBlender)
-    f.write (rootJointNameBlender + "\n")
     for t in FrameRange:
         print ("Frame " + str(iFrame))
         f.write ("Frame " + str(iFrame) + "\n")
@@ -580,14 +577,11 @@ def jointConfigsToFile (ps, r, fileName, config):
     pathToFile = '/local/mcampana/devel/hpp/videos/' # WARNING!
     gui = r.client.gui
     jointNames = robot.getJointNames ()
-    rootJointName = robot.getAllJointNames() [3] # virtualPelvis or virtualTorso or virtualThorax
-    rootJointNameBlender = rootJointName[7:len(rootJointName)] # remove "virtual"
+    rootJointName = robot.getJointNames () [0]
     nbInnerJoints = len(jointNames) - 2
     f = open(fileName,'a')
     print (str(nbInnerJoints))
     f.write(str(nbInnerJoints) + "\n")
-    print (rootJointNameBlender)
-    f.write (rootJointNameBlender + "\n")
     f.write ("Frame " + str(0) + "\n")
     q = config
     ps.robot.setCurrentConfig(q)

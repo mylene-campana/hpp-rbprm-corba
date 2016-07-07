@@ -231,10 +231,7 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 		lines=f.readlines() # lines [0] = nbInnerJoints ; lines [1] = freeflyerName
 		nbInnerJoints = int (lines[0])
 		#print ("nbInnerJoints= " + str(nbInnerJoints))
-		freeflyerName = lines[1].strip ('\n')
-		print ("freeflyerName= " + freeflyerName+'\n') # TEST
-		#freeflyerBone = armature.pose.bones[freeflyerName] # not used for now
-		lineNB = 1
+		lineNB = 0
 		while (lineNB + 1 < totalLineNumber):
 			lineNB = lineNB + 1
 			line = lines [lineNB] # frame number line
@@ -485,9 +482,9 @@ def mainTest ():
 	initFrame = 0
 	beginMotionFrame = 0
 	print ("--------  load motion armature  --------")
-	#fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZYX' # ANT
-	fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # FROG
-	#fileName = 'spid_jointConfigs.txt'; reOrientFrames = False; rotationOrder = '' # SPIDERMAN
+	fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZYX' # ANT
+	#fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # FROG
+	#fileName = 'spid_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # SPIDERMAN
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for inner joints
 	print ("endMotionFrame joints= " + str(endMotionFrame))

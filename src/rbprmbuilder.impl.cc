@@ -597,6 +597,17 @@ namespace hpp {
         }
     }
 
+    namespace{
+      void copyStateFrames(const rbprm::T_StateFrame& stateFrames, rbprm::T_State& states )
+      {
+        states.clear();
+        for(rbprm::T_StateFrame::const_iterator cit = stateFrames.begin(); cit != stateFrames.end(); ++cit)
+        {
+          states.push_back(cit->second);
+        }
+      }
+    }
+    
     floatSeqSeq* RbprmBuilder::interpolateConfigs(const hpp::floatSeqSeq& configs, double robustnessTreshold) throw (hpp::Error)
     {
         try
@@ -611,7 +622,8 @@ namespace hpp {
             }
             hpp::rbprm::interpolation::RbPrmInterpolationPtr_t interpolator = rbprm::interpolation::RbPrmInterpolation::create(fullBody_,startState_,endState_);
             std::vector<model::Configuration_t> configurations = doubleDofArrayToConfig(fullBody_->device_, configs);
-            lastStatesComputed_ = interpolator->Interpolate(problemSolver_->collisionObstacles(),configurations,robustnessTreshold);
+            lastStateFramesComputed_ = interpolator->Interpolate(problemSolver_->collisionObstacles(),configurations,robustnessTreshold);
+            copyStateFrames(lastStateFramesComputed_, lastStatesComputed_);
             hpp::floatSeqSeq *res;
             res = new hpp::floatSeqSeq ();
 
@@ -661,7 +673,8 @@ namespace hpp {
         }
 
         hpp::rbprm::interpolation::RbPrmInterpolationPtr_t interpolator = hpp::rbprm::interpolation::RbPrmInterpolation::create(fullBody_,startState_,endState_,problemSolver_->paths()[pathId]);
-        lastStatesComputed_ = interpolator->Interpolate(problemSolver_->collisionObstacles(),timestep,robustnessTreshold);
+        lastStateFramesComputed_ = interpolator->Interpolate(problemSolver_->collisionObstacles(),timestep,robustnessTreshold);
+        copyStateFrames(lastStateFramesComputed_, lastStatesComputed_);
 
         hpp::floatSeqSeq *res;
         res = new hpp::floatSeqSeq ();
@@ -703,9 +716,11 @@ namespace hpp {
             }
             //create helper
 //            /interpolation::LimbRRTHelper helper(fullBody_, problemSolver_->problem());
-            core::PathVectorPtr_t path = interpolation::interpolateStates(fullBody_,problemSolver_->problem(),
+            core::PathPtr_t path = interpolation::interpolateStates(fullBody_,problemSolver_->problem(),
                                                                           lastStatesComputed_.begin()+s1,lastStatesComputed_.begin()+s2);
-            problemSolver_->addPath(path);
+            core::PathVectorPtr_t pathvector= core::PathVector::create(path->outputSize(), path->outputDerivativeSize());
+            pathvector->appendPath(path);
+            problemSolver_->addPath(pathvector);
             problemSolver_->robot()->setDimensionExtraConfigSpace(problemSolver_->robot()->extraConfigSpace().dimension()+1);
         }
         catch(std::runtime_error& e)
@@ -1161,7 +1176,7 @@ namespace hpp {
 	    (fullBody_->device_->configSize (),
 	     fullBody_->device_->numberDof ());
 	  hpp::rbprm::BallisticInterpolationPtr_t interpolator = 
-	    rbprm::BallisticInterpolation::create(*(problemSolver_->problem ()),
+	    rbprm::BallisticInterpolation::create((problemSolver_->problem ()),
 						  fullBody_, startState_,
 						  endState_, path);
 	  const core::PathPtr_t subpath = (*path).pathAtRank (0);
@@ -1527,8 +1542,8 @@ namespace hpp {
           
 
           newPath->appendPath(rbprm::TimedBallisticPath::create(castedPath1,castedPath1Max,castedPath2Max,castedPath2)); 
-        }
         
+        }
         problemSolver_->addPath (newPath);
       }
 

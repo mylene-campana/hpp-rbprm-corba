@@ -53,7 +53,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
+entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
@@ -73,12 +73,12 @@ dir_init = [0,0,-1]; dir_goal = [0,0, 1]"""
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, False); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, False); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
 
@@ -91,7 +91,7 @@ fullBody.interpolateBallisticPath(entryPathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.6
+pp.speed=0.4
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)
@@ -118,7 +118,7 @@ pathToYamlFile (cl, r, "frames.yaml ", "armlessSkeleton/base_link", pathId, q_go
 ## Video recording
 import time
 pp.dt = 0.01
-pp.speed=0.5
+pp.speed=0.4
 rr(q_init_test)
 rr.startCapture ("capture","png")
 rr(q_init_test); time.sleep(2)
@@ -128,7 +128,7 @@ rr(q_goal_test); time.sleep(2);
 rr.stopCapture ()
 
 ## ffmpeg commands
-ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
+ffmpeg -r 30 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
 x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$(($x+1)); done
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi

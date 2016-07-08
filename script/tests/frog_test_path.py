@@ -23,7 +23,6 @@ urdfNameRoms = ['FrogLFootSphere','FrogRFootSphere','FrogLHandSphere','FrogRHand
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
-#base_joint_xyz_limits = [-2, 4, -1.5, 1.5, -0.1, 2.7] # groundcrouch
 base_joint_xyz_limits = [-4.5, 3.6, -6.3, 4.9, -0.15, 2.7] # etang # all rocks
 #base_joint_xyz_limits = [-2.3, 1.5, -3.9, 3.7, -0.15, 2.7]# etang juste middle
 
@@ -49,7 +48,6 @@ r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
 r.loadObstacleModel ('hpp-rbprm-corba', "etang_envir", "etang_envir")
-#r.loadObstacleModel ('hpp-rbprm-corba', "groundcrouch", "planning")
 addLight (r, [0,0,6,1,0,0,0], "li");
 plotFrame (r, "frameGroupName", [0,0,0], 0.5)
 
@@ -57,13 +55,11 @@ plotFrame (r, "frameGroupName", [0,0,0], 0.5)
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 q11[0:7] = [-1.44, 2.78, -0.11, 1, 0, 0, 0]; r(q11) # etang
-#q11[0:7] = [-3.2, 0, 0.05, 1, 0, 0, 0]; r(q11) # groundcrouch
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
 q22[0:7] = [-0.35, -3.45, 0.035, 1, 0, 0, 0]; r(q22) # etang
-#q22[0:7] = [3, 0, 0.05, 1, 0, 0, 0]; r(q22) # groundcrouch
 
 rbprmBuilder.isConfigValid(q22)
 

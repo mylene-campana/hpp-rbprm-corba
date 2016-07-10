@@ -18,8 +18,8 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'frog_trunk'
-urdfNameRoms = ['FrogLFootSphere','FrogRFootSphere','FrogLHandSphere','FrogRHandSphere']
+urdfName = 'ant_trunk'
+urdfNameRoms = ['LFFootSphere','LMFootSphere','LBFootSphere','RFFootSphere','RMFootSphere','RBFootSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
@@ -30,12 +30,14 @@ rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, p
 rbprmBuilder.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
 rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = -1
-rbprmBuilder.setNormalFilter('FrogLFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('FrogRFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('FrogLHandSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('FrogRHandSphere', [0,0,1], filterRange)
-rbprmBuilder.setContactSize (0.03,0.08)
+filterRange = 0.3
+rbprmBuilder.setNormalFilter('LFFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('LMFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('LBFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RFFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RMFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RBFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setContactSize (0.03,0.03)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
@@ -52,12 +54,12 @@ addLight (r, [0,0,6,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [6.3, 0, 0.4, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [-7.3, -2, 7.9, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-q22[0:7] = [-7.3, -2, 7.9, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [6.3, 0, 0.4, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -103,7 +105,7 @@ for i in range(1,len(pathOriWaypoints)-1):
         print('problem with waypoints number: ' + str(i))
 
 
-plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
+plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group_planning", "friction_cone2")
 plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
 
 

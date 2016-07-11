@@ -44,7 +44,7 @@ ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also config
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
 rbprmBuilder.setMaxTakeoffVelocity(30)#(8)
-rbprmBuilder.setMaxLandingVelocity(30)
+rbprmBuilder.setMaxLandingVelocity(35)
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 ps.client.problem.selectSteeringMethod("SteeringParabola")
 
@@ -72,9 +72,9 @@ rbprmBuilder.isConfigValid(q11)
 q22 = q11[::]
 #q22[0:7] = [55,60,0.3, 1, 0, 0, 0]; r(q22) # floor, right side
 #q22[0:7] = [-11.6,38.5,120.8, 1, 0, 0, 0]; r(q22) # highest tower
-q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
+#q22[0:7] =  [16,45,100.5, 1, 0, 0, 0]; r(q22) #toit en X
 #q22[0:7] =  [-110,20,29.2, 1, 0, 0, 0]; r(q22) #house on left side
-#q22[0:7] = [90,40,20.49, 1, 0, 0, 0]; r(q22) #right house
+q22[0:7] = [90,40,20.49, 1, 0, 0, 0]; r(q22) #right house
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -85,10 +85,10 @@ ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 #r.solveAndDisplay("rm",1,1)
 
 ## manually add way point (faster computation for test, work without but it's slow (~ <1minute )
-"""
+
 waypoints = [[20.075492263329966,
  45.67270834760806,
- 100.0368335278786,
+ 100.4368335278786,
  1,
  0,
  0,
@@ -101,11 +101,11 @@ waypoints = [[20.075492263329966,
  0.0,
  0.0,
  0.0,
- 0.0,
+ 1.0,
  0.0] ,
  [4,
  24,
- 72.36757488910698,
+ 72.76757488910698,
  0.6025437481958323,
  -0.014994289380592305,
  0.36339178566529046,
@@ -118,11 +118,11 @@ waypoints = [[20.075492263329966,
  0.0,
  0.0,
  0.0,
- 0.0,
+ 1.0,
  0.0],
  [17.90089886471105,
  20.51569231026736,
- 37.4,
+ 37.8,
  0.9780744240181991,
  -0.009709317338437355,
  0.023538837001709934,
@@ -135,25 +135,35 @@ waypoints = [[20.075492263329966,
  0.0,
  0.0,
  0.0,
- 0.0,
+ 1.0,
  0.0]]
+ps.client.problem.prepareSolveStepByStep()
+q11 = ps.node(0)
+q22 = ps.node(1)
 
 pbCl = rbprmBuilder.client.basic.problem
 pbCl.addConfigToRoadmap (waypoints[0])
 pbCl.addConfigToRoadmap (waypoints[1])
 pbCl.addConfigToRoadmap (waypoints[2])
-ps.directPath (q11, waypoints[0],True); pathIds0 = ps.numberPaths () - 1
-ps.directPath (waypoints[0], waypoints[1],True); pathId01 = ps.numberPaths () - 1
-ps.directPath (waypoints[1], waypoints[2],True); pathId12 = ps.numberPaths () - 1
-ps.directPath (waypoints[2], q22,True); pathId2g = ps.numberPaths () - 1
+ps.directPath (q11, waypoints[0],False)
+pathIds0 = ps.numberPaths () - 1
+ps.directPath (waypoints[0], waypoints[1],False)
+pathId01 = ps.numberPaths () - 1
+ps.directPath (waypoints[1], waypoints[2],False)
+pathId12 = ps.numberPaths () - 1
+ps.directPath (waypoints[2], q22,False)
+pathId2g = ps.numberPaths () - 1
 pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
 pbCl.addEdgeToRoadmap (waypoints[0], waypoints[1], pathId01, True)
 pbCl.addEdgeToRoadmap (waypoints[1], waypoints[2], pathId12, True)
 pbCl.addEdgeToRoadmap (waypoints[2], q22, pathId2g, True)
 ##########
-"""
 
-ps.client.problem.setRandomSeed(0)
+
+#ps.client.problem.setRandomSeed(4983)
+
+
+
 t = ps.solve ()
 
 solutionPathId = ps.numberPaths () - 1
@@ -218,7 +228,7 @@ ps.client.problem.getResultValues ()
 """
 plotFrame (r, 'frame_group', [0,0,0], 0.6)
 
-gui.removeFromGroup("path0",r.sceneName)
+gui.removeFromGroup("rm",r.sceneName)
 gui.getNodeList()
 ps.numberNodes()
 

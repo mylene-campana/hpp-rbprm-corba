@@ -164,15 +164,10 @@ fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.1
+pp.speed=1
 pathId = psf.numberPaths () -1
 rr(pp.client.problem.configAtParam(pathId,0))
 pp(pathId)
-
-
-
-fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-pp(psf.numberPaths ()-1)
 
 
 
@@ -194,16 +189,22 @@ r.client.gui.refresh ()
 
 
 ## Video recording
+
+id = r.client.gui.getWindowID("window_hpp_")
+rr.client.gui.attachCameraToNode("spiderman/Skull",id)
+
+
 import time
 pp.dt = 0.01
-pp.speed=0.5
+pp.speed=2
 rr(q_init_test)
-rr.startCapture ("capture","png")
-rr(q_init_test); time.sleep(2)
+rr.startCapture ("capture/capture","png")
+rr(q_init_test); time.sleep(5)
 rr(q_init_test)
 pp(psf.numberPaths ()-1)
 rr(q_goal_test); time.sleep(2);
 rr.stopCapture ()
+
 
 ## ffmpeg commands
 ffmpeg -r 50 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4

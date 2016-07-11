@@ -1487,10 +1487,15 @@ namespace hpp {
     }
 
 	  // loop to construct new path vector with parabPath constructor
+    ParabolaPathPtr_t pp;
 	  for (std::size_t i = 0; i < num_subpaths; i++) {
 	    const core::PathPtr_t subpath = (*path).pathAtRank (i);
-	    const ParabolaPathPtr_t pp = 
-	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
+	    pp =  boost::dynamic_pointer_cast<ParabolaPath>(subpath);
+      if(!pp){
+        const core::PathVectorPtr_t pv = boost::dynamic_pointer_cast<core::PathVector>(subpath);
+        const core::PathPtr_t subPathEdge = (*pv).pathAtRank (0);
+        pp = boost::dynamic_pointer_cast<ParabolaPath>(subPathEdge);
+      }
 	    const vector_t coefs = pp->coefficients ();
 	    const value_type length = pp->length ();
 

@@ -158,7 +158,7 @@ avconv -r 50 -i capture_0_%d.png -r 15 -vcodec mpeg4 video.mp4
 x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$(($x+1)); done
 avconv -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
-avconv -i video.mp4 -vcodec mpeg4 -crf 24 untitled.mp4
+avconv -i video.mp4 -vcodec mpeg4 -crf 24 spiderman_jump_slowmo.mp4
 rm capture*.png
 rm video.mp4
 """

@@ -30,19 +30,22 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 
 
 q_jump= fullBody.getCurrentConfig()
-q_jump  = [0, 0, 0, 1, 0.0,0.0, 0., 0, 0, 0, 0.0, 0.0, 0, -1.5, 0.4, -0.7, -0.5, -1.2, -0.4,0.1, -1.5, 0.4, -0.7, -0.5, -1.2, -0.4,0.1, -0.2, 0.3, -1.2, 2.2, -0.9, 0, -0.2, 0.3, -1.2, 2.2,-0.9, 0] #; rr(q_jump)
-
+q_jump  = [0.0,0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0, 0,0, 0.0, 0.0, 0, -0.7, -1.5, -0.4, -0.5, -1.2, -0.4, 0.1, -0.7, 1.5,0.4, -0.5, 1.2, -0.4, -0.1, -1.2, -0.3, -0.2, 2.2, -0.9,0, 0.0, -1.2, 0.3, 0.2, 2.2, -0.9, 0, 0.0]
 
 
 # q_jump[0:7] = q_init_test[0:7] ; rr(q_jump)
 
 
-q_feet = q_jump[27:33]
-q_arm = q_jump[13:20]
+q_lfeet = q_jump[27:34]
+q_rfeet = q_jump[34:41]
+q_larm = q_jump[13:20]
+q_rarm = q_jump[20:27]
 
+fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,1.,5.,1.,1.,1.])
+fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,1.,5.,1.,1.,1.])
+fullBody.addRefConfigAnalysis(q_larm,"RefPoseLArm")
+fullBody.addRefConfigAnalysis(q_rarm,"RefPoseRArm")
 
-fullBody.addRefConfigAnalysisWeight(q_feet,"RefPoseFeet",[1.,1.,1.,5.,1.,1.])
-fullBody.addRefConfigAnalysis(q_arm,"RefPoseArm")
 
 
 
@@ -55,13 +58,13 @@ y = 0.08 # contact surface length
 
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
-rLeg = 'RThigh_ry'
+rLeg = 'RThigh_rx'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
 fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 lLegId = 'lfoot'
-lLeg = 'LThigh_ry'
+lLeg = 'LThigh_rx'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
@@ -69,20 +72,20 @@ fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipu
 print("Legs added to fullbody")
 
 rarmId = 'rhand'
-rLeg = 'RHumerus_ry'
+rLeg = 'RHumerus_rx'
 rfoot = 'SpidermanRHandSphere'
 rarmx = x; rarmy = y
-fullBody.addLimb(rarmId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(rarmId,rLeg,rfoot,[0,0,0],[-1,0,0], x, y, nbSamples, "manipulability", 0.01,"_3_DOF")
 
 larmId = 'lhand'
-lLeg = 'LHumerus_ry'
+lLeg = 'LHumerus_rx'
 lfoot = 'SpidermanLHandSphere'
 larmx = x; larmy = y
-fullBody.addLimb(larmId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(larmId,lLeg,lfoot,[0,0,0],[-1,0,0], x, y, nbSamples, "manipulability", 0.01,"_3_DOF")
 
 print("Arms added to fullbody")
 
-def runallLeg(lid, dbName):
+def runallLLeg(lid, dbName):
 
 	fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
 	fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
@@ -90,10 +93,10 @@ def runallLeg(lid, dbName):
 	fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
 	fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
 	fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
-	fullBody.runLimbSampleAnalysis(lid, "RefPoseFeet", True)
+	fullBody.runLimbSampleAnalysis(lid, "RefPoseLFeet", True)
 	fullBody.saveLimbDatabase(lid, dbName)
 
-def runallArm(lid, dbName):
+def runallRLeg(lid, dbName):
 
 	fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
 	fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
@@ -101,17 +104,41 @@ def runallArm(lid, dbName):
 	fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
 	fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
 	fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
-	fullBody.runLimbSampleAnalysis(lid, "RefPoseArm", True)
+	fullBody.runLimbSampleAnalysis(lid, "RefPoseRFeet", True)
+	fullBody.saveLimbDatabase(lid, dbName)
+
+def runallLArm(lid, dbName):
+
+	fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
+	fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
+	fullBody.runLimbSampleAnalysis(lid, "jointLimitsDistance", False)
+	fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
+	fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
+	fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
+	fullBody.runLimbSampleAnalysis(lid, "RefPoseLArm", True)
+	fullBody.saveLimbDatabase(lid, dbName)
+
+
+
+def runallRArm(lid, dbName):
+
+	fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
+	fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
+	fullBody.runLimbSampleAnalysis(lid, "jointLimitsDistance", False)
+	fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
+	fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
+	fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
+	fullBody.runLimbSampleAnalysis(lid, "RefPoseRArm", True)
 	fullBody.saveLimbDatabase(lid, dbName)
 
 
 
 print("Run all legs : ")
-runallLeg(lLegId, './Spiderman_lleg.db')
-runallLeg(rLegId, './Spiderman_rleg.db')
+runallLLeg(lLegId, './Spiderman_lleg.db')
+runallRLeg(rLegId, './Spiderman_rleg.db')
 print("Run all arms : ")
-runallArm(larmId, './Spiderman_larm.db')
-runallArm(rarmId, './Spiderman_rarm.db')
+runallLArm(larmId, './Spiderman_larm.db')
+runallRArm(rarmId, './Spiderman_rarm.db')
 
 
 

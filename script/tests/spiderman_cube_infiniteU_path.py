@@ -56,14 +56,16 @@ pp = PathPlayer (rbprmBuilder.client.basic, r)
 r.loadObstacleModel ("hpp-rbprm-corba", "cubeWorld", "cubeWorld")
 r.addLandmark(r.sceneName,2)
 r.addLandmark("spiderman_trunk/base_link",1)
-addLight (r, [-10,0,5,1,0,0,0], "li");
+addLight (r, [-10,-5,5,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 
 #q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
 #q11[0:7] =  [-2.7,0,3.9, 1, 0, 0, 0]; r(q11) # cube WORKING CONTACT
-q11[0:7] =  [-2.7,0,3.9, 0.9512, 0.1677, 0.0449, 0.2549]
+#q11[0:7] =  [-2.7,-2.3,3.9, 0.9512, 0.1677, 0.0449, 0.2549]
+q11[0:7] =  [-2.7,-2.25,4, 0.9217, 0.1022, 0.2192, 0.3034] #WORKING : SIDE
+r(q11)
 
 
 rbprmBuilder.isConfigValid(q11)

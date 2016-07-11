@@ -1400,17 +1400,23 @@ namespace hpp {
 					waypoints [1][0]-waypoints [0][0]);
 	    waypoints [0][index + 3] = theta_i;
     }
-	  for (std::size_t i = 0 + rotateAfterJump; i < waypoints.size () - 1 + rotateAfterJump; i++) {
+	  for (std::size_t i = 0 + rotateAfterJump; i < (waypoints.size () - 1 + rotateAfterJump); i++) {
 	    // theta_(i,i+1)
 	    theta_i = atan2 (waypoints [i+1 - rotateAfterJump][1]-waypoints [i - rotateAfterJump][1],
-					waypoints [i+1][0]-waypoints [i][0]);
+					waypoints [i+1- rotateAfterJump][0]-waypoints [i- rotateAfterJump][0]);
 	    //hppDout (info, "theta_i: " << theta_i);
 	    waypoints [i][index + 3] = theta_i;
 
 
 	  }
 	  // ! last orientation (qEnd) = last theta_i
-	  waypoints [waypoints.size () - 1][index + 3] = theta_i;
+    if(rotateAfterJump)
+    {
+        waypoints [waypoints.size () - 1][index + 3] = atan2 (waypoints [waypoints.size()-1][1]-waypoints [waypoints.size()-2][1],
+        waypoints [waypoints.size()-1][0]-waypoints [waypoints.size()-2][0]);
+    }
+    else  
+      waypoints [waypoints.size () - 1][index + 3] = theta_i;
 
 	  // update waypoints orientations
 	  //const JointPtr_t skullJoint = robot_->getJointByName ("Skull");

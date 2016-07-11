@@ -94,17 +94,17 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.4
 
 fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-pp(psf.numberPaths ()-1)
+#pp(psf.numberPaths ()-1)
 
-
+r.startCapture("skeletonDesert","png") ; r.stopCapture()
 
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
 pathId = psf.numberPaths()-1 # path to export
-plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2")
-plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2")
-plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2")
+plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2_blue")
+plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2_blue")
+plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2_blue")
 pathSamples = plotSampleSubPath (psf, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')

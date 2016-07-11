@@ -23,7 +23,7 @@ urdfNameRoms = ['LFFootSphere','LMFootSphere','LBFootSphere','RFFootSphere','RMF
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
-base_joint_xyz_limits = [-8.7, 7.6, -3.1, 4.2, -0.7, 10]
+base_joint_xyz_limits = [-7.6, 8.7, -4.2, 3.1, -0.7, 10]
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
@@ -43,7 +43,7 @@ rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.1
 
 ps = ProblemSolver (rbprmBuilder)
 ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-rbprmBuilder.setNumberFilterMatch(4)
+rbprmBuilder.setNumberFilterMatch(6)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
@@ -54,12 +54,12 @@ addLight (r, [0,0,6,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-7.3, -2, 7.9, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [7.3, 2, 7.6, math.sqrt(2)/2.0, 0, 0, -math.sqrt(2)/2.0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-q22[0:7] = [6.3, 0, 0.4, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-6.3, 0, 0.15, 0, 0, 0, -1]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -67,8 +67,8 @@ ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(4.5)
-rbprmBuilder.setMaxLandingVelocity(8)
+rbprmBuilder.setMaxTakeoffVelocity(5.8)
+rbprmBuilder.setMaxLandingVelocity(9)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
@@ -89,6 +89,10 @@ rbprmBuilder.rotateAlongPath (solutionPathId,True)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 
+rbprmBuilder.rotateAlongPath (solutionPathId,False)
+orientedpathIdBis = ps.numberPaths () - 1
+#pp(orientedpathIdBis)
+
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 
@@ -102,6 +106,12 @@ print("-- Verify that all RB-waypoints are valid (oriented path): ")
 pathOriWaypoints = ps.getWaypoints(orientedpathId)
 for i in range(1,len(pathOriWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathOriWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
+
+print("-- Verify that all RB-waypoints are valid (oriented path): ")
+pathOriBisWaypoints = ps.getWaypoints(orientedpathIdBis)
+for i in range(1,len(pathOriBisWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathOriBisWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
 
 

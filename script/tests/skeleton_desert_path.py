@@ -47,7 +47,7 @@ r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
 r.loadObstacleModel (packageName,"desert","desert")
-#addLight (r, [-3,0,3,1,0,0,0], "li"); addLight (r, [3,0,3,1,0,0,0], "li1")
+addLight (r, [-3,-4,3,1,0,0,0], "li")
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
@@ -114,7 +114,7 @@ for i in range(1,len(pathOriBisWaypoints)-1):
         print('problem with waypoints number: ' + str(i))
 
 
-plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
+plotConeWaypoints (ps, solutionPathId, r, "cone_planning_wp_group", "friction_cone2")
 plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
 
 

@@ -1360,7 +1360,7 @@ namespace hpp {
       // --------------------------------------------------------------------
 
       void RbprmBuilder::rotateAlongPath (const CORBA::UShort pathId,
-                      const bool fullbody, const bool trunkOrientation, const bool getCloseToContact)
+                      const bool fullbody, const bool rotateAfterJump, const bool trunkOrientation, const bool getCloseToContact)
 	throw (hpp::Error) {
 	std::size_t pid = (std::size_t) pathId;
 	if(problemSolver_->paths().size() <= pid) {
@@ -1395,9 +1395,14 @@ namespace hpp {
 	  // update theta values
 	  value_type theta_i;
 	  value_type alpha_i;
-	  for (std::size_t i = 0; i < waypoints.size () - 1; i++) {
+    if(rotateAfterJump){
+      theta_i = atan2 (waypoints [1][1]-waypoints [0][1],
+					waypoints [1][0]-waypoints [0][0]);
+	    waypoints [0][index + 3] = theta_i;
+    }
+	  for (std::size_t i = 0 + rotateAfterJump; i < waypoints.size () - 1 + rotateAfterJump; i++) {
 	    // theta_(i,i+1)
-	    theta_i = atan2 (waypoints [i+1][1]-waypoints [i][1],
+	    theta_i = atan2 (waypoints [i+1 - rotateAfterJump][1]-waypoints [i - rotateAfterJump][1],
 					waypoints [i+1][0]-waypoints [i][0]);
 	    //hppDout (info, "theta_i: " << theta_i);
 	    waypoints [i][index + 3] = theta_i;

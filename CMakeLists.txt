@@ -256,6 +256,7 @@ install(FILES
 	data/meshes/desert.stl
 	data/meshes/cubeWorld.stl
 	data/meshes/cubeWorld2.stl
+	data/meshes/cubeWorld2_panel.stl
 	data/meshes/cubeWorld_panel.stl
 	data/meshes/high_plateforms.stl	
 	data/meshes/etang_envir.dae

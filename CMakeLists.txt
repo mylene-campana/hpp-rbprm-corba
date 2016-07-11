@@ -130,6 +130,7 @@ install(FILES
   data/urdf/ant/RBFootSphere.urdf
   data/urdf/cave.urdf
   data/urdf/cubeWorld.urdf
+  data/urdf/cubeWorld2.urdf
   data/urdf/desert.urdf
   data/urdf/high_plateforms.urdf
   data/urdf/etang_envir.urdf
@@ -205,6 +206,7 @@ install(FILES
   data/srdf/desert.srdf
   data/srdf/high_plateforms.srdf
   data/srdf/cubeWorld.srdf
+  data/srdf/cubeWorld2.srdf
   data/srdf/cliff.srdf
   data/srdf/rock.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
@@ -253,6 +255,7 @@ install(FILES
 	data/meshes/cave.stl
 	data/meshes/desert.stl
 	data/meshes/cubeWorld.stl
+	data/meshes/cubeWorld2.stl
 	data/meshes/cubeWorld_panel.stl
 	data/meshes/high_plateforms.stl	
 	data/meshes/etang_envir.dae

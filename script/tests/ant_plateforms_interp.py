@@ -9,7 +9,7 @@ from hpp.gepetto import Viewer, PathPlayer
 import numpy as np
 from viewer_library import *
 
-import frog_test_path as tp
+import ant_plateforms_path as tp
 
 
 
@@ -44,7 +44,7 @@ fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
 nbSamples = 50000
-cType = "_6_DOF"
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
@@ -87,7 +87,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
+entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
@@ -107,18 +107,18 @@ fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
-fullBody.setStartState(q_init_test,[lLegId,rLegId,larmId,rarmId])
-fullBody.setEndState(q_goal_test,[lLegId,rLegId,larmId,rarmId])
+fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
+fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.03)
+fullBody.interpolateBallisticPath(entryPathId, 0.002)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.4
+pp.speed=1.5
 
-fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+#fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)
 
 
@@ -130,14 +130,15 @@ pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2_blue")
+"""
 pathSamples = plotSampleSubPath (psf, rr, pathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'ant_path.txt')
-pathJointConfigsToFile (psf, rr, "antPlateforms_jointConfigs.txt", pathId, q_goal_test, 0.02)
-
+pathJointConfigsToFile (psf, rr, "antPlateforms_jointConfigs.txt", pathId, q_goal_test, 0.05)
+"""
 
 
 """

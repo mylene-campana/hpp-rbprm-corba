@@ -371,12 +371,12 @@
          </geometry>
          <material name="Gray"/>
       </visual>
-      <collision>
+      <!--<collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/ant/LBShank.stl"/>
          </geometry>
-      </collision>
+      </collision>-->
    </link>
    
    <link name="LBFoot_rx"/>
@@ -873,7 +873,7 @@
       <child link="LBThigh_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1.1" velocity="1.0"/>
    </joint>
    <joint name="LBThigh_rz" type="revolute">
       <parent link="LBThigh_ry"/>

@@ -25,17 +25,30 @@ fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName
 ps = ProblemSolver( fullBody )
 r = Viewer (ps)
 q_0 = fullBody.getCurrentConfig (); r(q_0)
+plotFrame(r, "framy",[0,0,0],0.4)
+
+# test armature pose in Blender :
+q_test = [0, 0, 0, 1, 0,0, 0, 0, 0, 0.2, 0.0, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, 0.4, 0.5, 0.7, 0, -0.6, 0.0, 0.0, -0.2, 0.3, -1.9, 1.9,-0.6, 0, -0.2, 0.3, -1.9, 1.9, -0.6, 0]; r(q_test)
 
 # Verify that normals will be correct
 cl = fullBody.client.basic
-plotJointFrame (r, cl, q_0, "RHumerus_ry", 0.4)
+plotJointFrame (r, cl, q_0, "RHumerus_rx", 0.4)
 plotJointFrame (r, cl, q_0, "RForearm_rx", 0.4)
 plotJointFrame (r, cl, q_0, "RHand_rx", 0.4)
-plotJointFrame (r, cl, q_0, "LHumerus_ry", 0.4)
+plotJointFrame (r, cl, q_0, "LHumerus_rx", 0.4)
 plotJointFrame (r, cl, q_0, "LForearm_rx", 0.4)
 plotJointFrame (r, cl, q_0, "LHand_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RThigh_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RShank_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RFoot_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LThigh_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LShank_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LFoot_rx", 0.4)
+plotJointFrame (r, cl, q_0, "RFootToe_rx", 0.4)
+plotJointFrame (r, cl, q_0, "LFootToe_rx", 0.4)
 #plotJointFrame (r, cl, q_0, "SpidermanRFootSphere", 0.15); plotJointFrame (r, cl, q_0, "SpidermanLFootSphere", 0.15)
 #plotJointFrame (r, cl, q_0, "SpidermanRHandSphere", 0.15); plotJointFrame (r, cl, q_0, "SpidermanLHandSphere", 0.15)
+q [fullBody.rankInConfiguration ['RFootToe_rx']] = -0.2; r(q)
 
 nbSamples = 10000
 x = 0.03 # contact surface width

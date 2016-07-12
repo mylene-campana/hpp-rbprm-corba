@@ -4,7 +4,7 @@
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/cave.dae"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/cave.stl"/>
       </geometry>
     </visual>
     <collision>

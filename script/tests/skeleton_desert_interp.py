@@ -117,7 +117,7 @@ writePathSamples (pathSamples, 'skeletonDesert_path.txt')
 pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 """
 pathId = psf.numberPaths()-1 # path to export
-pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
+pathToYamlFile (psf, rr, "skeletonDesert_frames2.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 
 """
 ## Video recording

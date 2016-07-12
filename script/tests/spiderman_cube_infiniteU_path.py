@@ -63,8 +63,9 @@ q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 
 #q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
 #q11[0:7] =  [-2.7,0,3.9, 1, 0, 0, 0]; r(q11) # cube WORKING CONTACT
-#q11[0:7] =  [-2.7,-2.3,3.9, 0.9512, 0.1677, 0.0449, 0.2549]
-q11[0:7] =  [-2.7,-2.25,4, 0.9217, 0.1022, 0.2192, 0.3034] #WORKING : SIDE
+q11[0:7] =  [-7,0,2.5, 1, 0, 0, 0]
+
+#q11[0:7] =  [-2.7,-2.25,4, 0.9217, 0.1022, 0.2192, 0.3034] #WORKING : SIDE
 r(q11)
 
 
@@ -73,7 +74,7 @@ rbprmBuilder.isConfigValid(q11)
 q22 = q11[::]
 
 #q22[0:7] =  [-7.2,0,2.6, 1, 0, 0, 0]; r(q22) # back plateform
-q22[0:7] =  [-2.8,8,0.8, 1, 0, 0, 0]; r(q22) # side plateform
+q22[0:7] =  [-3,8,0.8, 1, 0, 0, 0]; r(q22) # side plateform
 #q22[0:7] =   [5,0,3.8,  0.9537, 0, 0.3, 0]; r(q22) # front plateform
 rbprmBuilder.isConfigValid(q22)
 
@@ -82,10 +83,10 @@ ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
 ## manually add way point (faster computation for test, work without but it's slow (~ <1minute )
-"""
+
 q_cube = q11[::]
 
-q_cube[0:7] =  [-2.7,0,4.4, 0.9537, 0, 0.3, 0]
+q_cube[0:7] =  [-2.6,0,3.9, 1, 0, 0, 0]
 
 waypoints = [q_cube]
 pbCl = rbprmBuilder.client.basic.problem
@@ -99,8 +100,8 @@ ps.directPath (waypoints[0], q22,False)
 pathId2g = ps.numberPaths () - 1
 pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
 pbCl.addEdgeToRoadmap (waypoints[0], q22, pathId2g, True)
-##########
-"""
+#########
+
 
 t = ps.solve ()
 
@@ -109,6 +110,7 @@ q11 = ps.node(0)
 q22 = ps.node(1)
 #plotCone (q11, ps, r, "cone_first", "friction_cone_SG2");
 solutionPathId = ps.numberPaths () - 1
+pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 """ 
 plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
 qCone = [-2.7, 0.0, 3.9, 0.9537, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -117,17 +119,17 @@ qCone = [-2.7, 0.0, 3.9, 0.9537, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0,
 plotCone (qCone, ps, r, "cone_Mid", "friction_cone_SG2")
 
 
-pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+
 """
 
 ##############################
 
-rbprmBuilder.rotateAlongPath (solutionPathId)
+rbprmBuilder.rotateAlongPath (solutionPathId,True)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 r(pp.client.problem.configAtParam(orientedpathId,0))
 
-
+"""
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 
@@ -143,7 +145,7 @@ for i in range(1,len(pathWaypoints)-1):
 
 rob = rbprmBuilder.client.basic.robot
 r(q11)
-
+"""
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[2] = -5; 
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)

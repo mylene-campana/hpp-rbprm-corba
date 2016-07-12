@@ -281,7 +281,6 @@ namespace hpp {
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;
-        rbprm::T_StateFrame lastStateFramesComputed_;
 	rbprm::RbPrmShooterPtr_t rbShooter_;
         sampling::AnalysisFactory* analysisFactory_;
 	core::Configuration_t extendingPose_;

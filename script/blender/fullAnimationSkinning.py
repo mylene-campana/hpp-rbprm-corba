@@ -316,10 +316,10 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 				currentBone = armature.pose.bones[lastShortJointName]
 				currentBone.rotation_mode = rotationOrder
 				currentBone.rotation_euler = lastFullJointConfig
-		print ("lastShortJointName= " + lastShortJointName)
-		print ("rotation euler= " + str(currentBone.rotation_euler))
-		bpy.ops.object.mode_set(mode='OBJECT')
-		currentBone.keyframe_insert (data_path="rotation_euler", frame=frameId+startFrame)
+				#print ("lastShortJointName= " + lastShortJointName)
+				#print ("rotation euler= " + str(currentBone.rotation_euler))
+				bpy.ops.object.mode_set(mode='OBJECT')
+				currentBone.keyframe_insert (data_path="rotation_euler", frame=frameId+startFrame)
 	print ("total frame number in loaded motion= " + str(totalFrameNumber))
 	return totalFrameNumber+startFrame
 

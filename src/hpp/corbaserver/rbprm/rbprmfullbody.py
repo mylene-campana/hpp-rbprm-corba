@@ -567,3 +567,6 @@ class FullBody (object):
     def addRefConfigAnalysisWeight (self,config, name,weight):
         return self.client.rbprm.rbprm.addRefConfigAnalysisWeight(config,name,weight)
  
+    # Set friction coefficient of fullbody device
+    def setFullbodyFrictionCoef (self, mu):
+        return self.client.rbprm.rbprm.setFullbodyFrictionCoef (mu)

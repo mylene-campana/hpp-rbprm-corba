@@ -386,6 +386,7 @@ module hpp
 
     void addRefConfigAnalysisWeight (in floatSeq dofArray,in string name, in floatSeq weightArray) raises (hpp::Error);
 
+    void setFullbodyFrictionCoef (in double mu);
 
   }; // interface Robot
   }; // module rbprm

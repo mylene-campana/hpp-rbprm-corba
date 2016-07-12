@@ -267,6 +267,8 @@ namespace hpp {
     void addRefConfigAnalysis (const hpp::floatSeq& dofArray, const char* name)throw (hpp::Error);
     void addRefConfigAnalysisWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error);
 
+	void setFullbodyFrictionCoef (const double mu);
+
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
         core::ProblemSolverPtr_t problemSolver_;

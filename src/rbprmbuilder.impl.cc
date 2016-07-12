@@ -1379,6 +1379,8 @@ namespace hpp {
 	    core::PathVector::create (robot->configSize (),
 				      robot->numberDof ());
 	  bool success;
+	  core::Configuration_t qTmp;
+	  core::ValidationReportPtr_t report;
 
 	  for (std::size_t i = 0; i < num_subpaths; i++) { // store waypoints
 	    tmpPath = (*path).pathAtRank (i);
@@ -1410,15 +1412,19 @@ namespace hpp {
 	  //const std::size_t rank = skullJoint->rankInConfiguration ();
 	  // TODO: if fullbody, use OrientationConstraint for skullJoint ??
 	  for (std::size_t i = 0; i < waypoints.size (); i++) {
-	    waypoints [i] = rbprm::setOrientation (robot, waypoints [i]);
+	    qTmp = rbprm::setOrientation (robot, waypoints [i]);
+	    if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+	      hppDout (info, "waypoint with alpha orientation is valid");
+	      waypoints[i] = qTmp;
+	    } else {
+	      hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+        }
 	    //waypoints [i][rank] = skullJoint->lowerBound (0);
 	    hppDout (info, "new wp(i): " << displayConfig (waypoints [i]));
 	  }
 
 
       // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
-	  core::Configuration_t qTmp;
-	  core::ValidationReportPtr_t report;
     if(trunkOrientation){
       Eigen::Vector3d yTheta;
       Eigen::Quaterniond qr ,qi,qf;

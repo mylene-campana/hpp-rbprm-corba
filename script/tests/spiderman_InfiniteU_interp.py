@@ -22,8 +22,7 @@ urdfName = "spiderman"
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 0 # tp.ecsSize
-V0list = tp.V0list
-Vimplist = tp.Vimplist
+
 
 fullBody = FullBody ()
 robot = fullBody.client.basic.robot
@@ -103,7 +102,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.solutionPathId # tp.orientedpathId
+entryPathId = tp.orientedpathId # tp.orientedpathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
 q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
@@ -111,19 +110,19 @@ q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
 #q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
 
 
-dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
+
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init,[0,0,1], True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
-dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
+
 fullBody.setCurrentConfig (q_goal)
 fullBody.isConfigValid(q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
-fullBody.setStartState(q_init_test,[rLegId,lLegId,rarmId,larmId])
+fullBody.setStartState(q_init_test,[rLegId,lLegId])
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
 
@@ -142,20 +141,14 @@ rr(qe)
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(tp.orientedpathId, 0.03)
+fullBody.interpolateBallisticPath(tp.orientedpathId, 0.005)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.1
+pp.speed=1
 pathId = psf.numberPaths () -1
 rr(pp.client.problem.configAtParam(pathId,0))
-
-
-
-
-fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-pp(psf.numberPaths ()-1)
-
+pp(pathId)
 
 
 """

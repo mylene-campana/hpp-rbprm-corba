@@ -312,10 +312,10 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 						#print ("new joint fullJointConfig= " + str(fullJointConfig))
 					lastShortJointName = shortJointName
 					lastFullJointConfig = fullJointConfig
-		
-		currentBone = armature.pose.bones[lastShortJointName]
-		currentBone.rotation_mode = rotationOrder
-		currentBone.rotation_euler = lastFullJointConfig
+		    
+				currentBone = armature.pose.bones[lastShortJointName]
+				currentBone.rotation_mode = rotationOrder
+				currentBone.rotation_euler = lastFullJointConfig
 		print ("lastShortJointName= " + lastShortJointName)
 		print ("rotation euler= " + str(currentBone.rotation_euler))
 		bpy.ops.object.mode_set(mode='OBJECT')

@@ -27,7 +27,7 @@ ecsSize = 4
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 #rbprmBuilder.setJointBounds ("base_joint_xyz", [-140, 120, -80, 65, 1, 170])
-rbprmBuilder.setJointBounds ("base_joint_xyz", [30, 160, 80,310, 40, 80])
+rbprmBuilder.setJointBounds ("base_joint_xyz", [30, 160, -90,110, 20, 40])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.6
@@ -58,38 +58,46 @@ addLight (r, [-3,0,8,1,0,0,0], "li");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal 
-#q11[0:3] = [15, 125, 49]; r(q11) # mid right roof 
-q11[0:3] = [15, -60, 25.9]; r(q11) # mid-top right roof
 
+q11[0:3] = [49, -56, 24.5]; r(q11) # mid-top right roof
+#q11[0:3] = [79.46757938380145,  -37.8518255458082,  20.0,]
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
 q22[0:3] = [150, 89, 24.1]; r(q22) # top left roof
-
+#q22[0:3] = [79.46757938380145,  -37.8518255458082,  20.0,]
+#q22[0:3] = [129.8521576262425,  -14.394366498288257,  20.600915634849574]
+#q22[0:3] = [39.5, -30, 24.6]; r(q22) # first roof
 rbprmBuilder.isConfigValid(q22)
 
 
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
-r.solveAndDisplay("rm",1,1)
+#r.solveAndDisplay("rm",1,1)
 
 
-#t = ps.solve ()
-
+t = ps.solve ()
+#ps.clearRoadmap()
+#ps.solve()
+#ps.clearRoadmap()
+#ps.solve()
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
 
-rbprmBuilder.rotateAlongPath (solutionPathId)
+rbprmBuilder.rotateAlongPath (solutionPathId,True)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 
-V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
+
+V0list = rbprmBuilder.getsubPathsV0Vimp("V0",orientedpathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 
 print("Verify that all RB-waypoints are valid: ")
-pathWaypoints = ps.getWaypoints(solutionPathId)
+pathWaypoints = ps.getWaypoints(orientedpathId)
+
+
 for i in range(1,len(pathWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
@@ -137,7 +145,7 @@ ps.client.problem.getResultValues ()
 """
 plotFrame (r, 'frame_group', [0,0,0], 0.6)
 
-gui.removeFromGroup("path0",r.sceneName)
+gui.removeFromGroup("rm",r.sceneName)
 gui.getNodeList()
 ps.numberNodes()
 
@@ -207,8 +215,8 @@ ps.readRoadmap ('/local/mcampana/devel/hpp/data/skeleton_test_path.rdm')
 
 """ #### display
 gui.removeFromGroup("rm",r.sceneName)
-id = r.client.gui.getWindowID("window_hpp_")
-r.client.gui.attachCameraToNode("spiderman_trunk/base_link",id)
+id = rr.client.gui.getWindowID("window_hpp_")
+rr.client.gui.attachCameraToNode("spiderman/Skull",id)
 
 pp.setSpeed(10)
 r(pp.client.problem.configAtParam(orientedpathId,0))

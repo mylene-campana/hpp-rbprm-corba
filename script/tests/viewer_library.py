@@ -476,7 +476,8 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
     FrameRange = np.arange(0, ps.pathLength(pathId), dt)
     iFrame = 0 # int
     jointNames = robot.getJointNames ()
-    rootJointName = robot.getJointNames () [0]
+    rootPosJointName = robot.getJointNames () [0] # xyz position
+    rootRotJointName = robot.getJointNames () [1] # so3 rotation
     nbInnerJoints = len(jointNames) - 2
     f = open(fileName,'a')
     print (str(nbInnerJoints))
@@ -486,9 +487,10 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
         f.write ("Frame " + str(iFrame) + "\n")
         q = ps.configAtParam (pathId, t)
         ps.robot.setCurrentConfig(q)
-        rootPosRot = robot.getLinkPosition(rootJointName)
-        print (str(rootPosRot).strip('[]'))
-        f.write (str(rootPosRot).strip('[]') + "\n")
+        rootPos = robot.getLinkPosition(rootPosJointName)[0:3]
+        rootRot = robot.getLinkPosition(rootRotJointName)[3:7]
+        print (str(rootPos).strip('[]') + ', ' + str(rootRot).strip('[]'))
+        f.write (str(rootPos).strip('[]') + ', ' + str(rootRot).strip('[]') + "\n")
         for jointName in jointNames:
             if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
                 jointNameBlender = jointName
@@ -501,8 +503,10 @@ def pathJointConfigsToFile (ps, r, fileName, pathId, goalConfig, dt):
     f.write ("Frame " + str(iFrame) + "\n")
     q = goalConfig
     ps.robot.setCurrentConfig(q)
-    rootPosRot = robot.getLinkPosition(rootJointName)
-    f.write (str(rootPosRot).strip('[]') + "\n")
+    rootPos = robot.getLinkPosition(rootPosJointName)[0:3]
+    rootRot = robot.getLinkPosition(rootRotJointName)[3:7]
+    print (str(rootPos).strip('[]') + ', ' + str(rootRot).strip('[]'))
+    f.write (str(rootPos).strip('[]') + ', ' + str(rootRot).strip('[]') + "\n")
     for jointName in jointNames:
         if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
             jointNameBlender = jointName
@@ -577,7 +581,8 @@ def jointConfigsToFile (ps, r, fileName, config):
     pathToFile = '/local/mcampana/devel/hpp/videos/' # WARNING!
     gui = r.client.gui
     jointNames = robot.getJointNames ()
-    rootJointName = robot.getJointNames () [0]
+    rootPosJointName = robot.getJointNames () [0] # xyz position
+    rootRotJointName = robot.getJointNames () [1] # so3 rotation
     nbInnerJoints = len(jointNames) - 2
     f = open(fileName,'a')
     print (str(nbInnerJoints))
@@ -585,8 +590,10 @@ def jointConfigsToFile (ps, r, fileName, config):
     f.write ("Frame " + str(0) + "\n")
     q = config
     ps.robot.setCurrentConfig(q)
-    rootPosRot = robot.getLinkPosition(rootJointName)
-    f.write (str(rootPosRot).strip('[]') + "\n")
+    rootPos = robot.getLinkPosition(rootPosJointName)[0:3]
+    rootRot = robot.getLinkPosition(rootRotJointName)[3:7]
+    print (str(rootPos).strip('[]') + ', ' + str(rootRot).strip('[]'))
+    f.write (str(rootPos).strip('[]') + ', ' + str(rootRot).strip('[]') + "\n")
     for jointName in jointNames:
         if (jointName != "base_joint_xyz" and jointName != "base_joint_SO3" ):
             jointNameBlender = jointName

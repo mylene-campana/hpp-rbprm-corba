@@ -87,38 +87,41 @@ fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.03)
+fullBody.interpolateBallisticPath(entryPathId, 0.005)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.4
+pp.speed=1
 
-fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+#fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 #pp(psf.numberPaths ()-1)
 
+"""
 r.startCapture("skeletonDesert","png") ; r.stopCapture()
 
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
 pathId = psf.numberPaths()-1 # path to export
-plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2_blue")
-plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2_blue")
-plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2_blue")
-pathSamples = plotSampleSubPath (psf, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
+plotCone (q_init_test, psf, rr, "cone_start", "friction_cone_blue")
+plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone_blue")
+plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone_blue")
+pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
-writePathSamples (pathSamples, 'path.txt')
-pathToYamlFile (cl, r, "frames.yaml ", "armlessSkeleton/base_link", pathId, q_goal_test, 0.02)
-
+writePathSamples (pathSamples, 'skeletonDesert_path.txt')
+pathToYamlFile (cl, r, "frames.yaml ", "armlessSkeleton/", pathId, q_goal_test, 0.02)
+"""
+pathId = psf.numberPaths()-1 # path to export
+pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 
 """
 ## Video recording
 import time
 pp.dt = 0.01
-pp.speed=0.4
+pp.speed=1.5
 rr(q_init_test)
 rr.startCapture ("capture","png")
 rr(q_init_test); time.sleep(2)
@@ -128,46 +131,10 @@ rr(q_goal_test); time.sleep(2);
 rr.stopCapture ()
 
 ## ffmpeg commands
-ffmpeg -r 30 -i capture_0_%d.png -r 25 -vcodec libx264 video.mp4
+ffmpeg -r 30 -i capture_0_%04d.png -r 25 -vcodec libx264 video.mp4
 x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$(($x+1)); done
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
 """
-
-# extending
-q = q_0
-q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; rr(q)
-q [fullBody.rankInConfiguration ['RHip_J2']] = 0.0; rr(q)
-q [fullBody.rankInConfiguration ['RThigh']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['RShank']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['RFoot']] = 0.0; rr(q)
-
-q [fullBody.rankInConfiguration ['LHip_J1']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['LHip_J2']] = 0.0; rr(q)
-q [fullBody.rankInConfiguration ['LThigh']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['LShank']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['LAnkle_J1']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['LFoot']] = 0.0; rr(q)
-[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0]
-fullBody.isConfigValid(q)
-
-# flexion
-q = q_0
-q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; rr(q)
-q [fullBody.rankInConfiguration ['RHip_J2']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['RThigh']] = -1.8; rr(q)
-q [fullBody.rankInConfiguration ['RShank']] = 2; rr(q)
-q [fullBody.rankInConfiguration ['RAnkle_J1']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['RFoot']] = -0.1; rr(q)
-
-q [fullBody.rankInConfiguration ['LHip_J1']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['LHip_J2']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['LThigh']] = -1.8; rr(q)
-q [fullBody.rankInConfiguration ['LShank']] = 2; rr(q)
-q [fullBody.rankInConfiguration ['LAnkle_J1']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['LFoot']] = 0.1; rr(q)
-[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, -1.8, 2, -0.5, 0.1, -0.1, -0.2, -1.8, 2, -0.5, -0.1]
-fullBody.isConfigValid(q)
 

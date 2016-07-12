@@ -36,14 +36,14 @@ q_larm = flexion[10:19]
 q_rfeet = flexion[37:46]
 q_rarm = flexion[19:28]
 
-fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,5.,1.,1.,4.,1.,1.,4.])
-fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,5.,1.,1.,4.,1.,1.,4.])
+fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,10.,1.,1.,10.,1.,1.,5.])
+fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,10.,1.,1.,10.,1.,1.,5.])
 fullBody.addRefConfigAnalysis(q_larm,"RefPoseLArm")
 fullBody.addRefConfigAnalysis(q_rarm,"RefPoseRArm")
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_3_DOF"
+cType = "_6_DOF"
 x = 0.03 # contact surface width
 y = 0.04 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]

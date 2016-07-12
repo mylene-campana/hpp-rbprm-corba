@@ -55,7 +55,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Abdomen.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Abdomen_box.stl"/>
          </geometry>
       </visual>
       <collision>
@@ -76,7 +76,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Skull.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/ant/Skull_box.stl"/>
          </geometry>
       </visual>
       <collision>

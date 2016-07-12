@@ -85,16 +85,16 @@ fullBody.setEndState(q_goal_test,[lLegId,rLegId,larmId,rarmId])
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.03)
+fullBody.interpolateBallisticPath(entryPathId, 0.005)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.4
+pp.speed=1
 
-fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+#fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 pp(psf.numberPaths ()-1)
 
-pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", psf.numberPaths ()-1, q_goal_test, 0.01)
+pathJointConfigsToFile (psf, rr, "frog_pond_jointConfigs.txt", psf.numberPaths ()-1, q_goal_test, 0.002)
 
 
 
@@ -107,7 +107,7 @@ pathInterpWaypoints = ps.getWaypoints(pathId)
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2_blue")
-pathSamples = plotSampleSubPath (psf, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
+pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
@@ -136,95 +136,4 @@ x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
-"""
-"""
-# flexion
-q = q_0; q[2] = 0.5
-q [fullBody.rankInConfiguration ['LThigh_rx']] = -0.3; rr(q)
-q [fullBody.rankInConfiguration ['LThigh_ry']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['LThigh_rz']] = -1.2; rr(q)
-q [fullBody.rankInConfiguration ['LShank_rx']] = -0.1; rr(q)
-q [fullBody.rankInConfiguration ['LShank_ry']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['LShank_rz']] = 1; rr(q)
-q [fullBody.rankInConfiguration ['LFoot_rx']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['LFoot_ry']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['LFoot_rz']] = -1.2; rr(q)
-
-q [fullBody.rankInConfiguration ['RThigh_rx']] = 0.3; rr(q)
-q [fullBody.rankInConfiguration ['RThigh_ry']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['RThigh_rz']] = 1.2; rr(q)
-q [fullBody.rankInConfiguration ['RShank_rx']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['RShank_ry']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['RShank_rz']] = -1; rr(q)
-q [fullBody.rankInConfiguration ['RFoot_rx']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['RFoot_ry']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['RFoot_rz']] = 1.2; rr(q)
-
-
-q [fullBody.rankInConfiguration ['LHumerus_rx']] = 0.5; rr(q)
-q [fullBody.rankInConfiguration ['LHumerus_ry']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['LHumerus_rz']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['LForearm_rx']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['LForearm_ry']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['LForearm_rz']] = -0.1; rr(q)
-q [fullBody.rankInConfiguration ['LHand_rx']] = -0.4; rr(q)
-q [fullBody.rankInConfiguration ['LHand_ry']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['LHand_rz']] = 0.2; rr(q)
-
-q [fullBody.rankInConfiguration ['RHumerus_rx']] = -0.5; rr(q)
-q [fullBody.rankInConfiguration ['RHumerus_ry']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['RHumerus_rz']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['RForearm_rx']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['RForearm_ry']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['RForearm_rz']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['RHand_rx']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['RHand_ry']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['RHand_rz']] = -0.2; rr(q)
-
-fullBody.isConfigValid(q)
-
-# extending
-q = q_0; q[2] = 0.5
-q [fullBody.rankInConfiguration ['LThigh_rx']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['LThigh_ry']] = -0.3; rr(q)
-q [fullBody.rankInConfiguration ['LThigh_rz']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['LShank_rx']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['LShank_ry']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['LShank_rz']] = -0.3; rr(q)
-q [fullBody.rankInConfiguration ['LFoot_rx']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['LFoot_ry']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['LFoot_rz']] = 0.3; rr(q)
-
-q [fullBody.rankInConfiguration ['RThigh_rx']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['RThigh_ry']] = -0.3; rr(q)
-q [fullBody.rankInConfiguration ['RThigh_rz']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['RShank_rx']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['RShank_ry']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['RShank_rz']] = 0.3; rr(q)
-q [fullBody.rankInConfiguration ['RFoot_rx']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['RFoot_ry']] = 0; rr(q)
-q [fullBody.rankInConfiguration ['RFoot_rz']] = -0.3; rr(q)
-
-
-q [fullBody.rankInConfiguration ['LHumerus_rx']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['LHumerus_ry']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['LHumerus_rz']] = 0.3; rr(q)
-q [fullBody.rankInConfiguration ['LForearm_rx']] = 0.6; rr(q)
-q [fullBody.rankInConfiguration ['LForearm_ry']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['LForearm_rz']] = 0.3; rr(q)
-q [fullBody.rankInConfiguration ['LHand_rx']] = -0.1; rr(q)
-q [fullBody.rankInConfiguration ['LHand_ry']] = 0.3; rr(q)
-q [fullBody.rankInConfiguration ['LHand_rz']] = 0.1; rr(q)
-
-q [fullBody.rankInConfiguration ['RHumerus_rx']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['RHumerus_ry']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['RHumerus_rz']] = -0.3; rr(q)
-q [fullBody.rankInConfiguration ['RForearm_rx']] = -0.6; rr(q)
-q [fullBody.rankInConfiguration ['RForearm_ry']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['RForearm_rz']] = -0.3; rr(q)
-q [fullBody.rankInConfiguration ['RHand_rx']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['RHand_ry']] = 0.3; rr(q)
-q [fullBody.rankInConfiguration ['RHand_rz']] = -0.1; rr(q)
-
-fullBody.isConfigValid(q)
 """

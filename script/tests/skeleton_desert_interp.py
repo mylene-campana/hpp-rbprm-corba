@@ -29,6 +29,7 @@ fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName
 fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
 fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.setFullbodyFrictionCoef(0.5)
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
@@ -37,7 +38,7 @@ q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
 extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0,0,0,0]
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, -1.8, 2, -0.5, 0.1, -0.1, -0.2, -1.8, 2, -0.5, -0.1,0,0,0,0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1,0,0,0,0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
@@ -96,8 +97,8 @@ pp.speed=1
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 #pp(psf.numberPaths ()-1)
 
-"""
-r.startCapture("skeletonDesert","png") ; r.stopCapture()
+
+#r.startCapture("skeletonDesert","png") ; r.stopCapture()
 
 ## Export for Blender ##
 # First display in Viewer, then export
@@ -106,13 +107,14 @@ pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone_blue")
+"""
 pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'skeletonDesert_path.txt')
-pathToYamlFile (cl, r, "frames.yaml ", "armlessSkeleton/", pathId, q_goal_test, 0.02)
+pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 """
 pathId = psf.numberPaths()-1 # path to export
 pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
@@ -137,4 +139,40 @@ ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
 """
+"""
+# extending
+q = q_0
+q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['RHip_J2']] = 0.0; rr(q)
+q [fullBody.rankInConfiguration ['RThigh']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RShank']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['RFoot']] = 0.0; rr(q)
 
+q [fullBody.rankInConfiguration ['LHip_J1']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['LHip_J2']] = 0.0; rr(q)
+q [fullBody.rankInConfiguration ['LThigh']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['LShank']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LAnkle_J1']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['LFoot']] = 0.0; rr(q)
+[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0]
+fullBody.isConfigValid(q)
+
+# flexion
+q = q_0
+q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['RHip_J2']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['RThigh']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['RShank']] = 2.2; rr(q)
+q [fullBody.rankInConfiguration ['RAnkle_J1']] = -1.2; rr(q)
+q [fullBody.rankInConfiguration ['RFoot']] = -0.1; rr(q)
+
+q [fullBody.rankInConfiguration ['LHip_J1']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['LHip_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LThigh']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['LShank']] = 2.2; rr(q)
+q [fullBody.rankInConfiguration ['LAnkle_J1']] = -1.2; rr(q)
+q [fullBody.rankInConfiguration ['LFoot']] = 0.1; rr(q)
+[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
+fullBody.isConfigValid(q)
+"""

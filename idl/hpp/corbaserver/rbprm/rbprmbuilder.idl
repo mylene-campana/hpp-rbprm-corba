@@ -309,13 +309,14 @@ module hpp
     /// Add new path vector to Problem Solver, where robot orientation was
     /// updated to "follow" the given path directions
     /// \param pathId: reference path to apply rotation
+    /// \param rotateAfterJump : if true, orientation at waypoint i is along path (i-1) -> i
     /// \param fullbody: True if applied on a fullbody robot (returns path 
     /// \param getCloseToContact : follow the opposite of the contact normal until the configuration is 
     ///                            as close as possible of the contact
     /// vector of ballistic-paths), False if applied on a rbprm robot 
     /// (returns path vector of parabola-paths)
     void rotateAlongPath (in unsigned short pathId,
-              in boolean fullbody, in boolean trunkOrientation,in boolean getCloseToContact) raises (Error);
+              in boolean fullbody,in boolean rotateAfterJump, in boolean trunkOrientation,in boolean getCloseToContact) raises (Error);
      
     /// Add new path vector to Problem Solver, where the parametrization is made with time, and not x distance
     /// \param pathId: reference path to apply time parametrization

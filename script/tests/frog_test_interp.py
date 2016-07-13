@@ -60,7 +60,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
+entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
@@ -85,18 +85,19 @@ fullBody.setEndState(q_goal_test,[lLegId,rLegId,larmId,rarmId])
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
+fullBody.interpolateBallisticPath(entryPathId, 0.003)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=1
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-pp(psf.numberPaths ()-1)
+#pp(psf.numberPaths ()-1)
 
-pathJointConfigsToFile (psf, rr, "frog_pond_jointConfigs.txt", psf.numberPaths ()-1, q_goal_test, 0.002)
+pathJointConfigsToFile (psf, rr, "frog_pond_jointConfigs4.txt", psf.numberPaths ()-1, q_goal_test, 0.01)
 
-
+pathSamples = plotSampleSubPath (tp.ps.client.problem, tp.r, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
+writePathSamples (pathSamples, 'frog_path2.txt')
 
 """
 ## Export for Blender ##

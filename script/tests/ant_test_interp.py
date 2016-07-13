@@ -23,10 +23,11 @@ srdfSuffix = ""
 ecsSize = tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
+base_joint_xyz_limits = tp.base_joint_xyz_limits
 
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-fullBody.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, 0.001, 2.4])
+fullBody.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
 fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
@@ -37,10 +38,10 @@ q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_3_DOF"
+cType = "_6_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
-# By default, all offset are set to [0,0,0] and all normals to [0,0,1]
+# By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
 
 lfLegId = 'lffoot'
 lfLeg = 'LFThigh_rx'
@@ -62,7 +63,6 @@ rfLeg = 'RFThigh_rx'
 rffoot = 'RFFootSphere'
 fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
-
 rmLegId = 'rmfoot'
 rmLeg = 'RMThigh_rx'
 rmfoot = 'RMFootSphere'
@@ -74,6 +74,7 @@ rbfoot = 'RBFootSphere'
 fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 print("Limbs added to fullbody")
 
+q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
 confsize = len(tp.q11)
@@ -81,7 +82,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
+entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
@@ -93,12 +94,12 @@ if (ecsSize > 0):
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, [0,0,-1], True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
-dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
+dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal,  [0,0,-1], True); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
@@ -114,17 +115,14 @@ fullBody.interpolateBallisticPath(entryPathId, 0.01)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.8
-pid = pp.client.problem.numberPaths() -1
-pp(pid)
 
 
-fullBody.timeParametrizedPath(psf.numberPaths() -1)
-pp.speed=0.05
+#fullBody.timeParametrizedPath(psf.numberPaths() -1)
+pp.speed=1
 pp(psf.numberPaths ()-1)
 
 
-
+"""
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
@@ -139,6 +137,7 @@ gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'path.txt')
 pathJointConfigsToFile (psf, rr, "jointConfigs.txt", pathId, q_goal_test, 0.02)
+"""
 
 """
 ## Video recording

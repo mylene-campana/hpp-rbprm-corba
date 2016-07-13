@@ -21,10 +21,11 @@ urdfNameRoms = ['LFFootSphere','LMFootSphere','LBFootSphere','RFFootSphere','RMF
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
+base_joint_xyz_limits = [-6, -1, -2, 2, 0.001, 2.4]
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, 0.001, 2.4])
+rbprmBuilder.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
 #rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
@@ -41,7 +42,7 @@ rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.1
 
 ps = ProblemSolver (rbprmBuilder)
 ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-rbprmBuilder.setNumberFilterMatch(2)
+rbprmBuilder.setNumberFilterMatch(4)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
@@ -60,7 +61,7 @@ rbprmBuilder.isConfigValid(q11)
 #plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
 
 q22 = q11[::]
-q22[0:7] = [-1.5, -1, 0.1, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-2.5, 0, 0.1, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -69,7 +70,7 @@ ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(5)#(8)
+rbprmBuilder.setMaxTakeoffVelocity(5)#(4.5)
 rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
@@ -114,3 +115,19 @@ r(q11)
 qAway = q11 [::]; qAway[0] = -6.5; qAway[1] = -2
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
+"""
+## Export for Blender ##
+# First display in Viewer, then export
+# Don't change exported names, because harcoded in fullAnimationSkinning.py
+pathId = ps.numberPaths()-1 # path to export
+plotCone (q_init_test, ps, r, "cone_start", "friction_cone2")
+plotCone (q_goal_test, ps, r, "cone_goal", "friction_cone2")
+plotConeWaypoints (ps, pathId, r, "cone_wp_group", "friction_cone2")
+pathSamples = plotSampleSubPath (ps.client.problem, r, pathId, 70, "sampledPath", [1,0,0,1])
+
+gui.writeNodeFile('cone_wp_group','cones_path.dae')
+gui.writeNodeFile('cone_11','cone_start2.dae')
+gui.writeNodeFile('cone_21','cone_goal2.dae')
+writePathSamples (pathSamples, 'antInDirect_path.txt')
+pathToYamlFile (ps, r, "antDirectTrunk_frames2.yaml ", "ant_trunk", orientedpathId, q22, 0.01)
+"""

@@ -477,9 +477,6 @@ def mainTest ():
 	# Parameters that do not change from one problem to another
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
-	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
-	pathName = 'path'
-	initFrame = 0
 	beginMotionFrame = 0
 	print ("--------  load motion armature  --------")
 	#fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
@@ -487,11 +484,28 @@ def mainTest ():
 	fileName = 'spiderman_jointConfigs1.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # SPIDERMAN
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for inner joints
-	print ("endMotionFrame joints= " + str(endMotionFrame))
-	pathFileName = daeFilePath + 'frog_path.txt'
-	#pathPoints = parsePathPoints (pathFileName)
-	#plotPath (pathPoints, pathName, matPath)
+
+
+def mainTestBis (): # no armature
+	daeFilePath = '/local/mcampana/devel/hpp/videos/'
+	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
+	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
+	matConeSG = getOrCreateMaterial ("coneSG", 'SURFACE', [0,0.3,0], 0.4, True, False, False)
+	matConePath = getOrCreateMaterial ("cone_path", 'SURFACE', [0,0,1], 0.4, True, False, False)
+	pathName = 'path'
+	beginMotionFrame = 0
+	pathFileName = daeFilePath + 'antInDirect_path.txt'
+	daeStartConeFileName = daeFilePath + 'cone_start.dae'
+	daeGoalConeFileName = daeFilePath + 'cone_goal.dae'
+	daePathConeFileName = daeFilePath + 'cones_path.dae'
+	pathPoints = parsePathPoints (pathFileName)
+	plotPath (pathPoints, pathName, matPath)
+	importDaeObjects (daeStartConeFileName, 'Cone', matConeSG)
+	importDaeObjects (daeGoalConeFileName, 'Cone', matConeSG)
+	importDaeObjects (daePathConeFileName, 'Cone', matConePath)
+
 
 #---------------------------------------------------------------------------#
 #main  ()
-mainTest  ()
+#mainTest  ()
+mainTestBis ()

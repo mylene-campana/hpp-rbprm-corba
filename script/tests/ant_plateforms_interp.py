@@ -43,8 +43,8 @@ flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
-nbSamples = 50000
-cType = "_3_DOF"
+nbSamples = 80000
+cType = "_6_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
@@ -87,7 +87,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
+entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
@@ -112,14 +112,14 @@ fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegI
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.002)
+fullBody.interpolateBallisticPath(entryPathId, 1.2)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=1.5
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-pp(psf.numberPaths ()-1)
+#pp(psf.numberPaths ()-1)
 
 
 
@@ -131,13 +131,13 @@ plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2_blue")
 """
-pathSamples = plotSampleSubPath (psf, rr, pathId, 70, "sampledPath", [1,0,0,1])
+pathSamples = plotSampleSubPath (psf.client.problem, rr, entryPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
-writePathSamples (pathSamples, 'ant_path.txt')
-pathJointConfigsToFile (psf, rr, "antPlateforms_jointConfigs.txt", pathId, q_goal_test, 0.05)
+writePathSamples (pathSamples, 'antPlateforms_path.txt')
+pathJointConfigsToFile (psf, rr, "antPlateforms_jointConfigs.txt", pathId, q_goal_test, 0.01)
 """
 
 

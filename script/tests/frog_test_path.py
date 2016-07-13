@@ -85,11 +85,11 @@ solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 #pp(solutionPathId)
 
-rbprmBuilder.rotateAlongPath (solutionPathId,True)
+rbprmBuilder.rotateAlongPath (solutionPathId,True,False,True)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 
-rbprmBuilder.rotateAlongPath (solutionPathId,False)
+rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathIdBis = ps.numberPaths () - 1
 #pp(orientedpathIdBis)
 

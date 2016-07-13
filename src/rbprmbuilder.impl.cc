@@ -1424,12 +1424,12 @@ namespace hpp {
 	  // TODO: if fullbody, use OrientationConstraint for skullJoint ??
 	  for (std::size_t i = 0; i < waypoints.size (); i++) {
 	    qTmp = rbprm::setOrientation (robot, waypoints [i]);
-	    //if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+	    if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
 	      hppDout (info, "waypoint with alpha orientation is valid");
 	      waypoints[i] = qTmp;
-	      //} else {
-	      //hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
-	      //}
+	      } else {
+	      hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+	      }
 	    //waypoints [i][rank] = skullJoint->lowerBound (0);
 	    hppDout (info, "new wp(i): " << displayConfig (waypoints [i]));
 	  }

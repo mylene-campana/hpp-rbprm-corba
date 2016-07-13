@@ -21,6 +21,7 @@ urdfNameRoms = ['LFFootSphere','LMFootSphere','LBFootSphere','RFFootSphere','RMF
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
+base_joint_xyz_limits = [-4.5, 6.8, -8.8, 14.3, -6.9, 3.2]
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
@@ -52,12 +53,12 @@ addLight (r, [-1,15,0,1,0,0,0], "li2");
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [0.955, -5.37, -3.076, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [0.99, -5.4, -3.08, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-q22[0:7] = [1.099, 12.393, -1.58, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [1.15, 12.28, -1.51, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -111,8 +112,8 @@ for i in range(1,len(pathOriBisWaypoints)-1):
         print('problem with waypoints number: ' + str(i))
 
 
-plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group_planning", "friction_cone2")
-plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
+#plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group_planning", "friction_cone2")
+#plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
 
 
 """

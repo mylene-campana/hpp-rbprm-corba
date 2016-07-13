@@ -23,10 +23,11 @@ srdfSuffix = ""
 ecsSize = tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
+base_joint_xyz_limits = tp.base_joint_xyz_limits
 
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-fullBody.setJointBounds ("base_joint_xyz", [-6, 0, -2, 2, -0.3, 2.4])
+fullBody.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
 fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
@@ -82,7 +83,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
+entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]

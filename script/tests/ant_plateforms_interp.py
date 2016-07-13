@@ -44,7 +44,7 @@ fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
 nbSamples = 50000
-cType = "_3_DOF"
+cType = "_6_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
@@ -112,7 +112,7 @@ fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegI
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.002)
+fullBody.interpolateBallisticPath(entryPathId, 0.001)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
@@ -131,13 +131,13 @@ plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2_blue")
 """
-pathSamples = plotSampleSubPath (psf, rr, pathId, 70, "sampledPath", [1,0,0,1])
+pathSamples = plotSampleSubPath (psf.client.problem, rr, entryPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
-writePathSamples (pathSamples, 'ant_path.txt')
-pathJointConfigsToFile (psf, rr, "antPlateforms_jointConfigs.txt", pathId, q_goal_test, 0.05)
+writePathSamples (pathSamples, 'antPlateforms_path.txt')
+pathJointConfigsToFile (psf, rr, "antPlateforms_jointConfigs.txt", pathId, q_goal_test, 0.01)
 """
 
 

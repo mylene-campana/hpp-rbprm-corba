@@ -38,7 +38,7 @@ q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_6_DOF"
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
@@ -82,7 +82,7 @@ fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbod
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
+entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
@@ -121,6 +121,7 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=1
 pp(psf.numberPaths ()-1)
 
+pathJointConfigsToFile (psf, rr, "antTestInDirect_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.005)
 
 """
 ## Export for Blender ##

@@ -291,7 +291,7 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 							currentBone.rotation_euler = lastFullJointConfig
 							#print ("lastShortJointName= " + lastShortJointName)
 							#print ("rotation euler= " + str(currentBone.rotation_euler))
-							bpy.ops.object.mode_set(mode='OBJECT')
+							#bpy.ops.object.mode_set(mode='OBJECT')
 							currentBone.keyframe_insert (data_path="rotation_euler", frame=frameId+startFrame)
 						fullJointConfig= 3*[0] # zero by default
 						if (reOrientFrames):
@@ -318,7 +318,7 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 				currentBone.rotation_euler = lastFullJointConfig
 				#print ("lastShortJointName= " + lastShortJointName)
 				#print ("rotation euler= " + str(currentBone.rotation_euler))
-				bpy.ops.object.mode_set(mode='OBJECT')
+				#bpy.ops.object.mode_set(mode='OBJECT')
 				currentBone.keyframe_insert (data_path="rotation_euler", frame=frameId+startFrame)
 	print ("total frame number in loaded motion= " + str(totalFrameNumber))
 	return totalFrameNumber+startFrame
@@ -479,9 +479,9 @@ def mainTest ():
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
 	beginMotionFrame = 0
 	print ("--------  load motion armature  --------")
-	#fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
+	fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
 	#fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
-	fileName = 'spiderman_jointConfigs1.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # SPIDERMAN
+	#fileName = 'spiderman_jointConfigs1.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # SPIDERMAN
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for inner joints
 
@@ -507,5 +507,5 @@ def mainTestBis (): # no armature
 
 #---------------------------------------------------------------------------#
 #main  ()
-#mainTest  ()
-mainTestBis ()
+mainTest  ()
+#mainTestBis ()

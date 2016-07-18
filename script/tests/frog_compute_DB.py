@@ -29,23 +29,29 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 
 
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, 0, 0, -1.2, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0, 0, 1.2]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, -0.2, 0.1, -1.5, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0.2, 0.1, 1.5]
+
+"""from hpp.gepetto import Viewer
+psf = ProblemSolver( fullBody ); r = Viewer (psf)
+r(flexion)"""
 
 q_lfeet = flexion[28:37]
 q_larm = flexion[10:19]
 q_rfeet = flexion[37:46]
 q_rarm = flexion[19:28]
 
-fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,10.,1.,1.,10.,1.,1.,5.])
-fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,10.,1.,1.,10.,1.,1.,5.])
+legWheights = [1.,3.,4.,1.,3.,4.,1.,1.,3.]
+
+fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",legWheights)
+fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",legWheights)
 fullBody.addRefConfigAnalysis(q_larm,"RefPoseLArm")
 fullBody.addRefConfigAnalysis(q_rarm,"RefPoseRArm")
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_6_DOF"
-x = 0.03 # contact surface width
-y = 0.04 # contact surface length
+cType = "_3_DOF"
+x = 0.02 # contact surface width
+y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 
 #~ AFTER loading obstacles
@@ -129,3 +135,51 @@ runallRArm(rarmId, './Frog_rarm.db')
 
 ##plotOctreeValues(fullBody, "isotropy", lLegId)
 
+"""
+# flexion
+legWheights = [1.,5.,10.,1.,5.,10.,1.,1.,5.]
+q = q_0; q[2] = 0.5
+q = flexion
+q [fullBody.rankInConfiguration ['LThigh_rx']] = -0.3; rr(q)
+q [fullBody.rankInConfiguration ['LThigh_ry']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['LThigh_rz']] = -1.2; rr(q)
+q [fullBody.rankInConfiguration ['LShank_rx']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['LShank_ry']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['LShank_rz']] = 1; rr(q)
+q [fullBody.rankInConfiguration ['LFoot_rx']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['LFoot_ry']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['LFoot_rz']] = -1.5; rr(q)
+
+q [fullBody.rankInConfiguration ['RThigh_rx']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['RThigh_ry']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['RThigh_rz']] = 1.2; rr(q)
+q [fullBody.rankInConfiguration ['RShank_rx']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RShank_ry']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['RShank_rz']] = -1; rr(q)
+q [fullBody.rankInConfiguration ['RFoot_rx']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RFoot_ry']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RFoot_rz']] = 1.5; rr(q)
+
+
+q [fullBody.rankInConfiguration ['LHumerus_rx']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus_ry']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus_rz']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LForearm_rx']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['LForearm_ry']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['LForearm_rz']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['LHand_rx']] = -0.4; rr(q)
+q [fullBody.rankInConfiguration ['LHand_ry']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['LHand_rz']] = 0.2; rr(q)
+
+q [fullBody.rankInConfiguration ['RHumerus_rx']] = -0.5; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus_ry']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus_rz']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['RForearm_rx']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RForearm_ry']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RForearm_rz']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RHand_rx']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['RHand_ry']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['RHand_rz']] = -0.2; rr(q)
+
+fullBody.isConfigValid(q)
+"""

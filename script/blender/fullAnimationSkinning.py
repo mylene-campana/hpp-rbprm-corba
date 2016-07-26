@@ -220,9 +220,9 @@ def quaternionListProduct (a, b): # from https://en.wikipedia.org/wiki/Quaternio
 	r4 = a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[0]
 	return [r1, r2, r3, r4]
 
-def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
+def loadMotionArmature (filename, startFrame = 0, reOrientFrames = True, rotationOrder = 'ZXY', armatureName = "Armature"):
 	print ("loadMotionArmature")
-	armature = bpy.data.objects["Armature"] # WARNING: armature name has to be hardcoded to "Armature"
+	armature = bpy.data.objects[armatureName]
 	offsetArmatureQuarternion = [armature.rotation_quaternion[0],armature.rotation_quaternion[1],armature.rotation_quaternion[2],armature.rotation_quaternion[3]]
 	totalLineNumber = file_len(filename)
 	totalFrameNumber = 0
@@ -312,12 +312,13 @@ def loadMotionArmature (filename, startFrame, reOrientFrames, rotationOrder):
 						#print ("new joint fullJointConfig= " + str(fullJointConfig))
 					lastShortJointName = shortJointName
 					lastFullJointConfig = fullJointConfig
+					print (line)
 		    
 				currentBone = armature.pose.bones[lastShortJointName]
 				currentBone.rotation_mode = rotationOrder
 				currentBone.rotation_euler = lastFullJointConfig
-				#print ("lastShortJointName= " + lastShortJointName)
-				#print ("rotation euler= " + str(currentBone.rotation_euler))
+				print ("lastShortJointName= " + lastShortJointName)
+				print ("rotation euler= " + str(currentBone.rotation_euler))
 				#bpy.ops.object.mode_set(mode='OBJECT')
 				currentBone.keyframe_insert (data_path="rotation_euler", frame=frameId+startFrame)
 	print ("total frame number in loaded motion= " + str(totalFrameNumber))
@@ -477,13 +478,16 @@ def mainTest ():
 	# Parameters that do not change from one problem to another
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
-	beginMotionFrame = 0
+	beginMotionFrame = 120
 	print ("--------  load motion armature  --------")
 	fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
 	#fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
+	armatureName = "Armature.001"
+	#fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
+	fileName = 'frog_pond_jointConfigs_new1goal.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
 	#fileName = 'spiderman_jointConfigs1.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # SPIDERMAN
 	jointConfigsFileName = daeFilePath + fileName
-	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for inner joints
+	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
 
 
 def mainTestBis (): # no armature

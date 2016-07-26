@@ -38,7 +38,8 @@ r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.2, 0, 0, -0.3, 0, 0, 0.3, 0.2, -0.3, -0.2, 0, 0, 0.3, 0, 0, -0.3, 0, 0, 0, 0]
+#extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.2, 0, 0, -0.3, 0, 0, 0.3, 0.2, -0.3, -0.2, 0, 0, 0.3, 0, 0, -0.3, 0, 0, 0, 0]
+extending = [0.0, 0.0, 0.5, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.4, 0, 0, -0.6, 0, 0, 0.8, 0.2, -0.3, -0.4, 0, 0, 0.9, 0, 0, -0.8, 0.0, 0.0, 0.0, 0.0]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, -0.2, 0.1, -1.5, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0.2, 0.1, 1.5,0,0,0,0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
@@ -88,7 +89,7 @@ fullBody.interpolateBallisticPath(entryPathId, 0.0001)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.6
+pp.speed=0.4
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 #pp(psf.numberPaths ()-1)
@@ -121,7 +122,7 @@ pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0
 ## Video recording
 import time
 pp.dt = 0.02
-pp.speed=0.6
+pp.speed=0.5
 rr(q_init_test)
 rr.startCapture ("capture","png")
 rr(q_init_test); time.sleep(2)
@@ -136,4 +137,51 @@ x=0; for i in *png; do counter=$(printf %04d $x); ln "$i" new"$counter".png; x=$
 ffmpeg -r 30 -i new%04d.png -r 25 -vcodec libx264 video.mp4
 mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac pcm -o video.avi
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
+"""
+
+"""
+# extending
+q = q_0; q[2] = 0.5
+q [fullBody.rankInConfiguration ['LThigh_rx']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['LThigh_ry']] = -0.3; rr(q)
+q [fullBody.rankInConfiguration ['LThigh_rz']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['LShank_rx']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['LShank_ry']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['LShank_rz']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['LFoot_rx']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['LFoot_ry']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['LFoot_rz']] = 0.8; rr(q)
+
+q [fullBody.rankInConfiguration ['RThigh_rx']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RThigh_ry']] = -0.3; rr(q)
+q [fullBody.rankInConfiguration ['RThigh_rz']] = -0.4; rr(q)
+q [fullBody.rankInConfiguration ['RShank_rx']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['RShank_ry']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['RShank_rz']] = 0.9; rr(q)
+q [fullBody.rankInConfiguration ['RFoot_rx']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['RFoot_ry']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['RFoot_rz']] = -0.8; rr(q)
+
+
+q [fullBody.rankInConfiguration ['LHumerus_rx']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus_ry']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus_rz']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['LForearm_rx']] = 0.6; rr(q)
+q [fullBody.rankInConfiguration ['LForearm_ry']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['LForearm_rz']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['LHand_rx']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['LHand_ry']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['LHand_rz']] = 0.1; rr(q)
+
+q [fullBody.rankInConfiguration ['RHumerus_rx']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus_ry']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus_rz']] = -0.3; rr(q)
+q [fullBody.rankInConfiguration ['RForearm_rx']] = -0.6; rr(q)
+q [fullBody.rankInConfiguration ['RForearm_ry']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['RForearm_rz']] = -0.3; rr(q)
+q [fullBody.rankInConfiguration ['RHand_rx']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RHand_ry']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['RHand_rz']] = -0.1; rr(q)
+
+fullBody.isConfigValid(q)
 """

@@ -38,13 +38,14 @@ r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
-extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0,0,0,0,0]
-flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0,0,0,0,0]
+extending = [0.0, 0.0, 1, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0, 0,0,0,0]
+flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0,0,0,0]
+fullBody.isConfigValid(extending); fullBody.isConfigValid(flexion)
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
-nbSamples = 80000
-cType = "_6_DOF"
+nbSamples = 50000
+cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
@@ -122,7 +123,7 @@ pp.speed=1.5
 #pp(psf.numberPaths ()-1)
 
 
-
+"""
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
@@ -130,7 +131,7 @@ pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone2_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone2_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone2_blue")
-"""
+
 pathSamples = plotSampleSubPath (psf.client.problem, rr, entryPathId, 70, "sampledPath", [1,0,0,1])
 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
@@ -162,3 +163,27 @@ mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup 
 ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
 """
 
+"""
+# extending
+q = q_0; q [2] = 1
+q [fullBody.rankInConfiguration ['LFThigh_ry']] = 1.1; rr(q)
+q [fullBody.rankInConfiguration ['LFShank_ry']] = -0.5; rr(q)
+q [fullBody.rankInConfiguration ['LFFoot_ry']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LMThigh_ry']] = 1.1; rr(q)
+q [fullBody.rankInConfiguration ['LMShank_ry']] = -0.5; rr(q)
+q [fullBody.rankInConfiguration ['LMFoot_ry']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LBThigh_ry']] = 1.1; rr(q)
+q [fullBody.rankInConfiguration ['LBShank_ry']] = -0.5; rr(q)
+q [fullBody.rankInConfiguration ['LBFoot_ry']] = 0.2; rr(q)
+
+q [fullBody.rankInConfiguration ['RFThigh_ry']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['RFShank_ry']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['RFFoot_ry']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['RMThigh_ry']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['RMShank_ry']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['RMFoot_ry']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['RBThigh_ry']] = -1.1; rr(q)
+q [fullBody.rankInConfiguration ['RBShank_ry']] = 0.5; rr(q)
+q [fullBody.rankInConfiguration ['RBFoot_ry']] = -0.2; rr(q)
+
+"""

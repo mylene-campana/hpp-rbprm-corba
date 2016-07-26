@@ -745,7 +745,7 @@
       <child link="LFThigh_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="LFThigh_rz" type="revolute">
       <parent link="LFThigh_ry"/>
@@ -809,7 +809,7 @@
       <child link="LMThigh_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="LMThigh_rz" type="revolute">
       <parent link="LMThigh_ry"/>
@@ -873,7 +873,7 @@
       <child link="LBThigh_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="LBThigh_rz" type="revolute">
       <parent link="LBThigh_ry"/>
@@ -938,7 +938,7 @@
       <child link="RFThigh_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RFThigh_rz" type="revolute">
       <parent link="RFThigh_ry"/>
@@ -959,7 +959,7 @@
       <child link="RFShank_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RFShank_rz" type="revolute">
       <parent link="RFShank_ry"/>
@@ -1002,7 +1002,7 @@
       <child link="RMThigh_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RMThigh_rz" type="revolute">
       <parent link="RMThigh_ry"/>
@@ -1023,7 +1023,7 @@
       <child link="RMShank_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RMShank_rz" type="revolute">
       <parent link="RMShank_ry"/>
@@ -1066,7 +1066,7 @@
       <child link="RBThigh_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RBThigh_rz" type="revolute">
       <parent link="RBThigh_ry"/>
@@ -1087,7 +1087,7 @@
       <child link="RBShank_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="1" velocity="1.0"/>
    </joint>
    <joint name="RBShank_rz" type="revolute">
       <parent link="RBShank_ry"/>

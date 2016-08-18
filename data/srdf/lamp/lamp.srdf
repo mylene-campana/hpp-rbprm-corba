@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="lamp">
+
+<!-- Disable collision pairs of inner links -->
+<!-- trunk -->
+<disable_collisions link1="Head" link2="HeadLink" />
+
+<!-- Leg -->
+<disable_collisions link1="HeadLink" link2="Thigh" />
+<disable_collisions link1="Head" link2="Thigh" />
+<disable_collisions link1="Thigh" link2="Shank" />
+<disable_collisions link1="Shank" link2="Ankle" />
+<disable_collisions link1="Ankle" link2="Foot" />
+
+
+</robot>

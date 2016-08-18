@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<robot name="lamp">
+
+  <material name="Blue"> <!-- for spheres -->
+    <color rgba="0 0 1 0.5"/>
+  </material>
+  <material name="White">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="Gray">
+    <color rgba="0.6 0.6 0.6 1"/>
+  </material>
+  <material name="Green"> <!-- for ROMs -->
+    <color rgba="0 1 0 0.4"/>
+  </material>
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Head"/>
+      <origin rpy="0 0 3.14159265359" xyz="0 0 0"/>
+   </joint>
+
+  <link name="Head">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Head.stl"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Head.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="HeadLink">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/HeadLink.stl"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/HeadLink.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <!--<joint name="head_rom_joint" type="fixed">
+      <parent link="HeadLink"/>
+      <child link="head_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="head_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/foot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+  
+   <link name="ThighJoint"/>
+   <link name="Thigh">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Thigh.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Thigh.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="ShankJoint"/>
+   <!--<link name="ShankJointBis"/>-->
+   <link name="Shank">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Shank.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Shank.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="AnkleJoint"/>
+   <link name="Ankle">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Ankle.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Ankle.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="FootJoint"/>
+   <link name="Foot">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Foot.stl"/>
+         </geometry>
+         <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Foot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="LampFootSphere">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.007"/>
+         </geometry>
+         <material name="Blue"/>
+      </visual>
+   </link>
+   
+
+   <!-- JOINTS -->
+   <joint name="Head" type="fixed">
+      <parent link="Head"/>
+      <child link="HeadLink"/>
+      <origin rpy="0 0 0" xyz="0.0912 -0.0012 -0.0501"/>
+   </joint>
+   <joint name="ThighJoint" type="revolute">
+      <parent link="HeadLink"/>
+      <child link="ThighJoint"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.9" upper="1.9" velocity="1.0"/>
+   </joint>   
+   <joint name="Thigh" type="fixed">
+      <parent link="ThighJoint"/>
+      <child link="Thigh"/>
+      <origin rpy="0 0 0" xyz="0.0005 0.0000919 -0.2788"/>
+   </joint>
+   <joint name="ShankJoint" type="revolute">
+      <parent link="Thigh"/>
+      <child link="ShankJoint"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-2.6" upper="2.1" velocity="1.0"/>
+   </joint>
+   <!--<joint name="ShankJointBis" type="revolute">
+      <parent link="ShankJoint"/>
+      <child link="ShankJointBis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>-->
+   <joint name="Shank" type="fixed">
+      <parent link="ShankJoint"/>
+      <child link="Shank"/>
+      <origin rpy="0 0 0" xyz="-0.0044 0.0002 -0.2914"/>
+   </joint>
+   <joint name="AnkleJoint" type="revolute">
+      <parent link="Shank"/>
+      <child link="AnkleJoint"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-1.6" upper="1.6" velocity="1.0"/>
+   </joint>
+   <joint name="Ankle" type="fixed">
+      <parent link="AnkleJoint"/>
+      <child link="Ankle"/>
+      <origin rpy="0 0 0" xyz="-0.0002 -0.0002 -0.024"/>
+   </joint>
+   <joint name="FootJoint" type="revolute">
+      <parent link="Ankle"/>
+      <child link="FootJoint"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-1.5" upper="1.5" velocity="1.0"/>
+   </joint>
+   <joint name="Foot" type="fixed">
+      <parent link="FootJoint"/>
+      <child link="Foot"/>
+      <origin rpy="0 0 0" xyz="-0.072 -0.0009 -0.027"/>
+   </joint>
+   <joint name="LampFootSphere" type="fixed">
+      <parent link="Foot"/>
+      <child link="LampFootSphere"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.007"/>
+   </joint>
+
+
+</robot>

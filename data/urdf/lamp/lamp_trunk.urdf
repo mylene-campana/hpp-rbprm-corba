@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<robot name="lamp_trunk">
+
+  <material name="Blue"> <!-- for spheres -->
+    <color rgba="0 0 1 0.5"/>
+  </material>
+  <material name="White">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="Gray">
+    <color rgba="0.6 0.6 0.6 1"/>
+  </material>
+  <material name="Green"> <!-- for ROMs -->
+    <color rgba="0 1 0 0.4"/>
+  </material>
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Head"/>
+      <origin rpy="0 0 3.14159265359" xyz="0 0 0"/>
+   </joint>
+
+  <link name="Head">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Head_view.dae"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Head.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="HeadLink">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/HeadLink.stl"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/HeadLink.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+  <!--<joint name="head_rom_joint" type="fixed">
+      <parent link="HeadLink"/>
+      <child link="head_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="head_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/foot_rom.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+   </link>-->
+
+   <!-- JOINTS -->
+   <joint name="Head" type="fixed">
+      <parent link="Head"/>
+      <child link="HeadLink"/>
+      <origin rpy="0 0 0" xyz="0.0912 -0.0012 -0.0501"/>
+   </joint>
+
+</robot>

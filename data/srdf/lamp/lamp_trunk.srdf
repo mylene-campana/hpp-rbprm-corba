@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot name="lamp_trunk">
+
+<!-- Disable collision pairs of inner links -->
+<!-- trunk -->
+<disable_collisions link1="Head" link2="HeadLink" />
+
+</robot>

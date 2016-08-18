@@ -128,6 +128,9 @@ install(FILES
   data/urdf/ant/RFFootSphere.urdf
   data/urdf/ant/RMFootSphere.urdf
   data/urdf/ant/RBFootSphere.urdf
+  data/urdf/lamp/lamp.urdf
+  data/urdf/lamp/lamp_trunk.urdf
+  data/urdf/lamp/LampFootSphere.urdf
   data/urdf/cave.urdf
   data/urdf/cubeWorld.urdf
   data/urdf/cubeWorld2.urdf
@@ -202,6 +205,9 @@ install(FILES
   data/srdf/ant/RFFootSphere.srdf
   data/srdf/ant/RMFootSphere.srdf
   data/srdf/ant/RBFootSphere.srdf
+  data/srdf/lamp/lamp.srdf
+  data/srdf/lamp/lamp_trunk.srdf
+  data/srdf/lamp/LampFootSphere.srdf
   data/srdf/cave.srdf
   data/srdf/desert.srdf
   data/srdf/high_plateforms.srdf
@@ -305,7 +311,12 @@ install(DIRECTORY
 	data/meshes/frog
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
   )
-  
+
+install(DIRECTORY
+	data/meshes/lamp
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
+  )
+
 #install(DIRECTORY data/hyq_description
 #  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/../)
   

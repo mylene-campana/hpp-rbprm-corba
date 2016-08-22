@@ -36,6 +36,9 @@ r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
+#q_top= [-3.75,0,1.64135,1,0,0,0,0,-0.0227288,0.0226894,-0.0050107,1,0,0,0]
+#rr(q_top); fullBody.isConfigValid(q_top)
+
 #~ AFTER loading obstacles
 nbSamples = 20000
 cType = "_6_DOF"
@@ -79,20 +82,20 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[LegId])
 fullBody.setEndState(q_goal_test,[LegId])
 
-extending = q_0 # TODO
-flexion = q_0 # TODO
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, -0.3, 0.0, 0,0,0,0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -0.58, 1.1, -0.5, 0.0, 0,0,0,0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.01)
+fullBody.interpolateBallisticPath(entryPathId, 0.005)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
 
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1)
-#pp.speed=1
+pp.speed=1
 #pp(psf.numberPaths ()-1)
 
 
@@ -136,5 +139,8 @@ rm capture*.png
 rm video.mp4
 """
 
+"""
 q = q_0 [::]
-q [fullBody.rankInConfiguration ['ShankJoint']] = 0.5;r(q)
+q [fullBody.rankInConfiguration ['ShankJoint']] = -0.6;r(q)
+q [fullBody.rankInConfiguration ['AnkleJoint']] = 0.6;r(q)
+"""

@@ -63,7 +63,7 @@
       </collision>
    </link>
 
-   <!--<joint name="head_rom_joint" type="fixed">
+   <joint name="head_rom_joint" type="fixed">
       <parent link="HeadLink"/>
       <child link="head_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -77,9 +77,10 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
   
    <link name="ThighJoint"/>
+   <link name="ThighJointBis"/>
    <link name="Thigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -102,7 +103,6 @@
    </link>
    
    <link name="ShankJoint"/>
-   <!--<link name="ShankJointBis"/>-->
    <link name="Shank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -191,9 +191,16 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-1.9" upper="1.9" velocity="1.0"/>
-   </joint>   
-   <joint name="Thigh" type="fixed">
+   </joint>
+   <joint name="ThighJointBis" type="revolute">
       <parent link="ThighJoint"/>
+      <child link="ThighJointBis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.55" upper="0.05" velocity="1.0"/>
+   </joint> 
+   <joint name="Thigh" type="fixed">
+      <parent link="ThighJointBis"/>
       <child link="Thigh"/>
       <origin rpy="0 0 0" xyz="0.0005 0.0000919 -0.2788"/>
    </joint>
@@ -204,13 +211,6 @@
       <axis xyz="0 1 0"/>
       <limit effort="0" lower="-2.6" upper="2.1" velocity="1.0"/>
    </joint>
-   <!--<joint name="ShankJointBis" type="revolute">
-      <parent link="ShankJoint"/>
-      <child link="ShankJointBis"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
-   </joint>-->
    <joint name="Shank" type="fixed">
       <parent link="ShankJoint"/>
       <child link="Shank"/>

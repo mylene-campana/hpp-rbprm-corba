@@ -377,3 +377,21 @@ class ProblemSolver (object):
     def clearRoadmap (self):
         return self.client.problem.clearRoadmap ()
     ## \}
+
+## Get paths from roadmap edges and return sampled configurations on them
+    # (Because not sure if returning a pathVector is a good idea (never seen it)
+    # \param NbPointsPerSubPath number of points on each edge-path
+    def edgeToSampledPathVector (self, edgeId, NbPointsPerSubPath):
+        return self.client.problem.edgeToSampledPathVector (edgeId, NbPointsPerSubPath)
+    ## \}
+
+    def sampleSubPath (self, pathId, NbPointsPerSubPath):
+        return self.client.problem.sampleSubPath (pathId, NbPointsPerSubPath)
+
+    ## Set the limit of the planner number of iterations
+    def setPlannerIterLimit (self, limit):
+        return self.client.problem.setPlannerIterLimit (limit)
+
+    ## Get the limit of the planner number of iterations
+    def getPlannerIterLimit (self):
+        return self.client.problem.getPlannerIterLimit ()

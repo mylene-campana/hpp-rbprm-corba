@@ -44,10 +44,10 @@ flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
-rLegId = 'rfoot'
-lLegId = 'lfoot'
-rarmId = 'rhand'
-larmId = 'lhand'
+rLegId = 'RFoot'
+lLegId = 'LFoot'
+rarmId = 'RHand'
+larmId = 'LHand'
 fullBody.addLimbDatabase('./Frog_rleg.db',rLegId,'static')
 fullBody.addLimbDatabase('./Frog_lleg.db',lLegId,'static')
 fullBody.addLimbDatabase('./Frog_rarm.db',rarmId,'static')
@@ -83,6 +83,7 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lLegId,rLegId,larmId,rarmId])
 fullBody.setEndState(q_goal_test,[lLegId,rLegId,larmId,rarmId])
 
+psf.setPlannerIterLimit (1000)
 
 print("Start ballistic-interpolation")
 fullBody.interpolateBallisticPath(entryPathId, 0.0001)

@@ -43,25 +43,25 @@ y = 0.08 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 heuristicName = "static"
 #~ AFTER loading obstacles
-rLegId = 'rfoot'
+rLegId = 'RFoot'
 rLeg = 'RThigh_ry'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
 fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,heuristicName)
 
-lLegId = 'lfoot'
+lLegId = 'LFoot'
 lLeg = 'LThigh_ry'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
 fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,heuristicName)
 
-rarmId = 'rhand'
+rarmId = 'RHand'
 rLeg = 'RHumerus_ry'
 rfoot = 'SpidermanRHandSphere'
 rarmx = x; rarmy = y
 fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,heuristicName)
 
-larmId = 'lhand'
+larmId = 'LHand'
 lLeg = 'LHumerus_ry'
 lfoot = 'SpidermanLHandSphere'
 larmx = x; larmy = y

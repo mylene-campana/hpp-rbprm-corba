@@ -37,39 +37,39 @@ r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 
 #~ AFTER loading obstacles
-nbSamples = 80000
+nbSamples = 50000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
 
-lfLegId = 'lffoot'
+lfLegId = 'LFFoot'
 lfLeg = 'LFThigh_rx'
 lffoot = 'LFFootSphere'
 fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
-lmLegId = 'lmfoot'
+lmLegId = 'LMFoot'
 lmLeg = 'LMThigh_rx'
 lmfoot = 'LMFootSphere'
 fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
-lbLegId = 'lbfoot'
+lbLegId = 'LBFoot'
 lbLeg = 'LBThigh_rx'
 lbfoot = 'LBFootSphere'
 fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
-rfLegId = 'rffoot'
+rfLegId = 'RFFoot'
 rfLeg = 'RFThigh_rx'
 rffoot = 'RFFootSphere'
 fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
 
-rmLegId = 'rmfoot'
+rmLegId = 'RMFoot'
 rmLeg = 'RMThigh_rx'
 rmfoot = 'RMFootSphere'
 fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
 
-rbLegId = 'rbfoot'
+rbLegId = 'RBFoot'
 rbLeg = 'RBThigh_rx'
 rbfoot = 'RBFootSphere'
 fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
@@ -110,6 +110,8 @@ extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.
 flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0,0,0,0,0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
+
+psf.setPlannerIterLimit (1000)
 
 print("Start ballistic-interpolation")
 fullBody.interpolateBallisticPath(entryPathId, 0.005)

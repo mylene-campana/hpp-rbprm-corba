@@ -47,7 +47,7 @@ y = 0.05 # contact surface length
 offset = [0,0,0]
 normal = [0,0,1]
 
-LegId = 'foot'
+LegId = 'Foot'
 Leg = 'Thigh'
 foot = 'LampFootSphere'
 fullBody.addLimb(LegId, Leg, foot, offset, normal, x, y, nbSamples, "EFORT_Normal", 0.01, cType)

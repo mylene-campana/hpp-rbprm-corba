@@ -44,39 +44,39 @@ fullBody.isConfigValid(extending); fullBody.isConfigValid(flexion)
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
-nbSamples = 50000
+nbSamples = 30000
 cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
 # By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
 heuristic = "EFORT_Normal"
-lfLegId = 'lffoot'
+lfLegId = 'LFFoot'
 lfLeg = 'LFThigh_rx'
 lffoot = 'LFFootSphere'
 fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,1], x, y, nbSamples, heuristic, 0.01,cType)
 
-lmLegId = 'lmfoot'
+lmLegId = 'LMFoot'
 lmLeg = 'LMThigh_rx'
 lmfoot = 'LMFootSphere'
 fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,1], x, y, nbSamples, heuristic, 0.01,cType)
 
-lbLegId = 'lbfoot'
+lbLegId = 'LBFoot'
 lbLeg = 'LBThigh_rx'
 lbfoot = 'LBFootSphere'
 fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,1], x, y, nbSamples, heuristic, 0.01,cType)
 
-rfLegId = 'rffoot'
+rfLegId = 'RFFoot'
 rfLeg = 'RFThigh_rx'
 rffoot = 'RFFootSphere'
 fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,1], x, y, nbSamples, heuristic, 0.01,cType)
 
 
-rmLegId = 'rmfoot'
+rmLegId = 'RMFoot'
 rmLeg = 'RMThigh_rx'
 rmfoot = 'RMFootSphere'
 fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,1], x, y, nbSamples, heuristic, 0.01,cType)
 
-rbLegId = 'rbfoot'
+rbLegId = 'RBFoot'
 rbLeg = 'RBThigh_rx'
 rbfoot = 'RBFootSphere'
 fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,1], x, y, nbSamples, heuristic, 0.01,cType)
@@ -111,9 +111,10 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
+psf.setPlannerIterLimit (1000)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 1.2)
+fullBody.interpolateBallisticPath(entryPathId, 0.005)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
@@ -185,5 +186,11 @@ q [fullBody.rankInConfiguration ['RMFoot_ry']] = -0.2; rr(q)
 q [fullBody.rankInConfiguration ['RBThigh_ry']] = -1.1; rr(q)
 q [fullBody.rankInConfiguration ['RBShank_ry']] = 0.5; rr(q)
 q [fullBody.rankInConfiguration ['RBFoot_ry']] = -0.2; rr(q)
+
+biRRT converge pas:
+start= [7.37092,1.00709,7.74434,0.38411,0.100199,-0.389878,0.830912,0,0,0,0,0,0,1.15668,0.671725,-0.597937,-0.297447,-0.785419,-0.160423,-0.0130058,-0.13424,-0.037199,1.01357,-0.112751,-0.510943,0.000110022,0.0622325,0.156809,-0.0238343,-0.387803,0.222064,-0.362172,0.243999,-0.046081,0.113324,-0.319184,0.0564558,-0.144555,-0.850792,0.0862704,0.200879,0.0246342,-0.0178707,-0.184449,0.00759846,0.156328,-0.781473,0.0677216,0.293257,0.0318036,-0.0068635,-0.160168,0.0036874,-0.113042,-0.828873,-0.0127002,0.17509,-0.0579396,0.0153663,-0.126013,-0.00185134,0.235942,-0.0315914,-0.162165,0.638267]
+end= [7.94655,0.751815,6.93998,0.867979,0.274304,-0.383787,0.15517,0,0,0,0,0,0,-0.515819,-0.533339,0.266187,0.572353,-0.513911,0.16618,0.0693528,0.0507565,0.427327,1.13099,-0.7,-0.632192,-0.336571,0.143421,-0.152314,-0.182467,-0.478847,0.958497,-0.615771,0.0382872,-0.250416,0.00312143,-0.274915,0.146908,-0.973273,-0.584981,0.591201,-0.655292,0.617156,-0.157746,0.0738587,0.0428424,0.0944445,-0.468691,0.423731,0.920753,0.0827405,0.0603013,0.0639058,-0.131609,-0.197893,-0.212242,-0.199967,-0.56676,0.45163,0.153163,0.0460408,-0.0788465,3.2527e-86,4.32554e-91,1.17923e-95,8.54295e-72]
+
+
 
 """

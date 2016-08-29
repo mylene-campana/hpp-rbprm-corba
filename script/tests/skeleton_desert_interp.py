@@ -43,8 +43,8 @@ fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
 
-rLegId = 'rfoot'
-lLegId = 'lfoot'
+rLegId = 'RFoot'
+lLegId = 'LFoot'
 fullBody.addLimbDatabase('./armlessSkeleton_rleg.db',rLegId,'static')
 fullBody.addLimbDatabase('./armlessSkeleton_lleg.db',lLegId,'static')
 print("Limbs added to fullbody")
@@ -86,13 +86,15 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[rLegId,lLegId])
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
+psf.setPlannerIterLimit (1000)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
+fullBody.interpolateBallisticPath(entryPathId, 0.01)
+
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=1
+pp.speed=3
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 #pp(psf.numberPaths ()-1)
@@ -103,10 +105,12 @@ pp.speed=1
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
+"""
 pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone_blue")
+"""
 """
 pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 
@@ -116,8 +120,8 @@ gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'skeletonDesert_path.txt')
 pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 """
-pathId = psf.numberPaths()-1 # path to export
-pathToYamlFile (psf, rr, "skeletonDesert_frames2.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
+#pathId = psf.numberPaths()-1 # path to export
+#pathToYamlFile (psf, rr, "skeletonDesert_frames2.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 
 """
 ## Video recording
@@ -175,4 +179,9 @@ q [fullBody.rankInConfiguration ['LAnkle_J1']] = -1.2; rr(q)
 q [fullBody.rankInConfiguration ['LFoot']] = 0.1; rr(q)
 [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
 fullBody.isConfigValid(q)
+
+start= [-0.926587,-4.4898,-0.122323,-0.249679,-0.15765,-0.195424,0.935209,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.24573,0.306502,-0.831351,1.77806,-0.551047,0.352681,0.208679,0.319051,0.213806,1.01011,-0.713777,-0.219794,0.0632728,-0.425726,0.902637,-2.65711]
+end= [-1.0956,-4.57876,0.140881,-0.220252,-0.153921,-0.186192,0.945055,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.289627,0.383697,-0.0532497,0.295376,0.568455,0.177505,0.208679,0.319051,0.213806,1.01011,-0.713777,-0.219794,0.0632728,-0.425726,0.902637,-2.65711]
+
+
 """

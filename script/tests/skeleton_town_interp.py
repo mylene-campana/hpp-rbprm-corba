@@ -64,8 +64,8 @@ y = 0.08 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 
 #~ AFTER loading obstacles
-rLegId = 'rfoot'
-lLegId = 'lfoot'
+rLegId = 'RFoot'
+lLegId = 'LFoot'
 fullBody.addLimbDatabase('./armlessSkeleton_rleg.db',rLegId,'static')
 fullBody.addLimbDatabase('./armlessSkeleton_lleg.db',lLegId,'static')
 print("Limbs added to fullbody")

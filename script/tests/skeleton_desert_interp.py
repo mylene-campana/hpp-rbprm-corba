@@ -88,11 +88,11 @@ fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
+fullBody.interpolateBallisticPath(entryPathId, 0.01)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=1
+pp.speed=2
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 #pp(psf.numberPaths ()-1)
@@ -103,10 +103,12 @@ pp.speed=1
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
+"""
 pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone_blue")
 plotCone (q_goal_test, psf, rr, "cone_goal", "friction_cone_blue")
 plotConeWaypoints (psf, pathId, r, "cone_wp_group", "friction_cone_blue")
+"""
 """
 pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 
@@ -116,8 +118,8 @@ gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'skeletonDesert_path.txt')
 pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 """
-pathId = psf.numberPaths()-1 # path to export
-pathToYamlFile (psf, rr, "skeletonDesert_frames2.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
+#pathId = psf.numberPaths()-1 # path to export
+#pathToYamlFile (psf, rr, "skeletonDesert_frames2.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 
 """
 ## Video recording

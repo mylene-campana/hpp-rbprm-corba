@@ -86,11 +86,8 @@ ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
 q_cube = q11[::]
 
-<<<<<<< Updated upstream
-q_cube[0:7] =  [-2.6,0,3.9, 1, 0, 0, 0]
-=======
+
 q_cube[0:7] =  [-2.6,0,3.8, 1, 0, 0, 0]
->>>>>>> Stashed changes
 
 waypoints = [q_cube]
 pbCl = rbprmBuilder.client.basic.problem
@@ -128,11 +125,9 @@ plotCone (qCone, ps, r, "cone_Mid", "friction_cone_SG2")
 
 ##############################
 
-<<<<<<< Updated upstream
-rbprmBuilder.rotateAlongPath (solutionPathId,True)
-=======
+
 #rbprmBuilder.rotateAlongPath (solutionPathId,True)
->>>>>>> Stashed changes
+
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 r(pp.client.problem.configAtParam(orientedpathId,0))

@@ -69,7 +69,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Head.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/Head_box.stl"/>
          </geometry>
       </collision>
    </link>

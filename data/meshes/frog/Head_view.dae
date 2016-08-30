@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.70.0 commit date:2014-03-19, commit time:05:02, hash:19e627c</authoring_tool>
     </contributor>
-    <created>2016-06-27T18:18:12</created>
-    <modified>2016-06-27T18:18:12</modified>
+    <created>2016-08-30T15:51:58</created>
+    <modified>2016-08-30T15:51:58</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -82,6 +82,32 @@
   </library_lights>
   <library_images/>
   <library_effects>
+    <effect id="box-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.8 0 0 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
     <effect id="ROM-effect">
       <profile_COMMON>
         <technique sid="common">
@@ -217,6 +243,9 @@
     </effect>
   </library_effects>
   <library_materials>
+    <material id="box-material" name="box">
+      <instance_effect url="#box-effect"/>
+    </material>
     <material id="ROM-material" name="ROM">
       <instance_effect url="#ROM-effect"/>
     </material>
@@ -234,6 +263,39 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Cube_001-mesh" name="Cube.001">
+      <mesh>
+        <source id="Cube_001-mesh-positions">
+          <float_array id="Cube_001-mesh-positions-array" count="24">-0.002793312 -0.04989343 -0.06055498 -0.002793312 0.05010652 -0.06055498 0.09720665 0.05010652 -0.06055498 0.09720665 -0.04989343 -0.06055498 -0.002793312 -0.04989343 0.03944492 -0.002793312 0.05010652 0.03944492 0.09720665 0.05010652 0.03944492 0.09720665 -0.04989343 0.03944492</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_001-mesh-normals">
+          <float_array id="Cube_001-mesh-normals-array" count="36">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1 -1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-normals-array" count="12" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_001-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_001-mesh-positions"/>
+        </vertices>
+        <polylist material="box-material" count="12">
+          <input semantic="VERTEX" source="#Cube_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_001-mesh-normals" offset="1"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>4 0 5 0 1 0 5 1 6 1 2 1 6 2 7 2 3 2 7 3 4 3 0 3 0 4 1 4 2 4 7 5 6 5 5 5 0 6 4 6 1 6 1 7 5 7 2 7 2 8 6 8 3 8 3 9 7 9 0 9 3 10 0 10 2 10 4 11 7 11 5 11</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="foo-mesh" name="foo">
       <mesh>
         <source id="foo-mesh-positions">
@@ -368,6 +430,16 @@
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
+      <node id="Head_box" name="Head_box" type="NODE">
+        <matrix sid="transform">0.9829226 0 -0.2214612 0 0 1.092582 0 0 0.2853269 0 0.7629117 0 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_001-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="box-material" target="#box-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
       <node id="rhand_rom" name="rhand_rom" type="NODE">
         <matrix sid="transform">1.26759e-6 1 7.58967e-7 0 0 -7.58967e-7 1 0 1 -1.26759e-6 -9.6206e-13 0 0 0 0 1</matrix>
         <instance_geometry url="#foo-mesh">

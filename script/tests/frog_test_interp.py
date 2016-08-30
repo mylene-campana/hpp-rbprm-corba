@@ -83,17 +83,17 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lLegId,rLegId,larmId,rarmId])
 fullBody.setEndState(q_goal_test,[lLegId,rLegId,larmId,rarmId])
 
-psf.setPlannerIterLimit (1000)
+psf.setPlannerIterLimit (200)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.0001)
+fullBody.interpolateBallisticPath(entryPathId, 0.002)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=0.4
+pp.speed=0.8
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-#pp(psf.numberPaths ()-1)
+pp(psf.numberPaths ()-1)
 
 #pathJointConfigsToFile (psf, rr, "frog_pond_jointConfigs_new2.txt", psf.numberPaths ()-1, q_goal_test, 0.008)
 

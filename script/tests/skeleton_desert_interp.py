@@ -36,16 +36,22 @@ psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0,0,0,0] # TODO arms !!!
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.4, -0.1, -1.2, 0.0, 0.0, 0.0, -0.2, 0.1, 0.4, -0.1, 1.2, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0,0,0,0]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.8, -1.2, 0, 0, 0.0, -0.2, 0.1, 0.3, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0,0,0,0]
+q_contact = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.0, -1.2, 0.0, 0.0, 0.0, -0.2, 0.1, 0.3, -1.0, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0,0,0,0]
+
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
-
+fullBody.setPose (q_contact, "contact")
 
 rLegId = 'RFoot'
 lLegId = 'LFoot'
-fullBody.addLimbDatabase('./armlessSkeleton_rleg.db',rLegId,'static')
-fullBody.addLimbDatabase('./armlessSkeleton_lleg.db',lLegId,'static')
+rarmId = 'RHand'
+larmId = 'LHand'
+fullBody.addLimbDatabase('./skeleton_rleg.db',rLegId,'static')
+fullBody.addLimbDatabase('./skeleton_lleg.db',lLegId,'static')
+fullBody.addLimbDatabase('./skeleton_rarm.db',rarmId,'static')
+fullBody.addLimbDatabase('./skeleton_larm.db',larmId,'static')
 print("Limbs added to fullbody")
 
 confsize = len(tp.q11)
@@ -82,8 +88,8 @@ q_goal_test = fullBody.generateContacts(q_goal, dir_goal, False); rr (q_goal_tes
 fullBody.isConfigValid(q_goal_test)
 
 
-fullBody.setStartState(q_init_test,[rLegId,lLegId])
-fullBody.setEndState(q_goal_test,[rLegId,lLegId])
+fullBody.setStartState(q_init_test,[rLegId,lLegId,rarmId,larmId])
+fullBody.setEndState(q_goal_test,[rLegId,lLegId,rarmId,larmId])
 
 psf.setPlannerIterLimit (1000)
 
@@ -165,10 +171,53 @@ q [fullBody.rankInConfiguration ['LThigh']] = 0.1; rr(q)
 q [fullBody.rankInConfiguration ['LShank']] = 0.2; rr(q)
 q [fullBody.rankInConfiguration ['LAnkle_J1']] = 0.5; rr(q)
 q [fullBody.rankInConfiguration ['LFoot']] = 0.0; rr(q)
+
+q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['LElbow_J1']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['LForearm']] = -1.2; rr(q)
+
+q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['RElbow_J1']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['RForearm']] = 1.2; rr(q)
+
 [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0]
 fullBody.isConfigValid(q)
 
 # flexion
+q = q_0
+q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; r(q)
+q [fullBody.rankInConfiguration ['RHip_J2']] = -0.2; r(q)
+q [fullBody.rankInConfiguration ['RThigh']] = -1.1; r(q)
+q [fullBody.rankInConfiguration ['RShank']] = 2.2; r(q)
+q [fullBody.rankInConfiguration ['RAnkle_J1']] = -1.2; r(q)
+q [fullBody.rankInConfiguration ['RFoot']] = -0.1; r(q)
+
+q [fullBody.rankInConfiguration ['LHip_J1']] = 0.1; r(q)
+q [fullBody.rankInConfiguration ['LHip_J2']] = 0.2; r(q)
+q [fullBody.rankInConfiguration ['LThigh']] = -1.1; r(q)
+q [fullBody.rankInConfiguration ['LShank']] = 2.2; r(q)
+q [fullBody.rankInConfiguration ['LAnkle_J1']] = -1.2; r(q)
+q [fullBody.rankInConfiguration ['LFoot']] = 0.1; r(q)
+
+q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.2; r(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.1; r(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = 0.3; r(q)
+q [fullBody.rankInConfiguration ['LElbow_J1']] = -1.8; r(q)
+q [fullBody.rankInConfiguration ['LForearm']] = -1.2; r(q)
+
+q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.2; r(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.1; r(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = 0.3; r(q)
+q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.8; r(q)
+q [fullBody.rankInConfiguration ['RForearm']] = 1.2; r(q)
+
+fullBody.isConfigValid(q)
+
+# q_contact  # legs don't account
 q = q_0
 q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; rr(q)
 q [fullBody.rankInConfiguration ['RHip_J2']] = -0.2; rr(q)
@@ -183,7 +232,19 @@ q [fullBody.rankInConfiguration ['LThigh']] = -1.1; rr(q)
 q [fullBody.rankInConfiguration ['LShank']] = 2.2; rr(q)
 q [fullBody.rankInConfiguration ['LAnkle_J1']] = -1.2; rr(q)
 q [fullBody.rankInConfiguration ['LFoot']] = 0.1; rr(q)
-[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
+
+q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['LElbow_J1']] = -1.; rr(q)
+q [fullBody.rankInConfiguration ['LForearm']] = -1.2; rr(q)
+
+q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.; rr(q)
+q [fullBody.rankInConfiguration ['RForearm']] = 1.2; rr(q)
+
 fullBody.isConfigValid(q)
 
 """

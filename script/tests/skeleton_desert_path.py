@@ -21,7 +21,7 @@ rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 urdfName = 'skeleton_trunk'
-urdfNameRoms = ['LFootSphere','RFootSphere']
+urdfNameRoms = ['LFootSphere','RFootSphere','LHandSphere','RHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
@@ -35,6 +35,8 @@ rbprmBuilder.setFilter(urdfNameRoms)
 filterRange = 0.3
 rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], filterRange)
 rbprmBuilder.setNormalFilter('RFootSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('LHandSphere', [0,0,1], filterRange)
+rbprmBuilder.setNormalFilter('RHandSphere', [0,0,1], filterRange)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 

@@ -20,7 +20,7 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'skeleton_trunk'
+urdfName = 'skeleton_trunk_flexible'
 urdfNameRoms = ['LFootSphere','RFootSphere','LHandSphere','RHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""
@@ -139,3 +139,8 @@ qAway = q11 [::]; qAway[0] = -8
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 
+"""
+for i in range(0,len(waypoints)):
+    rbprmBuilder.isConfigValid(waypoints[i])
+
+"""

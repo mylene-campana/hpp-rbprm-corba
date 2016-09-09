@@ -58,17 +58,22 @@ y = 0.08 # contact surface length
 rLegId = 'rfoot'
 rLeg = 'RHip_J1'
 rfoot = 'RFootSphere'
-rLegx = x; rLegy = y
 fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 lLegId = 'lfoot'
 lLeg = 'LHip_J1'
 lfoot = 'LFootSphere'
-lLegx = x; lLegy = y
 fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
 print("Legs added to fullbody")
 
+rarmId = 'rhand'
+fullBody.addLimb(rarmId,'RShoulder_J1','RHandSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+
+larmId = 'lhand'
+fullBody.addLimb(larmId,'LShoulder_J1','LHandSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+
+print("Arms added to fullbody")
 
 def runallLLeg(lid, dbName):
     fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
@@ -112,8 +117,8 @@ def runallRArm(lid, dbName):
 
 runallLLeg(lLegId, './skeleton_lleg.db')
 runallRLeg(rLegId, './skeleton_rleg.db')
-runallLArm(larmId, './skeleton_larm.db')
-runallRArm(rarmId, './skeleton_rarm.db')
+runallLArm(rarmId, './skeleton_larm.db')
+runallRArm(larmId, './skeleton_rarm.db')
 
 
 ##plotOctreeValues(fullBody, "isotropy", lLegId)

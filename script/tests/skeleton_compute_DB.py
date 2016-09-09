@@ -117,8 +117,8 @@ def runallRArm(lid, dbName):
 
 runallLLeg(lLegId, './skeleton_lleg.db')
 runallRLeg(rLegId, './skeleton_rleg.db')
-runallLArm(rarmId, './skeleton_larm.db')
-runallRArm(larmId, './skeleton_rarm.db')
+runallLArm(larmId, './skeleton_larm.db')
+runallRArm(rarmId, './skeleton_rarm.db')
 
 
 ##plotOctreeValues(fullBody, "isotropy", lLegId)

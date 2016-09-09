@@ -19,7 +19,7 @@ rootJointType = "freeflyer"
 urdfName = "skeleton"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = 0#tp.ecsSize
+ecsSize = tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 
@@ -62,14 +62,14 @@ q_init = flexion; q_goal = q_init [::]
 entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 
-#q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[4][0:confsize-ecsSize]; rr(q)
-#fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
+q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[4][0:confsize-ecsSize]; rr(q)
+fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
 
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
+#if (ecsSize > 0):
+#    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
+#    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 """ # without solving path
 q_init[0:confsize-ecsSize] = tp.q11[0:confsize-ecsSize]

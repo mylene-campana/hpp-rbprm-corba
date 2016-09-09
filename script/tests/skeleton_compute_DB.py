@@ -29,7 +29,8 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 q_0 = fullBody.getCurrentConfig()
 
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.8, -1.2, 0, 0, 0.0, -0.2, 0.1, 0.3, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.1, 0.2, -1.8, -1.2, 0.0, 0.0, 0.0, -0.5, -0.1, 0.2, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
+
 
 """
 from hpp.gepetto import Viewer
@@ -140,17 +141,30 @@ q [fullBody.rankInConfiguration ['LShank']] = 2.2; r(q)
 q [fullBody.rankInConfiguration ['LAnkle_J1']] = -1.2; r(q)
 q [fullBody.rankInConfiguration ['LFoot']] = 0.1; r(q)
 
-q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.2; r(q)
-q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.1; r(q)
-q [fullBody.rankInConfiguration ['LHumerus']] = 0.3; r(q)
-q [fullBody.rankInConfiguration ['LElbow_J1']] = -1.8; r(q)
+q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.6; r(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = 0.1; r(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = 0.2; r(q)
+q [fullBody.rankInConfiguration ['LElbow_J1']] = -1.4; r(q)
 q [fullBody.rankInConfiguration ['LForearm']] = -1.2; r(q)
 
-q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.2; r(q)
-q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.1; r(q)
-q [fullBody.rankInConfiguration ['RHumerus']] = 0.3; r(q)
-q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.8; r(q)
+q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.6; r(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = -0.1; r(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = 0.2; r(q)
+q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.4; r(q)
 q [fullBody.rankInConfiguration ['RForearm']] = 1.2; r(q)
+
 [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.8, -1.2, 0, 0, 0.0, -0.2, 0.1, 0.3, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
 fullBody.isConfigValid(q)
+
+fullBody.rankInConfiguration ['RShoulder_J1']
+fullBody.rankInConfiguration ['RHand']
+
+fullBody.rankInConfiguration ['LShoulder_J1']
+fullBody.rankInConfiguration ['LHand']
+
+fullBody.rankInConfiguration ['RHip_J1']
+fullBody.rankInConfiguration ['RFoot']
+
+fullBody.rankInConfiguration ['LHip_J1']
+fullBody.rankInConfiguration ['LFoot']
 """

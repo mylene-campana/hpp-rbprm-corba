@@ -19,15 +19,15 @@ rootJointType = "freeflyer"
 urdfName = "skeleton"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = tp.ecsSize
+ecsSize = 0#tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 fullBody.setFullbodyFrictionCoef(0.5)
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
@@ -36,9 +36,9 @@ psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.4, -0.1, -1.2, 0.0, 0.0, 0.0, -0.2, 0.1, 0.4, -0.1, 1.2, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0,0,0,0]
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.8, -1.2, 0, 0, 0.0, -0.2, 0.1, 0.3, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0,0,0,0]
-q_contact = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.0, -1.2, 0.0, 0.0, 0.0, -0.2, 0.1, 0.3, -1.0, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0,0,0,0]
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.8, -0.5, -1.2, 0.0, 0.0, 0.0, -0.2, -0.1, -1.8, -0.5, 1.2, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0]#, 0,0,0,0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.1, 0.2, -1.4, -1.2, 0.0, 0.0, 0.0, -0.6, -0.1, 0.2, -1.4, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]#, 0,0,0,0]
+q_contact = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4, 0, -0.7, -1.0, -1.2, 0.0, 0.0, 0.0, -0.4, 0, -0.7, -1.0, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]#, 0,0,0,0]
 
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
@@ -56,11 +56,15 @@ print("Limbs added to fullbody")
 
 confsize = len(tp.q11)
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
-q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
+q_init = flexion; q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
 entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
+
+#q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[4][0:confsize-ecsSize]; rr(q)
+#fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
+
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
 if (ecsSize > 0):
@@ -88,13 +92,13 @@ q_goal_test = fullBody.generateContacts(q_goal, dir_goal, False); rr (q_goal_tes
 fullBody.isConfigValid(q_goal_test)
 
 
-fullBody.setStartState(q_init_test,[rLegId,lLegId,rarmId,larmId])
-fullBody.setEndState(q_goal_test,[rLegId,lLegId,rarmId,larmId])
+fullBody.setStartState(q_init_test,[rLegId,lLegId])
+fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
-psf.setPlannerIterLimit (1000)
+psf.setPlannerIterLimit (100)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.01)
+fullBody.interpolateBallisticPath(entryPathId, 0.005)
 
 
 
@@ -102,7 +106,7 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=3
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-#pp(psf.numberPaths ()-1)
+pp(psf.numberPaths ()-1)
 
 
 #r.startCapture("skeletonDesert","png") ; r.stopCapture()
@@ -123,7 +127,7 @@ gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'skeletonDesert_path.txt')
-pathToYamlFile (psf, rr, "skeletonDesert_frames.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
+pathToYamlFile (psf, rr, "fullSkeletonDesert_frames.yaml ", "skeleton", pathId, q_goal_test, 0.01)
 """
 #pathId = psf.numberPaths()-1 # path to export
 #pathToYamlFile (psf, rr, "skeletonDesert_frames2.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
@@ -173,15 +177,15 @@ q [fullBody.rankInConfiguration ['LAnkle_J1']] = 0.5; rr(q)
 q [fullBody.rankInConfiguration ['LFoot']] = 0.0; rr(q)
 
 q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.1; rr(q)
-q [fullBody.rankInConfiguration ['LHumerus']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['LElbow_J1']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = 0.1; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = -1.8; rr(q)
+q [fullBody.rankInConfiguration ['LElbow_J1']] = -0.5; rr(q)
 q [fullBody.rankInConfiguration ['LForearm']] = -1.2; rr(q)
 
 q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['RHumerus']] = 0.4; rr(q)
-q [fullBody.rankInConfiguration ['RElbow_J1']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = -0.1; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = -1.8; rr(q)
+q [fullBody.rankInConfiguration ['RElbow_J1']] = -0.5; rr(q)
 q [fullBody.rankInConfiguration ['RForearm']] = 1.2; rr(q)
 
 [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0]
@@ -233,15 +237,15 @@ q [fullBody.rankInConfiguration ['LShank']] = 2.2; rr(q)
 q [fullBody.rankInConfiguration ['LAnkle_J1']] = -1.2; rr(q)
 q [fullBody.rankInConfiguration ['LFoot']] = 0.1; rr(q)
 
-q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.2; rr(q)
-q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.1; rr(q)
-q [fullBody.rankInConfiguration ['LHumerus']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.4; rr(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = -0.7; rr(q)
 q [fullBody.rankInConfiguration ['LElbow_J1']] = -1.; rr(q)
 q [fullBody.rankInConfiguration ['LForearm']] = -1.2; rr(q)
 
-q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.2; rr(q)
-q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.1; rr(q)
-q [fullBody.rankInConfiguration ['RHumerus']] = 0.3; rr(q)
+q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.4; rr(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = -0.7; rr(q)
 q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.; rr(q)
 q [fullBody.rankInConfiguration ['RForearm']] = 1.2; rr(q)
 

@@ -17,7 +17,7 @@ meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
 ##
 #  Information to retrieve urdf and srdf files.
-urdfName = "armlessSkeleton"
+urdfName = "skeleton"
 urdfSuffix = ""
 srdfSuffix = ""
 
@@ -26,16 +26,26 @@ fullBody = FullBody ()
 
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
+q_0 = fullBody.getCurrentConfig()
 
 
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.8, -1.2, 0, 0, 0.0, -0.2, 0.1, 0.3, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
+"""
+from hpp.gepetto import Viewer
+psf = ProblemSolver( fullBody ); r = Viewer (psf)
+r(q_0)
+"""
 
-q_lfeet = flexion[31:37]
-q_rfeet = flexion[37:43]
+q_lfeet = flexion[47:53]
+q_rfeet = flexion[53:59]
+q_larm = flexion[31:38]
+q_rarm = flexion[39:46]
 
 fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,1.,5.,1.,1.])
 fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,1.,5.,1.,1.])
+fullBody.addRefConfigAnalysis(q_larm,"RefPoseLArm")
+fullBody.addRefConfigAnalysis(q_rarm,"RefPoseRArm")
 
 #~ AFTER loading obstacles
 nbSamples = 50000
@@ -80,12 +90,62 @@ def runallRLeg(lid, dbName):
     fullBody.runLimbSampleAnalysis(lid, "RefPoseRFeet", True)
     fullBody.saveLimbDatabase(lid, dbName)
 
+def runallLArm(lid, dbName):
+    fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
+    fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
+    fullBody.runLimbSampleAnalysis(lid, "jointLimitsDistance", False)
+    fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
+    fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
+    fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
+    fullBody.runLimbSampleAnalysis(lid, "RefPoseLArm", True)
+    fullBody.saveLimbDatabase(lid, dbName)
 
+def runallRArm(lid, dbName):
+    fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
+    fullBody.runLimbSampleAnalysis(lid, "manipulabilityTr", False)
+    fullBody.runLimbSampleAnalysis(lid, "jointLimitsDistance", False)
+    fullBody.runLimbSampleAnalysis(lid, "isotropyTr", False)
+    fullBody.runLimbSampleAnalysis(lid, "isotropy", False)
+    fullBody.runLimbSampleAnalysis(lid, "manipulability", False)
+    fullBody.runLimbSampleAnalysis(lid, "RefPoseRArm", True)
+    fullBody.saveLimbDatabase(lid, dbName)
 
-runallLLeg(lLegId, './armlessSkeleton_lleg.db')
-runallRLeg(rLegId, './armlessSkeleton_rleg.db')
-
+runallLLeg(lLegId, './skeleton_lleg.db')
+runallRLeg(rLegId, './skeleton_rleg.db')
+runallLArm(larmId, './skeleton_larm.db')
+runallRArm(rarmId, './skeleton_rarm.db')
 
 
 ##plotOctreeValues(fullBody, "isotropy", lLegId)
 
+"""
+# flexion + amrs
+q = q_0
+q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; r(q)
+q [fullBody.rankInConfiguration ['RHip_J2']] = -0.2; r(q)
+q [fullBody.rankInConfiguration ['RThigh']] = -1.1; r(q)
+q [fullBody.rankInConfiguration ['RShank']] = 2.2; r(q)
+q [fullBody.rankInConfiguration ['RAnkle_J1']] = -1.2; r(q)
+q [fullBody.rankInConfiguration ['RFoot']] = -0.1; r(q)
+
+q [fullBody.rankInConfiguration ['LHip_J1']] = 0.1; r(q)
+q [fullBody.rankInConfiguration ['LHip_J2']] = 0.2; r(q)
+q [fullBody.rankInConfiguration ['LThigh']] = -1.1; r(q)
+q [fullBody.rankInConfiguration ['LShank']] = 2.2; r(q)
+q [fullBody.rankInConfiguration ['LAnkle_J1']] = -1.2; r(q)
+q [fullBody.rankInConfiguration ['LFoot']] = 0.1; r(q)
+
+q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.2; r(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.1; r(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = 0.3; r(q)
+q [fullBody.rankInConfiguration ['LElbow_J1']] = -1.8; r(q)
+q [fullBody.rankInConfiguration ['LForearm']] = -1.2; r(q)
+
+q [fullBody.rankInConfiguration ['RShoulder_J1']] = -0.2; r(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.1; r(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = 0.3; r(q)
+q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.8; r(q)
+q [fullBody.rankInConfiguration ['RForearm']] = 1.2; r(q)
+[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.8, -1.2, 0, 0, 0.0, -0.2, 0.1, 0.3, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
+fullBody.isConfigValid(q)
+"""

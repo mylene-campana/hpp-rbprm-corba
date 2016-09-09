@@ -796,14 +796,14 @@
       <child link="RShank"/>
       <origin rpy="0 0 0" xyz="-0.023611 -0.0094444 -0.42972"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.05" upper="2.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.05" upper="2.4" velocity="1.0"/>
    </joint>
    <joint name="RAnkle_J1" type="revolute">
       <parent link="RShank"/>
       <child link="RAnkle_J1"/>
       <origin rpy="0 0 0" xyz="0 0 -0.43444"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.4" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="RFoot" type="revolute">
       <parent link="RAnkle_J1"/>
@@ -848,14 +848,14 @@
       <child link="LShank"/>
       <origin rpy="0 0 0" xyz="-0.023611 0.0094444 -0.42972"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.05" upper="2.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.05" upper="2.4" velocity="1.0"/>
    </joint>
    <joint name="LAnkle_J1" type="revolute">
       <parent link="LShank"/>
       <child link="LAnkle_J1"/>
       <origin rpy="0 0 0" xyz="0 0 -0.43444"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1.2" upper="1.2" velocity="1.0"/>
+      <limit effort="0" lower="-1.4" upper="1.2" velocity="1.0"/>
    </joint>
    <joint name="LFoot" type="revolute">
       <parent link="LAnkle_J1"/>

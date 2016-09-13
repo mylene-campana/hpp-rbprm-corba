@@ -38,7 +38,9 @@ q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.8, -0.5, -1.2, 0.0, 0.0, 0.0, -0.2, -0.1, -1.8, -0.5, 1.2, 0.0, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0]#, 0,0,0,0]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.1, 0.2, -1.4, -1.2, 0.0, 0.0, 0.0, -0.6, -0.1, 0.2, -1.4, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]#, 0,0,0,0]
-q_contact = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4, 0, -0.7, -1.0, -1.2, 0.0, 0.0, 0.0, -0.4, 0, -0.7, -1.0, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]#, 0,0,0,0]
+#q_contact = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4, 0, -0.7, -1.0, -1.2, 0.0, 0.0, 0.0, -0.4, 0, -0.7, -1.0, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]#, 0,0,0,0]
+
+q_contact = flexion [::]
 
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
@@ -106,7 +108,7 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=3
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-pp(psf.numberPaths ()-1)
+#pp(psf.numberPaths ()-1)
 
 
 #r.startCapture("skeletonDesert","png") ; r.stopCapture()
@@ -126,11 +128,9 @@ pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, 
 gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
-writePathSamples (pathSamples, 'skeletonDesert_path.txt')
-pathToYamlFile (psf, rr, "fullSkeletonDesert_frames.yaml ", "skeleton", pathId, q_goal_test, 0.01)
+writePathSamples (pathSamples, 'fullSkeleton_newDesert_path2.txt')
+pathToYamlFile (psf, rr, "fullSkeletonDesert_frames2.yaml ", "skeleton", psf.numberPaths()-1, q_goal_test, 0.025)
 """
-#pathId = psf.numberPaths()-1 # path to export
-#pathToYamlFile (psf, rr, "skeletonDesert_frames2.yaml ", "armlessSkeleton", pathId, q_goal_test, 0.01)
 
 """
 ## Video recording

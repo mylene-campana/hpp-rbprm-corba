@@ -11,8 +11,6 @@ from viewer_library import *
 
 import frog_test_path as tp
 
-
-
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
@@ -185,4 +183,7 @@ q [fullBody.rankInConfiguration ['RHand_ry']] = 0.3; rr(q)
 q [fullBody.rankInConfiguration ['RHand_rz']] = -0.1; rr(q)
 
 fullBody.isConfigValid(q)
+
+jointConfigsToFile (psf, rr, "frog_apex_config.txt", extending)
+jointConfigsToFile (psf, rr, "frog_contact_config.txt", flexion)
 """

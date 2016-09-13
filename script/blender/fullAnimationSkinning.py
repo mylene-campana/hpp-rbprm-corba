@@ -508,8 +508,17 @@ def mainTestBis (): # no armature
 	importDaeObjects (daeGoalConeFileName, 'Cone', matConeSG)
 	importDaeObjects (daePathConeFileName, 'Cone', matConePath)
 
+def justImportDamnPath ():
+	daeFilePath = '/local/mcampana/devel/hpp/videos/'
+	pathFileName = daeFilePath + 'fullSkeleton_newDesert_path.txt'
+	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
+	pathName = 'path'
+	pathPoints = parsePathPoints (pathFileName)
+	plotPath (pathPoints, pathName, matPath)
 
 #---------------------------------------------------------------------------#
 #main  ()
-mainTest  ()
+#mainTest  ()
 #mainTestBis ()
+#justImportDamnPath ()
+

@@ -210,6 +210,8 @@ plotJointFrame (r, cl, q_init_test, "RFootSphere", 0.15)
 q_0 = fullBody.getCurrentConfig()
 q = q_0
 q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.6; r(q)
+
+jointConfigsToFile (psf, rr, "spiderman_apex_config.txt", extending)
 """
 rr.addLandmark('spiderman/SpidermanLHandSphere',1)
 

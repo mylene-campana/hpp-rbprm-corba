@@ -173,6 +173,26 @@
          </geometry>
       </collision>
    </link>
+   <link name="LFootToe">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LFootToe.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LFootToe.stl"/>
+         </geometry>
+      </collision>
+   </link>
    
    <link name="FrogLFootSphere">
       <visual>
@@ -249,6 +269,26 @@
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/frog/RFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RFootToe">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RFootToe.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RFootToe.stl"/>
          </geometry>
       </collision>
    </link>
@@ -486,7 +526,7 @@
       <child link="LShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.7" upper="1.4" velocity="1.0"/>
+      <limit effort="0" lower="-1." upper="1.4" velocity="1.0"/>
    </joint>
   <joint name="LFoot_rx" type="revolute">
       <parent link="LShank"/>
@@ -507,12 +547,19 @@
       <child link="LFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-1.9" upper="0.7" velocity="1.0"/>
+      <limit effort="0" lower="-1.9" upper="0.9" velocity="1.0"/>
+   </joint>
+   <joint name="LFootToe" type="revolute">
+      <parent link="LFoot"/>
+      <child link="LFootToe"/>
+      <origin rpy="0 0 0" xyz="-0.0438 0.0852 -0.0153"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="FrogLFootSphere" type="fixed">
-      <parent link="LFoot"/>
+      <parent link="LFootToe"/>
       <child link="FrogLFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.0436 0.0776 -0.032"/>
+      <origin rpy="0 0 0" xyz="-0.0016 0.0010 -0.0122"/>
    </joint>
    
   <joint name="LHumerus_rx" type="revolute">
@@ -625,7 +672,7 @@
       <child link="RShank"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-1.4" upper="0.7" velocity="1.0"/>
+      <limit effort="0" lower="-1.4" upper="1." velocity="1.0"/>
    </joint>
   <joint name="RFoot_rx" type="revolute">
       <parent link="RShank"/>
@@ -646,12 +693,19 @@
       <child link="RFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit effort="0" lower="-0.7" upper="1.9" velocity="1.0"/>
+      <limit effort="0" lower="-0.9" upper="1.9" velocity="1.0"/>
+   </joint>
+   <joint name="RFootToe" type="revolute">
+      <parent link="RFoot"/>
+      <child link="RFootToe"/>
+      <origin rpy="0 0 0" xyz="-0.0473 -0.0954 -0.0172"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="FrogRFootSphere" type="fixed">
-      <parent link="RFoot"/>
+      <parent link="RFootToe"/>
       <child link="FrogRFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.0461 -0.0853 -0.032"/>
+      <origin rpy="0 0 0" xyz="-0.0019 -0.0007 -0.0112"/>
    </joint>
    
   <joint name="RHumerus_rx" type="revolute">

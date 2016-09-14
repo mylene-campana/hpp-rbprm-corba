@@ -26,21 +26,23 @@ fullBody = FullBody ()
 
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
+q_0 = fullBody.getCurrentConfig()
 
 
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, -0.2, 0.1, -1.5, 0.2, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0.2, 0.1, 1.5, 0.2]
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, -0.2, 0.1, -1.5, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0.2, 0.1, 1.5]
+#"""
+from hpp.gepetto import Viewer
+psf = ProblemSolver( fullBody ); rr = Viewer (psf)
+rr(q_0)
+#"""
 
-"""from hpp.gepetto import Viewer
-psf = ProblemSolver( fullBody ); r = Viewer (psf)
-r(flexion)"""
-
-q_lfeet = flexion[28:37]
+q_lfeet = flexion[28:38]
 q_larm = flexion[10:19]
-q_rfeet = flexion[37:46]
+q_rfeet = flexion[38:48]
 q_rarm = flexion[19:28]
 
-legWheights = [1.,2.,2.,1.,2.,2.,1.,1.,2.]
+legWheights = [1.,2.,2.,1.,2.,2.,1.,1.,2.,1.]
 
 fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",legWheights)
 fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",legWheights)
@@ -138,7 +140,7 @@ runallRArm(rarmId, './Frog_rarm.db')
 """
 # flexion
 legWheights = [1.,5.,10.,1.,5.,10.,1.,1.,5.]
-q = q_0; q[2] = 0.5
+q = q_0 [::]; q[2] = 0.5
 q = flexion
 q [fullBody.rankInConfiguration ['LThigh_rx']] = -0.3; rr(q)
 q [fullBody.rankInConfiguration ['LThigh_ry']] = -0.6; rr(q)
@@ -149,6 +151,7 @@ q [fullBody.rankInConfiguration ['LShank_rz']] = 1; rr(q)
 q [fullBody.rankInConfiguration ['LFoot_rx']] = -0.2; rr(q)
 q [fullBody.rankInConfiguration ['LFoot_ry']] = 0.1; rr(q)
 q [fullBody.rankInConfiguration ['LFoot_rz']] = -1.5; rr(q)
+q [fullBody.rankInConfiguration ['LFootToe']] = 0.2; rr(q)
 
 q [fullBody.rankInConfiguration ['RThigh_rx']] = 0.3; rr(q)
 q [fullBody.rankInConfiguration ['RThigh_ry']] = -0.6; rr(q)
@@ -159,7 +162,7 @@ q [fullBody.rankInConfiguration ['RShank_rz']] = -1; rr(q)
 q [fullBody.rankInConfiguration ['RFoot_rx']] = 0.2; rr(q)
 q [fullBody.rankInConfiguration ['RFoot_ry']] = 0.1; rr(q)
 q [fullBody.rankInConfiguration ['RFoot_rz']] = 1.5; rr(q)
-
+q [fullBody.rankInConfiguration ['RFootToe']] = 0.2; rr(q)
 
 q [fullBody.rankInConfiguration ['LHumerus_rx']] = 0.5; rr(q)
 q [fullBody.rankInConfiguration ['LHumerus_ry']] = 0.2; rr(q)
@@ -182,4 +185,16 @@ q [fullBody.rankInConfiguration ['RHand_ry']] = -0.2; rr(q)
 q [fullBody.rankInConfiguration ['RHand_rz']] = -0.2; rr(q)
 
 fullBody.isConfigValid(q)
+
+fullBody.rankInConfiguration ['RHumerus_rx']
+fullBody.rankInConfiguration ['RHand_rz']
+
+fullBody.rankInConfiguration ['LHumerus_rx']
+fullBody.rankInConfiguration ['LHand_rz']
+
+fullBody.rankInConfiguration ['RThigh_rx']
+fullBody.rankInConfiguration ['RFootToe']
+
+fullBody.rankInConfiguration ['LThigh_rx']
+fullBody.rankInConfiguration ['LFootToe']
 """

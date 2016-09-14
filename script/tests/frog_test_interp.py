@@ -27,8 +27,8 @@ base_joint_xyz_limits = tp.base_joint_xyz_limits
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 
 #psf = ProblemSolver( fullBody ); rr = Viewer (psf)
@@ -37,8 +37,8 @@ psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 #extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.2, 0, 0, -0.3, 0, 0, 0.3, 0.2, -0.3, -0.2, 0, 0, 0.3, 0, 0, -0.3, 0, 0, 0, 0]
-extending = [0.0, 0.0, 0.5, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.4, 0, 0, -0.6, 0, 0, 0.8, 0.2, -0.3, -0.4, 0, 0, 0.9, 0, 0, -0.8, 0.0, 0.0, 0.0, 0.0]
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, -0.2, 0.1, -1.5, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0.2, 0.1, 1.5,0,0,0,0]
+extending = [0.0, 0.0, 0.5, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.4, 0.3, 0.6, 0.4, 0.3, -0.1, 0.3, 0.1, 0.2, 0.4, -0.3, -0.6, 0.4, -0.3, 0.1, 0.3, -0.1, -0.2, -0.3, 0.4, 0, 0, -0.6, 0, 0, 0.8, 0.0, 0.2, -0.3, -0.4, 0, 0, 0.9, 0, 0, -0.8, 0.0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.2, 0.2, -0.2, 0.1, -0.1, -0.4, -0.2, 0.2, -0.5, 0.2, -0.2, 0.2, 0.1, 0.1, 0.4, -0.2, -0.2, -0.3, -0.6, -1.2, -0.1, 0.4, 1, -0.2, 0.1, -1.5, 0.2, 0.3, -0.6, 1.2, 0.1, 0.4, -1, 0.2, 0.1, 1.5, 0.2]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
@@ -55,16 +55,16 @@ print("Limbs added to fullbody")
 
 confsize = len(tp.q11)
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
-q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
+q_init = flexion; q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
 entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
+#if (ecsSize > 0):
+#    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
+#    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
@@ -84,7 +84,7 @@ fullBody.setEndState(q_goal_test,[lLegId,rLegId,larmId,rarmId])
 psf.setPlannerIterLimit (200)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.002)
+fullBody.interpolateBallisticPath(entryPathId, 0.005)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
@@ -116,7 +116,6 @@ writePathSamples (pathSamples, 'frog_path.txt')
 pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0.02)
 """
 
-
 """
 ## Video recording
 import time
@@ -140,7 +139,7 @@ ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
 
 """
 # extending
-q = q_0; q[2] = 0.5
+q = q_0 [::]; q[2] = 0.5
 q [fullBody.rankInConfiguration ['LThigh_rx']] = -0.2; rr(q)
 q [fullBody.rankInConfiguration ['LThigh_ry']] = -0.3; rr(q)
 q [fullBody.rankInConfiguration ['LThigh_rz']] = 0.4; rr(q)

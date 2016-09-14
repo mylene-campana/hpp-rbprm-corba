@@ -29,8 +29,7 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 q_0 = fullBody.getCurrentConfig()
 
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.1, 0.2, -1.8, -1.2, 0.0, 0.0, 0.0, -0.5, -0.1, 0.2, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
-
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.1, 0.2, -1.4, -1.2, 0.0, 0.0, -0.6, -0.1, 0.2, -1.4, 1.2, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0.0]
 
 """
 from hpp.gepetto import Viewer
@@ -38,13 +37,13 @@ psf = ProblemSolver( fullBody ); r = Viewer (psf)
 r(q_0)
 """
 
-q_lfeet = flexion[47:53]
-q_rfeet = flexion[53:59]
+q_lfeet = flexion[45:52]
+q_rfeet = flexion[52:59]
 q_larm = flexion[31:38]
-q_rarm = flexion[39:46]
+q_rarm = flexion[38:45]
 
-fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,1.,5.,1.,1.])
-fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,1.,5.,1.,1.])
+fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,1.,5.,1.,1.,1.])
+fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,1.,5.,1.,1.,1.])
 fullBody.addRefConfigAnalysis(q_larm,"RefPoseLArm")
 fullBody.addRefConfigAnalysis(q_rarm,"RefPoseRArm")
 
@@ -126,7 +125,7 @@ runallRArm(rarmId, './skeleton_rarm.db')
 
 """
 # flexion + amrs
-q = q_0
+q = q_0 [::]
 q [fullBody.rankInConfiguration ['RHip_J1']] = -0.1; r(q)
 q [fullBody.rankInConfiguration ['RHip_J2']] = -0.2; r(q)
 q [fullBody.rankInConfiguration ['RThigh']] = -1.1; r(q)
@@ -153,7 +152,6 @@ q [fullBody.rankInConfiguration ['RHumerus']] = 0.2; r(q)
 q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.4; r(q)
 q [fullBody.rankInConfiguration ['RForearm']] = 1.2; r(q)
 
-[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, -0.1, 0.3, -1.8, -1.2, 0, 0, 0.0, -0.2, 0.1, 0.3, -1.8, 1.2, 0.0, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1]
 fullBody.isConfigValid(q)
 
 fullBody.rankInConfiguration ['RShoulder_J1']
@@ -163,8 +161,8 @@ fullBody.rankInConfiguration ['LShoulder_J1']
 fullBody.rankInConfiguration ['LHand']
 
 fullBody.rankInConfiguration ['RHip_J1']
-fullBody.rankInConfiguration ['RFoot']
+fullBody.rankInConfiguration ['RFootToe']
 
 fullBody.rankInConfiguration ['LHip_J1']
-fullBody.rankInConfiguration ['LFoot']
+fullBody.rankInConfiguration ['LFootToe']
 """

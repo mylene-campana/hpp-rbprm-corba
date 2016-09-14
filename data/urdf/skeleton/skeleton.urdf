@@ -322,13 +322,7 @@
          </geometry>
       </collision>
    </link>
-   <link name="RAnkle_J1"/>
-   <link name="RFootInter">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0"/>
-         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
-      </inertial>
+   <link name="RAnkle_J1">
    </link>
    <link name="RFoot">
       <inertial>
@@ -347,6 +341,26 @@
          <origin xyz="0.065875 -0.018889 -0.025972" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/RFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="RFootToe">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.2"/>
+         <inertia ixx="0.0035454" ixy="0.00043767" ixz="0" iyy="0.00074844" iyz="-0.00016575" izz="0.0033563"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/RFootToe.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/RFootToe.stl"/>
          </geometry>
       </collision>
    </link>
@@ -403,13 +417,7 @@
          </geometry>
       </collision>
    </link>
-   <link name="LAnkle_J1"/>
-   <link name="LFootInter">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0"/>
-         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
-      </inertial>
+   <link name="LAnkle_J1">
    </link>
    <link name="LFoot">
       <inertial>
@@ -428,6 +436,26 @@
          <origin xyz="0.065875 0.018889 -0.025972" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/LFoot.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   <link name="LFootToe">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0.2"/>
+         <inertia ixx="0.0035454" ixy="0.00043767" ixz="0" iyy="0.00074844" iyz="-0.00016575" izz="0.0033563"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/LFootToe.stl"/>
+         </geometry>
+         <material name="White"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/LFootToe.stl"/>
          </geometry>
       </collision>
    </link>
@@ -463,13 +491,6 @@
       </collision>
    </link>
    <link name="RElbow_J1"/>
-   <link name="RForearm_Virtual">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 -0.11352 0"/>
-         <mass value="0"/>
-         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
-      </inertial>
-   </link>
    <link name="RForearm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 -0.11352"/>
@@ -544,13 +565,6 @@
       </collision>
    </link>
    <link name="LElbow_J1"/>
-   <link name="LForearm_Virtual">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 0 -0.11352"/>
-         <mass value="0"/>
-         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
-      </inertial>
-   </link>
    <link name="LForearm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 -0.11352 0"/>
@@ -807,20 +821,22 @@
    </joint>
    <joint name="RFoot" type="revolute">
       <parent link="RAnkle_J1"/>
-      <child link="RFootInter"/>
+      <child link="RFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
-   <joint name="RFootInter" type="fixed">
-      <parent link="RFootInter"/>
-      <child link="RFoot"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+   <joint name="RFootToe" type="revolute">
+      <parent link="RFoot"/>
+      <child link="RFootToe"/>
+      <origin rpy="0 0 0" xyz="0.1162 -0.0175 -0.0583"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
    </joint>
   <joint name="RFootSphere" type="fixed">
-      <parent link="RFoot"/>
+      <parent link="RFootToe"/>
       <child link="RFootSphere"/>
-      <origin rpy="0 0 0" xyz="0.15 -0.023 -0.095"/>
+      <origin rpy="0 0 0" xyz="0.0147 0 -0.0147"/>
    </joint>
    <joint name="LHip_J1" type="revolute">
       <parent link="Pelvis"/>
@@ -859,20 +875,22 @@
    </joint>
    <joint name="LFoot" type="revolute">
       <parent link="LAnkle_J1"/>
-      <child link="LFootInter"/>
+      <child link="LFoot"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
    </joint>
-   <joint name="LFootInter" type="fixed">
-      <parent link="LFootInter"/>
-      <child link="LFoot"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+   <joint name="LFootToe" type="revolute">
+      <parent link="LFoot"/>
+      <child link="LFootToe"/>
+      <origin rpy="0 0 0" xyz="0.1114 0.0168 -0.0571"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
    </joint>
   <joint name="LFootSphere" type="fixed">
-      <parent link="LFoot"/>
+      <parent link="LFootToe"/>
       <child link="LFootSphere"/>
-      <origin rpy="0 0 0" xyz="0.15 0.023 -0.095"/>
+      <origin rpy="0 0 0" xyz="0.0195 0.0044 -0.0159"/>
    </joint>
    <joint name="RShoulder_J1" type="revolute">
       <parent link="Thorax"/>
@@ -901,13 +919,6 @@
       <origin rpy="0 0 0" xyz="0 0 -0.3162"/>
       <axis xyz="0 1 0"/>
       <limit effort="0" lower="-2.7" upper="0.05" velocity="1.0"/>
-   </joint>
-   <joint name="RForearm_Virtual" type="revolute">
-      <parent link="RHumerus"/>
-      <child link="RForearm_Virtual"/>
-      <origin rpy="0 0 0" xyz="0 0 -0.3162"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-3.14" upper="3.14" velocity="1.0"/>
    </joint>
    <joint name="RForearm" type="revolute">
       <parent link="RElbow_J1"/>
@@ -962,13 +973,6 @@
       <origin rpy="0 0 0" xyz="0 0 -0.3162"/>
       <axis xyz="0 1 0"/>
       <limit effort="0" lower="-2.7" upper="0.05" velocity="1.0"/>
-   </joint>
-   <joint name="LForearm_Virtual" type="revolute">
-      <parent link="LHumerus"/>
-      <child link="LForearm_Virtual"/>
-      <origin rpy="0 0 0" xyz="0 0 -0.3162"/>
-      <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-3.14" upper="3.14" velocity="1.0"/>
    </joint>
    <joint name="LForearm" type="revolute">
       <parent link="LElbow_J1"/>

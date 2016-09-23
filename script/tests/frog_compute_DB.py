@@ -151,7 +151,7 @@ q [fullBody.rankInConfiguration ['LShank_rz']] = 1; rr(q)
 q [fullBody.rankInConfiguration ['LFoot_rx']] = -0.2; rr(q)
 q [fullBody.rankInConfiguration ['LFoot_ry']] = 0.1; rr(q)
 q [fullBody.rankInConfiguration ['LFoot_rz']] = -1.5; rr(q)
-q [fullBody.rankInConfiguration ['LFootToe']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['LFootToe_ry']] = 0.2; rr(q)
 
 q [fullBody.rankInConfiguration ['RThigh_rx']] = 0.3; rr(q)
 q [fullBody.rankInConfiguration ['RThigh_ry']] = -0.6; rr(q)
@@ -162,7 +162,7 @@ q [fullBody.rankInConfiguration ['RShank_rz']] = -1; rr(q)
 q [fullBody.rankInConfiguration ['RFoot_rx']] = 0.2; rr(q)
 q [fullBody.rankInConfiguration ['RFoot_ry']] = 0.1; rr(q)
 q [fullBody.rankInConfiguration ['RFoot_rz']] = 1.5; rr(q)
-q [fullBody.rankInConfiguration ['RFootToe']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RFootToe_ry']] = 0.2; rr(q)
 
 q [fullBody.rankInConfiguration ['LHumerus_rx']] = 0.5; rr(q)
 q [fullBody.rankInConfiguration ['LHumerus_ry']] = 0.2; rr(q)
@@ -193,8 +193,8 @@ fullBody.rankInConfiguration ['LHumerus_rx']
 fullBody.rankInConfiguration ['LHand_rz']
 
 fullBody.rankInConfiguration ['RThigh_rx']
-fullBody.rankInConfiguration ['RFootToe']
+fullBody.rankInConfiguration ['RFootToe_ry']
 
 fullBody.rankInConfiguration ['LThigh_rx']
-fullBody.rankInConfiguration ['LFootToe']
+fullBody.rankInConfiguration ['LFootToe_ry']
 """

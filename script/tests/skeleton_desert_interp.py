@@ -26,8 +26,8 @@ Vimplist = tp.Vimplist
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
-#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 fullBody.setFullbodyFrictionCoef(0.5)
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
@@ -36,8 +36,8 @@ psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -2, -0.4, -1.2, 0.0, 0.0, -0.2, -0.1, -2, -0.4, 1.2, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0.0]#, 0,0,0,0]
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.1, 0.2, -1.4, -1.2, 0.0, 0.0, -0.6, -0.1, 0.2, -1.4, 1.2, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0.0]#, 0,0,0,0]
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -2, -0.4, -1.2, 0.0, 0.0, -0.2, -0.1, -2, -0.4, 1.2, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0.0, 0,0,0,0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.1, 0.2, -1.4, -1.2, 0.0, 0.0, -0.6, -0.1, 0.2, -1.4, 1.2, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0.0, 0,0,0,0]
 #q_contact = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4, 0, -0.7, -1.0, -1.2, 0.0, 0.0, -0.4, 0, -0.7, -1.0, 1.2, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0.0]#, 0,0,0,0]
 
 #q_contact = flexion [::]
@@ -64,14 +64,16 @@ q_init = flexion; q_goal = q_init [::]
 entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 
-q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[4][0:confsize-ecsSize]; rr(q)
+q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[1][0:confsize-ecsSize]; rr(q)
 fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
+
+q2= [6.2666,-2.6362,-0.952683,-0.0849639,-0.13228,0.113626,0.981006,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.278843,0.200458,0.939182,-2.93748,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.278843,0.200458,0.939182,-2.93748,]
 
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
-#if (ecsSize > 0):
-#    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
-#    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
+if (ecsSize > 0):
+    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
+    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 """ # without solving path
 q_init[0:confsize-ecsSize] = tp.q11[0:confsize-ecsSize]
@@ -221,5 +223,10 @@ q [fullBody.rankInConfiguration ['RElbow_J1']] = -1.; rr(q)
 q [fullBody.rankInConfiguration ['RForearm']] = 1.2; rr(q)
 
 fullBody.isConfigValid(q)
+
+
+#q = [6.2666,-2.6362,-0.952683,-0.0849639,-0.13228,0.113626,0.981006,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.678865,0.0628397,0.3524,-1.64609,-1.32557,-0.00309284,-0.16359,-0.68511,-0.141783,0.349037,-1.59126,1.34176,0.142385,-0.01578,0.303685,1.07764,0.47237,-0.0472983,0.972411,-0.146209,0.334052,-0.227656,-0.326022,-1.14689,2.27182,-1.20909,0.0557013,0.124957,-0.278843,0.200458,0.939182,-2.93748,]
+q = [6.2666,-2.6362,-0.952683,-0.0849639,-0.13228,0.113626,0.981006,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.678865,0.0628397,0.3524,-1.64609,-1.32557,-0.00309284,-0.16359,-0.68511,-0.141783,0.349037,-1.59126,1.34176,0.142385,-0.01578,0.303685,1.07764,0.47237,-0.0472983,0.972411,-0.146209,0.334052,-0.227656,-0.326022,-1.14689,2.27182,-1.20909,0.0557013,0.124957,-0.278843,0.200458,0.939182,-2.93748,]
+fullBody.isConfigValid(q); rr(q)
 
 """

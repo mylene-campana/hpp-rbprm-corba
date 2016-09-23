@@ -81,10 +81,10 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setStartState(q_init_test,[lLegId,rLegId,larmId,rarmId])
 fullBody.setEndState(q_goal_test,[lLegId,rLegId,larmId,rarmId])
 
-psf.setPlannerIterLimit (200)
+psf.setPlannerIterLimit (100)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
+fullBody.interpolateBallisticPath(entryPathId, 0.002)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
@@ -113,7 +113,7 @@ gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'frog_path.txt')
-pathJointConfigsToFile (psf, rr, "frog_jointConfigs.txt", pathId, q_goal_test, 0.02)
+pathJointConfigsToFile (psf, rr, "frog_jointConfigs_toe.txt", psf.numberPaths ()-1, q_goal_test, 0.03)
 """
 
 """

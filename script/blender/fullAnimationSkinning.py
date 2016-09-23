@@ -1,6 +1,6 @@
 import bpy
 from math import *
-import yaml #Windaube
+#import yaml #Windaube
 """
 Contains all Blender actions to:
   - import initial and final cones, (and create associated spheres ?)
@@ -376,7 +376,6 @@ def main ():
 	scriptFilePath = '/local/mcampana/devel/hpp/src/hpp-rbprm-corba/script/tests/'
 	edgeRMFilename = scriptFilePath + 'edges.txt'
 	indexesFileName = scriptFilePath + 'indexes.txt'
-	jointConfigsFileName = scriptFilePath + 'jointConfigs.txt'
 	edgeNamePrefix = 'edge'; coneNamePrefix = 'Cone_'; coneWpNamePrefix = 'Cone_WP_'; pathName = 'path'
 	numPointsPerEdge = 70
 	initFrame = 0
@@ -386,12 +385,6 @@ def main ():
 	#numberOfCones = 21; rmDisappearFrame = 260; # No Roadmap for MIG 2016
 	cameraInitPose = [7.33,8.92,6.86,56.4,-2.16,162.9]
 	cameraFollowPose = [-2.80,0.782,0.683,82.7,0,254]
-	#robotName = 'skeleton/base_link'; # for Skeleton
-	robotName = 'Armature'; # for Spiderman, ant, frog
-	pathFileName = viewerFilePath + 'frog_path.txt'
-	#fileName = 'ant_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZYX' # ANT
-	fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZYX' # FROG
-	#fileName = 'spid_jointConfigs.txt'; reOrientFrames = False; rotationOrder = '' # SPIDERMAN
 
 	# Materials
 	matConeSG = getOrCreateMaterial ("coneSG", 'SURFACE', [0,0.3,0], 0.4, True, False, False)
@@ -429,13 +422,9 @@ def main ():
 	
 	# Import motion
 	endMotionFrame = 0 # dummy init
-	if (robotName == 'skeleton/base_link'):
-		endMotionFrame = loadMotionBodies (yamlFileName, beginMotionFrame) # for skeleton
-		print ("endMotionFrame bodies= " + str(endMotionFrame))
-	else:
-		jointConfigsFileName = viewerFilePath + fileName
-		endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder) # for skinning (spiderman, frog, ant)
-		print ("endMotionFrame joints= " + str(endMotionFrame))
+	endMotionFrame = loadMotionBodies (yamlFileName, beginMotionFrame) # for skeleton
+	print ("endMotionFrame bodies= " + str(endMotionFrame))
+
 	bpy.data.scenes["Scene"].frame_end = endMotionFrame + 50
 	
 	# Visibilities
@@ -480,11 +469,11 @@ def mainTest ():
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
 	beginMotionFrame = 120
 	print ("--------  load motion armature  --------")
-	fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
-	#fileName = 'frog_jointConfigs.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
-	armatureName = "Armature.001"
 	#fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
-	fileName = 'frog_pond_jointConfigs_new1goal.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
+	fileName = 'frog_jointConfigs_toe.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
+	armatureName = "Armature"
+	#fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
+	#fileName = 'frog_pond_jointConfigs_new1goal.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
 	#fileName = 'spiderman_jointConfigs1.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # SPIDERMAN
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
@@ -516,9 +505,17 @@ def justImportDamnPath ():
 	pathPoints = parsePathPoints (pathFileName)
 	plotPath (pathPoints, pathName, matPath)
 
+def irosRoadmapVisibility (): # IROS 2016 PRESENTATION: change Roadmap Visibilities at frame 0
+	edgeNamePrefix = 'edge'; coneNamePrefix = 'Cone_'
+	initFrame = 0; numPointsPerEdge = 70
+	numberOfEdges = 1086; numberOfCones = 339;
+	setObjectNotInListVisibility (edgeNamePrefix, numberOfEdges, [], initFrame, True) # Visibility off at frame 0
+	setObjectNotInListVisibility (coneNamePrefix, numberOfCones, [], initFrame, True)
+	setVisibility ('Cone', initFrame, True) # 'cause first RM cone name is not following the prefix
+
 #---------------------------------------------------------------------------#
 #main  ()
 #mainTest  ()
 #mainTestBis ()
 #justImportDamnPath ()
-
+#irosRoadmapVisibility ()

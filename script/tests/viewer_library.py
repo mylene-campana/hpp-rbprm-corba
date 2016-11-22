@@ -8,7 +8,8 @@
 from __future__ import division
 import numpy as np
 import math
-#from hpp.gepetto import Viewer, PathPlayer
+import os
+import glob
 
 Pi = math.pi
 
@@ -145,6 +146,19 @@ def plotStraightLine (vector, pos, r, lineNamePrefix):
 
 # --------------------------------------------------------------------#
 
+## Plot straight lines between origin and several points ##
+## Parameters:
+# pos: origin-position of straight line
+# r: viewer server
+# lineNamePrefix: string prefix used for line name
+def plotStraightLines_OM (origin, points, r, lineNamePrefix, color):
+    for i in range(0,len(points)):
+        lineName=lineNamePrefix + "_StraightLines_OM_" + str(i)
+        r.client.gui.addLine(lineName, origin[0:3], points[i][0:3], color)
+        r.client.gui.addToGroup (lineName, r.sceneName)
+
+# --------------------------------------------------------------------#
+
 ## Plot plane theta ##
 # (with two triangles, last pos not taken in addSquareFace)
 ## Parameters:
@@ -152,16 +166,37 @@ def plotStraightLine (vector, pos, r, lineNamePrefix):
 # q2: final configuration
 # r : viewer server
 # lineNamePrefix: string prefix used for line name
-def plotThetaPlane (q1, q2, r, lineNamePrefix):
+def plotThetaPlane (q1, q2, r, lineNamePrefix, planeColor):
     pos1 = [q1 [0], q1 [1], q1 [2]+5]
     pos2 = [q2 [0], q2 [1], q2 [2]-5]
     pos3 = [q1 [0], q1 [1], q1 [2]-5]
     pos4 = [q2 [0], q2 [1], q2 [2]+5]
-    r.client.gui.addSquareFace (lineNamePrefix, pos1, pos2, pos4, pos4, [0.7,0.2,0.2,0.5])
+    r.client.gui.addSquareFace (lineNamePrefix, pos1, pos2, pos4, pos4, planeColor)
     r.client.gui.addToGroup (lineNamePrefix, r.sceneName)
-    lineNamePrefix_bis = lineNamePrefix+"bis"
-    r.client.gui.addSquareFace (lineNamePrefix_bis, pos1, pos3, pos2, pos2, [0.7,0.2,0.2,0.5])
-    r.client.gui.addToGroup (lineNamePrefix_bis, r.sceneName)
+    lineNamePrefix_otherPlane = lineNamePrefix+"otherPlane"
+    r.client.gui.addSquareFace (lineNamePrefix_otherPlane, pos1, pos3, pos2, pos2, planeColor)
+    r.client.gui.addToGroup (lineNamePrefix_otherPlane, r.sceneName)
+
+# --------------------------------------------------------------------#
+
+## Plot plane theta ##
+# (with two triangles, last pos not taken in addSquareFace)
+## Parameters:
+# q1: initial configuration
+# q2: final configuration
+# r : viewer server
+# lineNamePrefix: string prefix used for line name
+def plotThetaPlaneBis (origin, theta, length, r, lineNamePrefix, planeColor):
+    x0 = origin [0]; y0 = origin [1]; z0 = origin [2]; 
+    pos1 = [x0 + length*math.cos(theta), y0 + length*math.sin(theta), length]
+    pos2 = [x0 + length*math.cos(theta), y0 + length*math.sin(theta), -length]
+    pos3 = [x0 - length*math.cos(theta), y0 - length*math.sin(theta), -length]
+    pos4 = [x0 - length*math.cos(theta), y0 - length*math.sin(theta), length]
+    r.client.gui.addSquareFace (lineNamePrefix+"bis", pos1, pos2, pos3, pos3, planeColor) # fourth point ignored
+    r.client.gui.addToGroup (lineNamePrefix+"bis", r.sceneName)
+    lineNamePrefix_otherPlane = lineNamePrefix+"otherPlane"+"bis"
+    r.client.gui.addSquareFace (lineNamePrefix_otherPlane, pos1, pos3, pos4, pos4, planeColor)
+    r.client.gui.addToGroup (lineNamePrefix_otherPlane, r.sceneName)
 
 # --------------------------------------------------------------------#
 
@@ -252,6 +287,8 @@ def addLight (r, q, lightName):
 # sphereSize: size of sphere
 def plotSphere (q, r, sphereName, sphereColor, sphereSize):
     r.client.gui.addSphere (sphereName,sphereSize,sphereColor)
+    if len(q) == 3:
+        q[3:7] = [1,0,0,0]
     r.client.gui.applyConfiguration (sphereName, q[0:7])
     r.client.gui.addToGroup (sphereName, r.sceneName)
     r.client.gui.refresh ()
@@ -439,6 +476,109 @@ def plotGIWC (q, Vmatrix, r, giwcId, color):
         #r.client.gui.addLine(lineName,[Vmatrix[i][0],Vmatrix[i][1],Vmatrix[i][2]], [Vmatrix[i][3],Vmatrix[i][4],Vmatrix[i][5]],color)
         r.client.gui.addLine(lineName,[origin[0],origin[1],origin[2]], [rot_i[0],rot_i[1],rot_i[2]],color)
         r.client.gui.addToGroup (lineName, r.sceneName)
+
+# --------------------------------------------------------------------#
+
+##  Direct Plot convex-cone and plane_theta intersection, given list of contact-cones and origin ##
+## Parameters:
+# origin: unique position of cone origins
+# ps: Problem Solver
+# r: viewer server
+# origin: unique position of cone origins
+# cones: list of contact-cone directions
+# CC2D_dir: direction of the 2D-convex-cone computed by the C++binded intersection function "convexConePlaneIntersection"
+# color: osg-color of displayed lines and spheres (e.g. [0,0.9,0.1,1])
+# sphereSize: size of the origin sphere
+# lineNamePrefix: string used for line group name
+# coneNamePrefix: string used for cone group name
+# coneURDFname: "friction_cone" (mu = 0.5) or "friction_cone2" (mu = 1.2)
+def plotConvexConeInters (ps, r, origin, CC2D_dir, cones, sphereName, color, sphereSize, lineNamePrefix, coneNamePrefix, coneURDFname):
+	x0 = origin [0]; y0 = origin [1]; z0 = origin [2]; originConfig = [x0,y0,z0,1,0,0,0];
+        x = CC2D_dir [0]; y = CC2D_dir [1]; z = CC2D_dir [2]; 
+        Ncones = len(cones)
+        Nconfigs = ps.robot.getConfigSize ();
+        ECSindex = Nconfigs - ps.robot.client.basic.robot.getExtraConfigSize()
+        qConeInit = Nconfigs*[0]; qConeInit [0:3] = origin; qConeInit [3:7] = [1,0,0,0];
+	plotSphere (originConfig, r, sphereName, color, sphereSize)
+	r.client.gui.addLine(lineNamePrefix+"_lineConvexConeInters",[x0,y0,z0], [x0+x,y0+y,z0+z],color)
+	r.client.gui.addToGroup (lineNamePrefix+"_lineConvexConeInters", r.sceneName)
+        for i in range (0,Ncones):
+            coneName_i =  coneNamePrefix + str(i)
+            qCone_i = qConeInit [::]
+            qCone_i [ECSindex:ECSindex+3] = cones [i] # WARNING: not normalized
+            plotCone (qCone_i, ps, r, coneName_i, coneURDFname)
+
+# --------------------------------------------------------------------#
+
+## Plot cones with dir = (1 - alpha)*n1 + alpha*n2 (for each zone between two contact-cones)##
+## Parameters:
+# origin: unique position of cone origins
+# ps: Problem Solver
+# r: viewer server
+# origin: unique position of cone origins
+# cones: list of contact-cone directions
+# alphaStep: step between two interpolated cones
+# coneNamePrefix: string used for cone group name
+# coneURDFname: "friction_cone" (mu = 0.5) or "friction_cone2" (mu = 1.2)
+def plotConvexConeInterpolations (ps, r, origin, cones, alphaStep, coneNamePrefix, coneURDFname):
+	x0 = origin [0]; y0 = origin [1]; z0 = origin [2]; originConfig = [x0,y0,z0,1,0,0,0];
+        Ncones = len(cones)
+        Nconfigs = ps.robot.getConfigSize ();
+        ECSindex = Nconfigs - ps.robot.client.basic.robot.getExtraConfigSize()
+        qConeInit = Nconfigs*[0]; qConeInit [0:3] = origin; qConeInit [3:7] = [1,0,0,0];
+        for i in range (0,Ncones):
+            for j in range(i + 1,Ncones):
+                for alpha in np.arange(alphaStep, 1.-alphaStep, alphaStep):
+                    coneName_ij_alpha =  coneNamePrefix + str(i) + str(j) + str(alpha)
+                    qCone_ij_alpha = qConeInit [::]
+                    dir_ij_alpha = (np.array(cones [i])*(1-alpha) + np.array(cones [j])*alpha).tolist ()
+                    qCone_ij_alpha [ECSindex:ECSindex+3] = dir_ij_alpha
+                    plotCone (qCone_ij_alpha, ps, r, coneName_ij_alpha, coneURDFname)
+	
+
+# --------------------------------------------------------------------#
+
+# Parse (Vec3f vectors) and Plot points. (Used for the convex-cone and plane_theta intersection)
+# Before calling this function, the C++binded intersection function "convexConePlaneIntersection" must be called in DEBUG mode
+def plotLogConvexConeInters (r, logID, lineParsed, lineEnd, pointPrefix, pointSize, pointColor):
+    logFile = "/local/mcampana/devel/hpp/install/var/log/hpp/"
+    logLinePrefix = "INFO:/local/mcampana/devel/hpp/src/hpp-rbprm/src/fullbodyBallistic/convex-cone-intersection.cc:"
+    skipChar = 5 # number of skipped characters after the end of logLinePrefix "000: "
+    l_prefix = len(logLinePrefix)
+    l = len(lineParsed)
+    l_end = len(lineEnd)
+    i = 0
+    with open (logFile + "journal." + str(logID) + ".log") as f:
+        points = []
+        for line in f:
+            if line [:l_prefix] == logLinePrefix and line [l_prefix+skipChar:l_prefix+skipChar+l] == lineParsed:
+                suffix = line [l_prefix+skipChar+l:]
+                st = suffix.strip (')\n') # remove end characters
+                sp = st.split () # separate numbers with space
+                try:
+                    point = map (float, sp) # convert into float
+                    points.append (point)
+                    pointName = pointPrefix + str(logID) + '_' + str(i)
+                    plotSphere (point, r, pointName, pointColor, pointSize)
+                except:
+                    print ("st=%s"%st)
+                    print ("sp=%s"%sp)
+                    print ("point=%s"%point)
+                i = i + 1
+            if line [:l_prefix] == logLinePrefix and line [l_prefix+skipChar:l_prefix+skipChar+l_end] == lineEnd:
+                break
+    return points # list, not array
+	
+# --------------------------------------------------------------------#
+
+## get the ID (number) of the newest log file ##
+def getNewestLogID ():
+    journalPrefixName = "/local/mcampana/devel/hpp/install/var/log/hpp/journal."
+    newest = max(glob.iglob('/local/mcampana/devel/hpp/install/var/log/hpp/*.log'), key=os.path.getctime)
+    logID = newest[len(journalPrefixName):].strip('.log')
+    print ("logID= " +str(logID))
+    return logID
+
 
 # --------------------------------------------------------------------#
 # ----------------------------## BLENDER ##------------------------------------#

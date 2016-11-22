@@ -388,6 +388,16 @@ module hpp
 
     void setFullbodyFrictionCoef (in double mu);
 
+    /// Compute the intersection between the convex sum of the given cones 
+    /// with the vertical plane of x-y-orientation theta.
+    /// If force-closure is detected, result is adapted.
+    /// 2D-convex-cone result is presented as a vector:
+    /// [half-apex-angle, x_dir, y_dir, z_dir]
+    floatSeq convexConePlaneIntersection (in unsigned short Ncones,
+					  in floatSeqSeq cones,
+					  in double theta, in double mu)
+      raises (Error);
+
   }; // interface Robot
   }; // module rbprm
   }; // module corbaserver

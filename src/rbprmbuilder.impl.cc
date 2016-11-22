@@ -1755,6 +1755,25 @@ namespace hpp {
       }
 
 
+      // ---------------------------------------------------------------
+
+      hpp::floatSeq* RbprmBuilder::convexConePlaneIntersection
+      (const unsigned short Ncones, const hpp::floatSeqSeq& cones,
+       const double theta, const double mu) throw (hpp::Error){
+	std::vector<fcl::Vec3f> cones_vec;
+	fcl::Vec3f cone;
+	for (unsigned short i = 0; i < Ncones; i++) {
+	  for (CORBA::UShort k = 0; k < 3; k++)
+	    cone (k) = cones [i][k];
+	  cone.normalize ();
+	  cones_vec.push_back (cone);
+	}
+	const core::vector_t CC =
+	  convexCone::compute_convex_cone_inter (cones_vec, theta, mu);
+	hpp::floatSeq* result = vectorToFloatseq (CC);
+	return result;
+      }
+
     } // namespace impl
   } // namespace rbprm
 } // namespace hpp

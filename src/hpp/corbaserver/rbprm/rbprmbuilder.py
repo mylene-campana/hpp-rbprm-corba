@@ -347,3 +347,8 @@ class Builder (object):
 
     def getResultValues (self):
         return self.client.rbprm.rbprm.getResultValues ()
+
+    def convexConePlaneIntersection (self, Ncones, cones, theta, mu):
+        return self.client.rbprm.rbprm.convexConePlaneIntersection (Ncones,
+                                                                    cones,
+                                                                    theta, mu)

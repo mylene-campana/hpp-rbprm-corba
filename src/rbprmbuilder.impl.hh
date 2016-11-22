@@ -33,7 +33,7 @@
 # include <hpp/core/config-validations.hh>
 # include <hpp/model/configuration.hh>
 # include <hpp/core/distance.hh>
-
+# include "hpp/rbprm/fullbodyBallistic/convex-cone-intersection.hh"
 
 namespace hpp {
   namespace rbprm {
@@ -268,6 +268,10 @@ namespace hpp {
     void addRefConfigAnalysisWeight (const hpp::floatSeq& dofArray, const char* name,const hpp::floatSeq& weightArray)throw (hpp::Error);
 
 	void setFullbodyFrictionCoef (const double mu);
+
+	hpp::floatSeq* convexConePlaneIntersection
+	(const unsigned short  Ncones, const hpp::floatSeqSeq& cones,
+	 const double theta, const double mu) throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.

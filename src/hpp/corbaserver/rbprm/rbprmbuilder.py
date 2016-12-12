@@ -93,16 +93,14 @@ class Builder (object):
     def boundSO3 (self,  bounds):
         return self.client.rbprm.rbprm.boundSO3 (bounds)
 
-	## Specifies a preferred normal direction for a given rom.
+	## Specifies a preferred affordance for a given rom.
 	# This constrains the planner to accept a rom configuration only if
 	# it collides with a surface the normal of which has these properties.
 	#
     # \param rom name of the rome,
-    # \param normal 3d vector specifying the normal,
-    # \param tolerance expressed as the dot product between the considered obstacle and the ideal normal.
-    # if the dot product is greater than the tolerance the surface will be considered valid.
-    def setNormalFilter (self, rom, normal, tolerance):
-        return self.client.rbprm.rbprm.setNormalFilter (rom, normal, tolerance)
+    # \param affordances list of affordance names
+    def setAffordanceFilter (self, rom, affordances):
+        return self.client.rbprm.rbprm.setAffordanceFilter (rom, affordances)
 
 	## Specifies a rom constraint for the planner.
 	# A configuration will be valid if and only if the considered rom collides
@@ -327,9 +325,6 @@ class Builder (object):
     def rotateAlongPath (self, pathId,rotateAfterJump = False,trunkOrientation = False, getCloseToContact =  False):
         return self.client.rbprm.rbprm.rotateAlongPath (pathId, False,rotateAfterJump, trunkOrientation,getCloseToContact)
 
-    def computeConfigGIWC (self, config, contactLength, contactWidth):
-        return self.client.rbprm.rbprm.computeConfigGIWC (config, contactLength, contactWidth)
-
     def setFullOrientationMode (self, fullOrientationMode):
         return self.client.rbprm.rbprm.setFullOrientationMode (fullOrientationMode)
 
@@ -352,3 +347,11 @@ class Builder (object):
         return self.client.rbprm.rbprm.convexConePlaneIntersection (Ncones,
                                                                     cones,
                                                                     theta, mu)
+    ## Get the dimension of the extra configuration space
+    def getDimensionExtraConfigSpace(self):
+        return self.client.basic.robot.getDimensionExtraConfigSpace()
+
+    ## Convert a direction vector to a quaternion (use Eigen::Quaterniond::FromTwoVectors with Z vector)
+    # \param u the vector director
+    def quaternionFromVector(self,vector):
+        return self.client.basic.robot.quaternionFromVector(vector)

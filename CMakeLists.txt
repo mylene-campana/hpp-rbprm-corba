@@ -50,6 +50,7 @@ ADD_REQUIRED_DEPENDENCY("hpp-corbaserver >= 3")
 ADD_REQUIRED_DEPENDENCY("hpp-rbprm")
 ADD_REQUIRED_DEPENDENCY("omniORB4 >= 4.1.4")
 ADD_REQUIRED_DEPENDENCY("hpp-model-urdf >= 3")
+ADD_REQUIRED_DEPENDENCY("hpp-affordance-corba")
 ADD_REQUIRED_DEPENDENCY("hpp-util >= 3")
 
 PKG_CONFIG_APPEND_LIBS(${PROJECT_NAME})
@@ -91,6 +92,7 @@ install(FILES
   data/urdf/groundcrouch.urdf
   data/urdf/darpa.urdf
   data/urdf/car.urdf
+  data/urdf/polaris.urdf
   #~ data/urdf/scene2.urdf
   data/urdf/robot_test/robot_test_lleg_rom.urdf
   data/urdf/robot_test/robot_test_rleg_rom.urdf
@@ -168,6 +170,7 @@ install(FILES
   data/srdf/groundcrouch.srdf
   data/srdf/darpa.srdf
   data/srdf/car.srdf
+  data/srdf/polaris.srdf
   #~ data/srdf/scene2.srdf
   data/srdf/robot_test/robot_test_lleg_rom.srdf
   data/srdf/robot_test/robot_test_rleg_rom.srdf
@@ -247,6 +250,8 @@ install(FILES
 	data/meshes/stepladder.stl
 	data/meshes/chair.stl
 	data/meshes/car.stl
+	data/meshes/polaris.stl
+	data/meshes/polaris_reduced.stl
 	data/meshes/ground_bigStep.stl
 	data/meshes/ground_jump_easy.stl
 	data/meshes/ground_jump_easyStart.stl
@@ -267,13 +272,15 @@ install(FILES
 	data/meshes/high_plateforms.stl	
 	data/meshes/etang_envir.dae
 	data/meshes/etang_envir.stl	
-    data/meshes/cliff.stl
-    data/meshes/rock.stl
-    data/meshes/cliff_panel.stl
+        data/meshes/cliff.stl
+	data/meshes/rock.stl
+	data/meshes/cliff_panel.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
+  
 install(FILES
 	data/meshes/hyq/hyq_all.stl
+	#data/meshes/hyq/hyq_all_realist.stl
 	data/meshes/hyq/hyq_trunk.stl
 	data/meshes/hyq/hyq_trunk_large.stl
 	data/meshes/hyq/hyq_rom.stl

@@ -96,7 +96,7 @@ lineEnd = "END of intersection points ---"
 pointsInters = plotLogConvexConeInters (r, logID, lineParsed, lineEnd, "IntersPoint_", 0.02, red)
 plotStraightLines_OM (origin, pointsInters, r, "CC_intersLine", red) # overlay the borderLines if plotted before them
 
-#plotConvexConeInterpolations (ps, r, origin, cones, 0.2, "CC_interpolation", coneURDFName)
+#plotConvexConeInterpolations (ps, r, origin, cones, 0.2, "CC_interpolation", coneURDFName)  # NOT the convex-cone, but a shape included in it !
 
 #r.startCapture("convexConeIntersPlaneTheta1","png") ; r.stopCapture()
 

@@ -28,27 +28,31 @@ rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, p
 rbprmBuilder.setJointBounds ("base_joint_xyz", [-4.5, 6.8, -8.8, 14.3, -6.9, 3.2])
 rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = 0.3
-rbprmBuilder.setNormalFilter('LFFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('LMFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('LBFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('RFFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('RMFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('RBFootSphere', [0,0,1], filterRange)
+affordanceType = ['Support']
+rbprmBuilder.setAffordanceFilter('LFFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('LMFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('LBFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('RFFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('RMFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('RBFootSphere', affordanceType)
 rbprmBuilder.setContactSize (0.03,0.03)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 ps = ProblemSolver (rbprmBuilder)
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-rbprmBuilder.setNumberFilterMatch(3)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
-r.loadObstacleModel ('hpp-rbprm-corba', "cave", "cave")
+obstacleName = "cave"
+r.loadObstacleModel (packageName, obstacleName, obstacleName+"_obst")
 addLight (r, [-3,0,8,1,0,0,0], "li");
 addLight (r, [-1,15,0,1,0,0,0], "li2");
+
+from hpp.corbaserver.affordance.affordance import AffordanceTool
+afftool = AffordanceTool ()
+afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
+afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
@@ -62,6 +66,8 @@ q22[0:7] = [1.15, 12.28, -1.51, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(3)
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation

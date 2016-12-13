@@ -115,6 +115,7 @@ namespace hpp {
 	  hppDout (info, "effectiveNbFilterMatch= " << effectiveNbFilterMatch);
 	  hpp::model::RbPrmDevicePtr_t robotcast = boost::static_pointer_cast<hpp::model::RbPrmDevice>(robot);
 	  if (affMap_.empty ()) {
+	    hppDout (info, "No affordances found. Unable to create shooter object.");
 	    throw hpp::Error ("No affordances found. Unable to create shooter object.");
 	  }
 	  rbprm::RbPrmShooterPtr_t shooter = hpp::rbprm::RbPrmShooter::create
@@ -137,6 +138,7 @@ namespace hpp {
             affMap_ = problemSolver_->map
               <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
             if (affMap_.empty ()) {
+	      hppDout (info, "No affordances found. Unable to create Path Validaton object.");
               throw hpp::Error ("No affordances found. Unable to create Path Validaton object.");
             }
             hpp::rbprm::RbPrmValidationPtr_t validation

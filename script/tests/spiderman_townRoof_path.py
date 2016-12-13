@@ -30,30 +30,28 @@ rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, p
 rbprmBuilder.setJointBounds ("base_joint_xyz", [30, 160, -90,110, 20, 40])
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = 0.6
-rbprmBuilder.setNormalFilter('SpidermanLFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('SpidermanRFootSphere', [0,0,1], filterRange)
+affordanceType = ['Support']
+rbprmBuilder.setAffordanceFilter('SpidermanLFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('SpidermanRFootSphere', affordanceType)
 rbprmBuilder.setContactSize (0.03,0.08)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 ps = ProblemSolver (rbprmBuilder)
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(25)#(8)
-rbprmBuilder.setMaxLandingVelocity(25)
-ps.client.problem.selectConFigurationShooter("RbprmShooter")
-ps.client.problem.selectSteeringMethod("SteeringParabola")
-
-
-rbprmBuilder.setNumberFilterMatch(2)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
-r.loadObstacleModel ("iai_maps", "town", "town")
+obstacleName = "town"
+r.loadObstacleModel ("iai_maps", obstacleName, obstacleName+"_obst")
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(2)
 addLight (r, [-3,0,8,1,0,0,0], "li");
+
+from hpp.corbaserver.affordance.affordance import AffordanceTool
+afftool = AffordanceTool ()
+afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
+afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
@@ -70,6 +68,13 @@ q22[0:3] = [150, 89, 24.1]; r(q22) # top left roof
 #q22[0:3] = [39.5, -30, 24.6]; r(q22) # first roof
 rbprmBuilder.isConfigValid(q22)
 
+ps.selectPathPlanner("BallisticPlanner")
+#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
+rbprmBuilder.setFrictionCoef(1.2)
+rbprmBuilder.setMaxTakeoffVelocity(25)#(8)
+rbprmBuilder.setMaxLandingVelocity(25)
+ps.client.problem.selectConFigurationShooter("RbprmShooter")
+ps.client.problem.selectSteeringMethod("SteeringParabola")
 
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)

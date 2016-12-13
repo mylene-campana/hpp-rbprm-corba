@@ -32,23 +32,27 @@ rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, p
 rbprmBuilder.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
 rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
 rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = 0.3
-rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('RFootSphere', [0,0,1], filterRange)
+affordanceType = ['Support']
+rbprmBuilder.setAffordanceFilter('LFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('RFootSphere', affordanceType)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 ps = ProblemSolver (rbprmBuilder)
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-rbprmBuilder.setNumberFilterMatch(2)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
-r.loadObstacleModel (packageName,"desert","desert")
+obstacleName = "desert"
+r.loadObstacleModel (packageName, obstacleName, obstacleName+"_obst")
 addLight (r, [-4,-4,3,1,0,0,0], "li"); addLight (r, [4,4,3,1,0,0,0], "li2")
 addLight (r, [-4,4,3,1,0,0,0], "li3"); addLight (r, [4,-4,3,1,0,0,0], "li4")
+
+from hpp.corbaserver.affordance.affordance import AffordanceTool
+afftool = AffordanceTool ()
+afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
+afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
@@ -64,7 +68,8 @@ q22[0:7] = [-6.4, -5.1, -1.7, 0, 0, 0, -1]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(2)
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation

@@ -68,7 +68,7 @@ if (ecsSize > 0):
     q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 
-dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
+dir_init = (-np.array(V0list [len(V0list)-1])).tolist() # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
@@ -88,7 +88,8 @@ fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
+psf.setPlannerIterLimit (50)
+fullBody.interpolateBallisticPath(entryPathId, 0.01)
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
@@ -98,6 +99,7 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=1
 #pp(psf.numberPaths ()-1)
 
+#test = []; rr(test); fullBody.isConfigValid(test)
 
 """
 ## Export for Blender ##

@@ -2285,10 +2285,19 @@ assert(s2 == s1 +1);
 	    interpolator->flexionPose (flexionPose_);
 	  else
 	    hppDout (info, "no flexion pose was provided to interpolator");
-    if (contactPose_.rows() > 0)
+	  if (contactPose_.rows() > 0)
 	    interpolator->contactPose (contactPose_);
 	  else
 	    hppDout (info, "no flexion pose was provided to interpolator");
+
+	  const affMap_t &affMap = problemSolver_->map
+	    <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
+	  if (!affMap.empty ()) {
+	    interpolator->affordanceFilters (bindShooter_.affFilter_);
+	    interpolator->affordanceMap (affMap);
+	  }
+	  else
+	    hppDout (error, "No affordances can be given to interpolator");
 
 	  if (subPathNumber == 1)
 	    newPath = interpolator->InterpolateDirectPath(u_offset);

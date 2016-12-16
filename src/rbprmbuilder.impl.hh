@@ -344,6 +344,8 @@ namespace hpp {
 	(const unsigned short  Ncones, const hpp::floatSeqSeq& cones,
 	 const double theta, const double mu) throw (hpp::Error);
 
+	hpp::floatSeqSeq* getContactCones (const hpp::floatSeq& dofArray);
+
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
         core::ProblemSolverPtr_t problemSolver_;

@@ -56,6 +56,9 @@ afftool = AffordanceTool ()
 afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
 afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
 
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(2)
+
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0.128453,0.20242,0.970838,0] # set normal for init config
@@ -63,15 +66,12 @@ q11[0:7] = [4.42, -0.08, 0.09, 0, 0, 0, -1]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
-
 q22 = q11[::]
 q22[(len(q22)-4):]=[-0.216356,-0.357682,0.908435,0] # set normal for goal config
 q22[0:7] = [-6.4, -5.1, -1.7, 0, 0, 0, -1]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
-rbprmBuilder.setNumberFilterMatch(2)
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation

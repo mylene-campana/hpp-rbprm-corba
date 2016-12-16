@@ -7,7 +7,7 @@ from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
 from hpp.gepetto import Viewer, PathPlayer
 from viewer_library import *
 
-import skeleton_test_path as tp
+#import skeleton_test_path as tp
 
 
 
@@ -28,9 +28,10 @@ fullBody.setJointBounds ("base_joint_xyz", [-8, 6, -2, 2, 0, 3])
 #fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 #fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
+"""
 from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
-#ps = ProblemSolver( fullBody ); r = Viewer (ps)
-#r = Viewer (ps)
+psf = ProblemSolver( fullBody ); rr = Viewer (psf)
+"""
 
 ps = tp.ProblemSolver( fullBody )
 r = tp.Viewer (ps); gui = r.client.gui

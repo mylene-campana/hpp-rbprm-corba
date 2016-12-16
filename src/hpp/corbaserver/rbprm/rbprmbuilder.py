@@ -355,3 +355,6 @@ class Builder (object):
     # \param u the vector director
     def quaternionFromVector(self,vector):
         return self.client.basic.robot.quaternionFromVector(vector)
+
+    def getContactCones (self, config):
+        return self.client.rbprm.rbprm.getContactCones (config)

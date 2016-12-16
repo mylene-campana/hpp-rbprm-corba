@@ -810,7 +810,7 @@
       <child link="RShank"/>
       <origin rpy="0 0 0" xyz="-0.023611 -0.0094444 -0.42972"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.05" upper="2.4" velocity="1.0"/>
+      <limit effort="0" lower="-0.05" upper="2.7" velocity="1.0"/>
    </joint>
    <joint name="RAnkle_J1" type="revolute">
       <parent link="RShank"/>
@@ -864,7 +864,7 @@
       <child link="LShank"/>
       <origin rpy="0 0 0" xyz="-0.023611 0.0094444 -0.42972"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.05" upper="2.4" velocity="1.0"/>
+      <limit effort="0" lower="-0.05" upper="2.7" velocity="1.0"/>
    </joint>
    <joint name="LAnkle_J1" type="revolute">
       <parent link="LShank"/>
@@ -911,7 +911,7 @@
       <child link="RHumerus"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-2.7" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-2.7" upper="1.7" velocity="1.0"/>
    </joint>
    <joint name="RElbow_J1" type="revolute">
       <parent link="RHumerus"/>
@@ -965,7 +965,7 @@
       <child link="LHumerus"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-2.8" upper="0.5" velocity="1.0"/>
+      <limit effort="0" lower="-2.8" upper="1.7" velocity="1.0"/>
    </joint>
    <joint name="LElbow_J1" type="revolute">
       <parent link="LHumerus"/>

@@ -124,6 +124,7 @@ def plotCone (q, ps, r, coneName, coneURDFname):
 #gui.addMesh (coneName,"/local/mcampana/devel/hpp/src/animals_description/meshes/cone2.dae")
 #gui.applyConfiguration (coneName, q11[0:7]); gui.addToGroup (coneName, r.sceneName)
 #gui.refresh ()
+
 # --------------------------------------------------------------------#
 
 ## Plot straight line ##
@@ -146,9 +147,33 @@ def plotStraightLine (vector, pos, r, lineNamePrefix):
 
 # --------------------------------------------------------------------#
 
-## Plot straight lines between origin and several points ##
+## Plot straight lines ##
+# Uses: plot cone direction or cone - plane_theta intersection
 ## Parameters:
 # pos: origin-position of straight line
+# vectors: list of direction vectors
+# r: viewer server
+# lineNamePrefix: string prefix used for line name
+# color: osg-color of the curve (e.g. [0,1,0,1])
+def plotStraightLines (pos, vectors, r, lineNamePrefix, color):
+    x0 = pos[0]
+    y0 = pos[1]
+    z0 = pos[2]
+    for i in range (0,len(vectors)):
+        x = vectors [i][0]
+        y = vectors [i][1]
+        z = vectors [i][2]
+        lineName=lineNamePrefix+"straightVector_"+str(i)
+        r.client.gui.addLine(lineName,[x0,y0,z0], [x0+x,y0+y,z0+z],color)
+        r.client.gui.addToGroup (lineName, r.sceneName)
+
+
+# --------------------------------------------------------------------#
+
+## Plot straight lines between origin and several points ##
+## Parameters:
+# origin: origin-position of straight line
+# points: M points
 # r: viewer server
 # lineNamePrefix: string prefix used for line name
 def plotStraightLines_OM (origin, points, r, lineNamePrefix, color):
@@ -559,7 +584,7 @@ def plotLogConvexConeInters (r, logID, lineParsed, lineEnd, pointPrefix, pointSi
                     point = map (float, sp) # convert into float
                     points.append (point)
                     pointName = pointPrefix + str(logID) + '_' + str(i)
-                    plotSphere (point, r, pointName, pointColor, pointSize)
+                    #plotSphere (point, r, pointName, pointColor, pointSize) # cone origin may have changed
                 except:
                     print ("st=%s"%st)
                     print ("sp=%s"%sp)

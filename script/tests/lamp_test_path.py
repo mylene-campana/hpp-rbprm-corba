@@ -48,6 +48,9 @@ afftool = AffordanceTool ()
 afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
 afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
 
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(1)
+
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
@@ -63,8 +66,7 @@ q22[0:7] = [-2.5, 0, 0.59, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
-rbprmBuilder.setNumberFilterMatch(1)
+"""
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
@@ -90,13 +92,14 @@ pathWaypoints = ps.getWaypoints(solutionPathId)
 for i in range(1,len(pathWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
+"""
 
-
+""" # Not for contact-cones
 plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
 plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
+"""
 
-
-
+"""
 # Write data to log file
 pfr = rbprmBuilder.getResultValues ()
 if isinstance(t, list):
@@ -108,11 +111,11 @@ f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
 
 rob = rbprmBuilder.client.basic.robot
-r(q11)
 
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[0] = -6.5; qAway[1] = -2
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
+"""
 
 """
 ## Export for Blender ##
@@ -130,3 +133,23 @@ gui.writeNodeFile('cone_21','cone_goal2.dae')
 writePathSamples (pathSamples, 'lamp_path.txt')
 pathToYamlFile (psf, rr, "lampTrunkTest_frames.yaml ", "lamp_trunk", pathId, q_goal_test, 0.01)
 """
+
+q = q11 # ideally, take waypoints
+cones = rbprmBuilder.getContactCones (q)
+theta = math.atan2(q22 [1] - q11 [1] , q22 [0] - q11 [0])
+origin = q[0:3]; mu = 1.2; coneURDFName = "friction_cone2"
+
+t = rbprmBuilder.convexConePlaneIntersection (len(cones), cones, theta, mu)
+
+# Display:
+black = [0.1,0.1,0.1,1]; red = [1,0,0,1]; blue = [0,0,1,1]; green = [0,1,0,1]; planeThetaColor = [0.7,0.2,0.2,0.2]
+logID = getNewestLogID ()
+CC2D_dir = t [1:4]; phi_CC = t [0]
+
+#plotThetaPlaneBis (origin, theta, 1, r, "thetaPlane", planeThetaColor)
+plotConvexConeInters (ps, r, origin, CC2D_dir, cones, "CC_center", black, 0.02, "CC_dir", "contactCones", coneURDFName)
+
+lineParsedBorders = "M_border = ("
+lineEndBorders = "END of border points ---"
+pointsIntersBorders = plotLogConvexConeInters (r, logID, lineParsedBorders, lineEndBorders, "IntersPointBorders_", 0.021, blue)
+plotStraightLines (origin, pointsIntersBorders, r, "CC_borderLine", blue)

@@ -2840,6 +2840,26 @@ assert(s2 == s1 +1);
 	return result;
       }
 
+      // ---------------------------------------------------------------
+      hpp::floatSeqSeq* RbprmBuilder::getContactCones
+      (const hpp::floatSeq& dofArray) {
+	// compute contact-cones DIRECTIONS (not location)
+	const core::DevicePtr_t robot = problemSolver_->robot ();
+	const core::Configuration_t q = dofArrayToConfig (robot, dofArray);
+	const std::vector<fcl::Vec3f> cones = 
+	  library::computeContactCones (problemSolver_->problem(), q);
+
+	hpp::floatSeq* dofArrayCone;
+	hpp::floatSeqSeq *conesSequence;
+	conesSequence = new hpp::floatSeqSeq ();
+	conesSequence->length ((CORBA::ULong) cones.size ());
+	for (std::size_t i = 0; i < cones.size (); i++) {
+	  dofArrayCone = vectorToFloatseq (cones [i]);
+	  (*conesSequence) [(CORBA::ULong) i] = *dofArrayCone;
+	}
+	return conesSequence;
+      }
+
     } // namespace impl
   } // namespace rbprm
 } // namespace hpp

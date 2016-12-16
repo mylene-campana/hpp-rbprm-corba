@@ -607,6 +607,11 @@ module hpp
 					  in double theta, in double mu)
       raises (Error);
 
+    /// Get contact-cones directions corresponding to given rbprm-configuration.
+    /// Contact-cones are located at the center of the
+    /// ROM-obstacle intersections.
+    floatSeqSeq getContactCones (in floatSeq dofArray);
+
     /// if the preprocessor variable PROFILE is active
     /// dump the profiling data into a logFile
     /// \param logFile name of the file where to dump the profiling data

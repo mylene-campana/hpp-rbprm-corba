@@ -692,8 +692,10 @@ namespace hpp {
 							affMap, bindShooter_.affFilter_, dir);
 
            core::Configuration_t q;
-           if(contactPose_.size() > 0)
-             q = rbprm::computeContactPose(state,contactPose_,fullBody_);
+           if(flexionPose_.size() > 0) {
+	     hppDout (info, "generate contacts using flexionPose");
+             q = rbprm::computeContactPose(state,flexionPose_,fullBody_);
+	   }
            else 
              q = state.configuration_;
 	    std::queue<std::string> contactStack = state.contactOrder_;
@@ -2285,11 +2287,14 @@ assert(s2 == s1 +1);
 	    interpolator->flexionPose (flexionPose_);
 	  else
 	    hppDout (info, "no flexion pose was provided to interpolator");
-	  if (contactPose_.rows() > 0)
-	    interpolator->contactPose (contactPose_);
+	  if (takeoffContactPose_.rows() > 0)
+	    interpolator->takeoffContactPose (takeoffContactPose_);
 	  else
-	    hppDout (info, "no flexion pose was provided to interpolator");
-
+	    hppDout (info, "no takeoff-contact pose was provided to interpolator");
+	  if (landingContactPose_.rows() > 0)
+	    interpolator->landingContactPose (landingContactPose_);
+	  else
+	    hppDout (info, "no landing-contact pose was provided to interpolator");
 	  const affMap_t &affMap = problemSolver_->map
 	    <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
 	  if (!affMap.empty ()) {
@@ -2539,7 +2544,7 @@ assert(s2 == s1 +1);
 
 
       // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
-    if(trunkOrientation){
+    if(trunkOrientation) {
       Eigen::Vector3d yTheta;
       Eigen::Quaterniond qr ,qi,qf;
       
@@ -2696,8 +2701,9 @@ assert(s2 == s1 +1);
 	std::string query_str = std::string(poseQuery);
 	if(query_str.compare ("extending") != 0 && 
 	   query_str.compare ("flexion") != 0 && 
-     query_str.compare ("contact") != 0)
-	  throw std::runtime_error ("Query problem, ask for extending, flexion or contact");
+	   query_str.compare ("takeoffContact") != 0 &&
+	   query_str.compare ("landingContact") != 0)
+	  throw std::runtime_error ("Query problem, ask for extending, flexion, takeoffContact or landingContact");
 	core::DevicePtr_t robot = problemSolver_->robot ();
 	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
 	if (query_str.compare ("extending") == 0) {
@@ -2707,10 +2713,13 @@ assert(s2 == s1 +1);
 	else if (query_str.compare ("flexion") == 0){
 	  flexionPose_ = q;
 	  hppDout (info, "flexionPose_= " << displayConfig(flexionPose_));
-	}else if (query_str.compare ("contact") == 0){
-    contactPose_ = q;
-	  hppDout (info, "contactPose= " << displayConfig(contactPose_));
-  }
+	}else if (query_str.compare ("takeoffContact") == 0){
+	  takeoffContactPose_ = q;
+	  hppDout (info, "takeoffContact= " << displayConfig(takeoffContactPose_));
+	}else if (query_str.compare ("landingContact") == 0){
+	  landingContactPose_ = q;
+	  hppDout (info, "landingContactPose= " << displayConfig(landingContactPose_));
+	}
       }
 
       // ---------------------------------------------------------------

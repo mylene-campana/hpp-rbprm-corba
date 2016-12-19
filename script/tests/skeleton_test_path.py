@@ -91,12 +91,37 @@ ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 t = ps.solve ()
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+#pp(solutionPathId)
 
-print("Verify that all RB-waypoints are valid: ")
+rbprmBuilder.rotateAlongPath (solutionPathId,False)
+orientedpathId = ps.numberPaths () - 1
+#pp(orientedpathId)
+
+rbprmBuilder.rotateAlongPath (solutionPathId,False, False, True) # use alpha dir for SO3
+orientedpathIdBis = ps.numberPaths () - 1
+#pp(orientedpathIdBis)
+
+V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
+Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
+
+print("-- Verify that all RB-waypoints are valid (solution path): ")
 pathWaypoints = ps.getWaypoints(solutionPathId)
 for i in range(1,len(pathWaypoints)-1):
-    if(not(rbprmBuilder.isConfigValid(pathWaypoints[i]))):
+    if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
+
+print("-- Verify that all RB-waypoints are valid (oriented path): ")
+pathOriWaypoints = ps.getWaypoints(orientedpathId)
+for i in range(1,len(pathOriWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathOriWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
+
+print("-- Verify that all RB-waypoints are valid (oriented path): ")
+pathOriBisWaypoints = ps.getWaypoints(orientedpathIdBis)
+for i in range(1,len(pathOriBisWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathOriBisWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
+
 
 
 """

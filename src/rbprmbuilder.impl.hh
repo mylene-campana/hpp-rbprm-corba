@@ -362,9 +362,10 @@ namespace hpp {
 	rbprm::RbPrmShooterPtr_t rbShooter_;
         rbprm::T_StateFrame lastStatesComputedTime_; // new Pierre
         sampling::AnalysisFactory* analysisFactory_;
-	core::Configuration_t extendingPose_;
-	core::Configuration_t flexionPose_;
-	core::Configuration_t contactPose_;
+	core::Configuration_t extendingPose_; // parabola apex
+	core::Configuration_t flexionPose_; // parabola extremity
+	core::Configuration_t takeoffContactPose_; // when releasing contact
+	core::Configuration_t landingContactPose_; // when starting contact
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

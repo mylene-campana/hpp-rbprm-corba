@@ -24,7 +24,7 @@
   <link name="Head">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="2.8"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -84,7 +84,7 @@
    <link name="Thigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -106,7 +106,7 @@
    <link name="Shank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -128,7 +128,7 @@
    <link name="Ankle">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="0.08"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -150,7 +150,7 @@
    <link name="Foot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="1."/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>

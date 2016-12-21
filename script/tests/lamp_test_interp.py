@@ -34,6 +34,7 @@ fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 #psf = ProblemSolver(fullBody); rr = Viewer (psf)
 r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
+pp = PathPlayer (fullBody.client.basic, rr)
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 #q_top= [-3.75,0,1.64135,1,0,0,0,0,-0.0227288,0.0226894,-0.0050107,1,0,0,0]
@@ -74,32 +75,56 @@ fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
+com = fullBody.getCenterOfMass ();
+sphereColor = [1,0,0,1]; sphereSize = 0.03; sphereName = "comInit"
+plotSphere (com, r, sphereName, sphereColor, sphereSize)
+
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
 fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
+com = fullBody.getCenterOfMass (); sphereName = "comGoal"
+plotSphere (com, r, sphereName, sphereColor, sphereSize)
+
 fullBody.setStartState(q_init_test,[LegId])
 fullBody.setEndState(q_goal_test,[LegId])
+
+## Interpolation
 
 extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, -0.3, 0.0, 0,0,0,0]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -0.58, 1.1, -0.5, 0.0, 0,0,0,0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
+timeStep = 0.001
 
 print("Start ballistic-interpolation")
 psf.setPlannerIterLimit (50)
-fullBody.interpolateBallisticPath(entryPathId, 0.01)
+fullBody.interpolateBallisticPath(entryPathId, 0.005) #  -> now also set lastComputedStates_ stack
+
+#configs = fullBody.interpolate(0.01,entryPathId,100, True)   # Steve  # timeStep, pathId, robThreshold   -> to set lastComputedStates_ stack
+#numberOfStatesComputed = len(configs)
 
 
-pp = PathPlayer (fullBody.client.basic, rr)
-
-
-#fullBody.timeParametrizedPath(psf.numberPaths() -1)
-pp.speed=1
+#fullBody.timeParametrizedPath(psf.numberPaths() -1) # TODO debug !
+pp.speed=2
 #pp(psf.numberPaths ()-1)
 
 #test = []; rr(test); fullBody.isConfigValid(test)
+
+statesTime = fullBody.getlastStatesComputedTime ()
+numberOfStatesComputed = len(statesTime)-1
+configs = statesTime [:numberOfStatesComputed]
+times = statesTime [numberOfStatesComputed]
+
+fullBody.comRRT(0, 1, entryPathId, 0) # path = COM path (parabola ?)
+
+
+"""
+for i in range (0,numberOfStatesComputed):
+	rr(configs[i]); time.sleep(0.5);
+
+"""
 
 """
 ## Export for Blender ##
@@ -146,3 +171,4 @@ q = q_0 [::]
 q [fullBody.rankInConfiguration ['ShankJoint']] = -0.6;r(q)
 q [fullBody.rankInConfiguration ['AnkleJoint']] = 0.6;r(q)
 """
+

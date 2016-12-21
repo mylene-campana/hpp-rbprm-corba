@@ -1539,11 +1539,13 @@ namespace hpp {
     {
         try
         {
-            std::size_t s1((std::size_t)state1), s2((std::size_t)state2);            
+            std::size_t s1((std::size_t)state1), s2((std::size_t)state2);
+	    hppDout (info, "s1= " << s1 << ", s2= " << s2);
 // temp
-assert(s2 == s1 +1);
+//assert(s2 == s1 +1);
             if(lastStatesComputed_.size () < s1 || lastStatesComputed_.size () < s2 )
             {
+	      hppDout (info, "lastStatesComputed_.size ()= " << lastStatesComputed_.size ());
                 throw std::runtime_error ("did not find a states at indicated indices: " + std::string(""+s1) + ", " + std::string(""+s2));
             }
             unsigned int pathId = (unsigned int)(path);
@@ -2278,6 +2280,7 @@ assert(s2 == s1 +1);
 	  const core::PathPtr_t subpath = (*path).pathAtRank (0);
 	  const ParabolaPathPtr_t pp = 
 	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
+	  rbprm::T_StateFrame stateFrames;
 
 	  if (extendingPose_.rows() > 0)
 	    interpolator->extendingPose (extendingPose_);
@@ -2305,12 +2308,21 @@ assert(s2 == s1 +1);
 	    hppDout (error, "No affordances can be given to interpolator");
 
 	  if (subPathNumber == 1)
-	    newPath = interpolator->InterpolateDirectPath(u_offset);
+	    newPath = interpolator->InterpolateDirectPath(u_offset, &stateFrames);
 	  else
-	    newPath = interpolator->InterpolateFullPath(u_offset);
+	    newPath = interpolator->InterpolateFullPath(u_offset, &stateFrames);
 
-	  std::size_t newPathId = problemSolver_->addPath (newPath);
-	  hppDout (info, "newPath Id is: " << newPathId);
+	  // TEST TMP: BALLISTIC PATH NOT ADDED, JUST UPDATE THE STATES
+	  //std::size_t newPathId = problemSolver_->addPath (newPath);
+
+	  lastStatesComputedTime_.clear ();
+	  lastStatesComputedTime_.resize (stateFrames.size());
+	  lastStatesComputed_.clear ();
+	  lastStatesComputed_.resize (stateFrames.size());
+	  for (std::size_t i = 0; i < stateFrames.size(); i++) {
+	    lastStatesComputedTime_ [i] = stateFrames [i];
+	    lastStatesComputed_ [i] = stateFrames [i].second;
+	  }
 	}
 	catch(std::runtime_error& e)
 	  {
@@ -2867,6 +2879,29 @@ assert(s2 == s1 +1);
 	  (*conesSequence) [(CORBA::ULong) i] = *dofArrayCone;
 	}
 	return conesSequence;
+      }
+
+      // ---------------------------------------------------------------
+      hpp::floatSeqSeq* RbprmBuilder::getlastStatesComputedTime () {
+	// get configs and then all times
+	std::size_t size = lastStatesComputedTime_.size ();
+	vector_t times (size);
+	core::Configuration_t q;
+	hpp::floatSeq* dofArray;
+	hpp::floatSeqSeq *statesTimeSequence;
+	statesTimeSequence = new hpp::floatSeqSeq ();
+	statesTimeSequence->length ((CORBA::ULong) size + 1);
+	for (std::size_t i = 0; i < size; i++) {
+	  times [i] = lastStatesComputedTime_ [i].first;
+	  // configs
+	  q = lastStatesComputedTime_ [i].second.configuration_;
+	  dofArray = vectorToFloatseq (q);
+	  (*statesTimeSequence) [(CORBA::ULong) i] = *dofArray;
+	}
+	// time
+	dofArray = vectorToFloatseq (times);
+	(*statesTimeSequence) [(CORBA::ULong) size] = *dofArray;
+	return statesTimeSequence;
       }
 
     } // namespace impl

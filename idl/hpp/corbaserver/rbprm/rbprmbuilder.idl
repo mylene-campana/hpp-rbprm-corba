@@ -612,6 +612,9 @@ module hpp
     /// ROM-obstacle intersections.
     floatSeqSeq getContactCones (in floatSeq dofArray);
 
+    /// Get configurations contained in lastStatesComputedTime_ and their times
+    floatSeqSeq getlastStatesComputedTime ();
+
     /// if the preprocessor variable PROFILE is active
     /// dump the profiling data into a logFile
     /// \param logFile name of the file where to dump the profiling data

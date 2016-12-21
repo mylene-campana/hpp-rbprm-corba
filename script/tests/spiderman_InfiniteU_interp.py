@@ -11,8 +11,6 @@ from viewer_library import *
 
 import spiderman_cube_infiniteU_path as tp
 
-
-
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
@@ -28,120 +26,74 @@ fullBody = FullBody ()
 robot = fullBody.client.basic.robot
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 
-
-
+#psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
-
 psf = tp.ProblemSolver( fullBody )
 rr = tp.Viewer (psf); gui = rr.client.gui
 
 
-
-#~ AFTER loading obstacles
-nbSamples = 50000
-cType = "_3_DOF"
-x = 0.03 # contact surface width
-y = 0.08 # contact surface length
-# By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 heuristicName = "static"
-#~ AFTER loading obstacles
 rLegId = 'RFoot'
-rLeg = 'RThigh_ry'
-rfoot = 'SpidermanRFootSphere'
-rLegx = x; rLegy = y
-fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,heuristicName)
-
 lLegId = 'LFoot'
-lLeg = 'LThigh_ry'
-lfoot = 'SpidermanLFootSphere'
-lLegx = x; lLegy = y
-fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,heuristicName)
-
 rarmId = 'RHand'
-rLeg = 'RHumerus_ry'
-rfoot = 'SpidermanRHandSphere'
-rarmx = x; rarmy = y
-fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,heuristicName)
-
 larmId = 'LHand'
-lLeg = 'LHumerus_ry'
-lfoot = 'SpidermanLHandSphere'
-larmx = x; larmy = y
+fullBody.addLimbDatabase('./Spiderman_rleg.db',rLegId,heuristicName)
+fullBody.addLimbDatabase('./Spiderman_lleg.db',lLegId,heuristicName)
+fullBody.addLimbDatabase('./Spiderman_rarm.db',rarmId,heuristicName)
 fullBody.addLimbDatabase('./Spiderman_larm.db',larmId,heuristicName)
-
-
 print("Limbs added to fullbody")
 
 
-
-
 extending = [0, 0, 0, 1, 0, 0, 0, 0.8, 0.0, 0, -0.6, 0.0, 0,0.4, -0.9, 0.9, 0, 0, 0.0, 0.0, 0.4, 0.9, -0.9, 0, 0, 0.0,-0.0, -2, -0.5, 0.3, 2.2, 0.7, 0, 0.0, -2, 0.5, -0.3, 2.2, 0.7, 0.0, 0.0]
-
-flexion = [0, 0, 0, 1, 0, 0, 0,  0.0, 0, 0, 0.0, 0.0, 0.0, -2, 0.3, -0.3, 0, -0.6, 0.0, 0.0, -2, -0.3, 0.3, 0, 0.6, 0.0,-0.0, -1.9, -0.3, -0.2, 1.9, -0.6, 0, 0.0, -1.9, 0.3, 0.2, 1.9, -0.6, 0, 0.0]
-q_contact = [0, 0, 0, 1, 0.0, 0.0, 0.0, 0.7, 0, 0, -0.7, 0.0,0, 0.5, 0.7, 0.5, 0, -0.6, 0.0, 0.0, 0.5, -0.7, -0.5, 0,0.6, 0.0, -0.0, -1.2, -0.3, -0.2, 2.2, -0.9, 0, 0.0, -1.2,0.3, 0.2, 2.2, -0.9, 0, 0.0]
-
-
+q_contact_takeoff = [0, 0, 0, 1, 0, 0, 0,  0.0, 0, 0, 0.0, 0.0, 0.0, -2, 0.3, -0.3, 0, -0.6, 0.0, 0.0, -2, -0.3, 0.3, 0, 0.6, 0.0,-0.0, -1.9, -0.3, -0.2, 1.9, -0.6, 0, 0.0, -1.9, 0.3, 0.2, 1.9, -0.6, 0, 0.0]
+flexion = [0, 0, 0, 1, 0.0, 0.0, 0.0, 0.7, 0, 0, -0.7, 0.0,0, 0.5, 0.7, 0.5, 0, -0.6, 0.0, 0.0, 0.5, -0.7, -0.5, 0,0.6, 0.0, -0.0, -1.2, -0.3, -0.2, 2.2, -0.9, 0, 0.0, -1.2,0.3, 0.2, 2.2, -0.9, 0, 0.0]
+q_contact_landing = []
 
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
-fullBody.setPose (q_contact, "contact")
-
-
-
-
-#fullBody.runSampleAnalysis( "RefPoseFeet", True) #done in compute_db now
+fullBody.setPose (q_contact_takeoff, "takeoffContact")
+fullBody.setPose (q_contact_landing, "landingContact")
 
 
 #id = r.client.gui.getWindowID("window_hpp_")
 #rr.client.gui.attachCameraToNode("spiderman/Thorax",id)
 
-q_0 = fullBody.getCurrentConfig(); rr(q_0)
-
-confsize = len(tp.q11)-ecsSize
+confsize = len(tp.q11)
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
-q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
+q_init = flexion; q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathId # tp.orientedpathId
+entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
-q_init[0:confsize] = trunkPathwaypoints[0][0:confsize]
-q_goal[0:confsize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize]
-#q_init[fullConfSize:fullConfSize+ecsSize] = tp.q11[confsize:confsize+ecsSize]
-#q_goal[fullConfSize:fullConfSize+ecsSize] = tp.q22[confsize:confsize+ecsSize]
 
 
+q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
+q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
+if (ecsSize > 0):
+    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
+    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
+
+dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init,[0,0,1], True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, False); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
-
+dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
 fullBody.setCurrentConfig (q_goal)
-fullBody.isConfigValid(q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, [0,0,-1], True); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, False); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
+
 
 fullBody.setStartState(q_init_test,[rLegId,lLegId])
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
-
-"""
-qe = extending[::]
-qe[0:7] = [-2.025129887082707,
-40.59097542330351,
-128.97577375406138,
- 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
- 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
- -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
-
-rr(qe)
-"""
-
-
+psf.setPlannerIterLimit (50)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(tp.orientedpathId, 0.005)
+fullBody.interpolateBallisticPath(entryPathId, 0.005)
+
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
@@ -214,5 +166,23 @@ q [fullBody.rankInConfiguration ['RAnkle_J1']] = 0.6; r(q)
 """
 rr.addLandmark('spiderman/SpidermanLHandSphere',1)
 
+"""
+qe = extending[::]
+qe[0:7] = [-2.025129887082707,
+40.59097542330351,
+128.97577375406138,
+ 1, 0, 0, 0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.6, -0.9, 0.9, 0.4,
+ 0, 0, 0.0, 0.0, -0.9, 0.9, 0.4, 0, 0, 0.0, 0.0, 0.5, 0.5,
+ -2, 2.2, 0.7, 0, 0.5, 0.5, -2, 2.2, 0.7, 0.0]
 
+rr(qe)
+"""
 
+""" # without solving path
+q_init[0:confsize-ecsSize] = tp.q11[0:confsize-ecsSize]
+q_goal[0:confsize-ecsSize] = tp.q22[0:confsize-ecsSize]
+if (ecsSize > 0):
+    q_init[fullConfSize-ecsSize:fullConfSize] = tp.q11[confsize-ecsSize:confsize]
+    q_goal[fullConfSize-ecsSize:fullConfSize] = tp.q22[confsize-ecsSize:confsize]
+
+dir_init = [0,0,-1]; dir_goal = [0,0, 1]"""

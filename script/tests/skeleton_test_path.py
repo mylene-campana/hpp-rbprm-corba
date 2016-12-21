@@ -19,7 +19,7 @@ rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
 urdfName = 'skeleton_trunk_flexible'
-urdfNameRoms = ['LFootSphere','RFootSphere']
+urdfNameRoms = ['LFootSphere','RFootSphere','LHandSphere','RHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
@@ -32,6 +32,8 @@ rbprmBuilder.setFilter(urdfNameRoms)
 affordanceType = ['Support']
 rbprmBuilder.setAffordanceFilter('LFootSphere', affordanceType)
 rbprmBuilder.setAffordanceFilter('RFootSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('LHandSphere', affordanceType)
+rbprmBuilder.setAffordanceFilter('RHandSphere', affordanceType)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 

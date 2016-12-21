@@ -27,8 +27,8 @@ fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
 fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
-fullBody.setFullbodyFrictionCoef(0.5)
+#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+#fullBody.setFullbodyFrictionCoef(0.5)
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
@@ -36,15 +36,16 @@ psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -2, -0.4, -1.2, 0.0, 0.0, -0.2, -0.1, -2, -0.4, 1.2, 0.0, 0.0, 0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0.0, -0.1, 0.0, 0.1, 0.2, 0.5, 0.0, 0.0, 0,0,0,0]
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.1, 0.2, -1.4, -1.2, 0.0, 0.0, -0.6, -0.1, 0.2, -1.4, 1.2, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0.0, 0,0,0,0]
-#q_contact = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4, 0, -0.7, -1.0, -1.2, 0.0, 0.0, -0.4, 0, -0.7, -1.0, 1.2, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0.0]#, 0,0,0,0]
-
-#q_contact = flexion [::]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -0.2, -1, -2.5, 0.0, 0.0, -0.2, -0.1, -0.2, -1, 2.5, 0.0, 0.0, 0, 0.1, -2, 2.5, -0.7, 0, -0.2, 0, -0.1, -2, 2.5, -0.7, 0, -0.2]
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.6, -1, -1.5, 0.0, 0.0, -0.2, -0.1, -1.7, -1.1, 1.5, 0.0, 0.0, 0, 0.0, -1.2, 1.5, 0.0, 0, -0.0, 0, -0.0, -1.4, 1.7, 0.1, 0, -0.0]
+q_contact_takeoff =[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.4, -1.3, -1.5, 0.0, 0.0, -0.2, -0.1, -1.5, -1.2, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
+q_contact_landing = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 1.4, -1, -1.2, 0.0, 0.0, -0.0, 0.2, 1.5, -1.1, 1.2, 0.0, 0.0, 0, 0.1, -1.1, 0.9, 0, 0, -0.2, 0, -0.1, -1.1, 0.9, 0, 0, -0.2]
 
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
-#fullBody.setPose (q_contact, "contact")
+fullBody.setPose (q_contact_takeoff, "takeoffContact")
+fullBody.setPose (q_contact_landing, "landingContact")
+
 
 rLegId = 'RFoot'
 lLegId = 'LFoot'
@@ -64,10 +65,8 @@ q_init = flexion; q_goal = q_init [::]
 entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 
-q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[1][0:confsize-ecsSize]; rr(q)
-fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
-
-q2= [6.2666,-2.6362,-0.952683,-0.0849639,-0.13228,0.113626,0.981006,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.278843,0.200458,0.939182,-2.93748,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.278843,0.200458,0.939182,-2.93748,]
+#q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[1][0:confsize-ecsSize]; rr(q)
+#fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
 
 q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
 q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
@@ -75,14 +74,6 @@ if (ecsSize > 0):
     q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
     q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
-""" # without solving path
-q_init[0:confsize-ecsSize] = tp.q11[0:confsize-ecsSize]
-q_goal[0:confsize-ecsSize] = tp.q22[0:confsize-ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = tp.q11[confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = tp.q22[confsize-ecsSize:confsize]
-
-dir_init = [0,0,-1]; dir_goal = [0,0, 1]"""
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
 fullBody.setCurrentConfig (q_init)
@@ -113,7 +104,7 @@ pp.speed=3
 #pp(psf.numberPaths ()-1)
 
 
-#r.startCapture("skeletonDesert","png") ; r.stopCapture()
+#r.startCapture("skeletonDesert_pbIntersectionRomObst","png") ; r.stopCapture()
 
 ## Export for Blender ##
 # First display in Viewer, then export
@@ -230,3 +221,13 @@ q = [6.2666,-2.6362,-0.952683,-0.0849639,-0.13228,0.113626,0.981006,0,0,0,0,0,0,
 fullBody.isConfigValid(q); rr(q)
 
 """
+
+""" # without solving path
+q_init[0:confsize-ecsSize] = tp.q11[0:confsize-ecsSize]
+q_goal[0:confsize-ecsSize] = tp.q22[0:confsize-ecsSize]
+if (ecsSize > 0):
+    q_init[fullConfSize-ecsSize:fullConfSize] = tp.q11[confsize-ecsSize:confsize]
+    q_goal[fullConfSize-ecsSize:fullConfSize] = tp.q22[confsize-ecsSize:confsize]
+
+dir_init = [0,0,-1]; dir_goal = [0,0, 1]"""
+

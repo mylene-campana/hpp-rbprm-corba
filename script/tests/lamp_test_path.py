@@ -54,7 +54,7 @@ rbprmBuilder.setNumberFilterMatch(1)
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-5.0, 0, 0.59, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [-5.0, 0, 0.42, 1, 0, 0, 0]; r(q11)  # z = 0.59
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -62,11 +62,11 @@ rbprmBuilder.isConfigValid(q11)
 #plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
 
 q22 = q11[::]
-q22[0:7] = [-2.5, 0, 0.59, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-2.5, 0, 0.42, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-"""
+
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
@@ -92,7 +92,12 @@ pathWaypoints = ps.getWaypoints(solutionPathId)
 for i in range(1,len(pathWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
-"""
+
+print("-- Verify that all RB-waypoints are valid (oriented path): ")
+pathOriWaypoints = ps.getWaypoints(orientedpathId)
+for i in range(1,len(pathOriWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathOriWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
 
 """ # Not for contact-cones
 plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")

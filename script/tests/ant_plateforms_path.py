@@ -52,8 +52,12 @@ addLight (r, [0,0,6,1,0,0,0], "li");
 
 from hpp.corbaserver.affordance.affordance import AffordanceTool
 afftool = AffordanceTool ()
+afftool.setAffordanceConfig('Support', [3., 1., 0.05]) # error, angle and area   # default (0.3,0.3,0.05)
 afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
 afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
+
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(4)
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
@@ -67,8 +71,7 @@ q22[0:7] = [-6.3, 0, 0.15, 0, 0, 0, -1]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
-rbprmBuilder.setNumberFilterMatch(4)
+
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation

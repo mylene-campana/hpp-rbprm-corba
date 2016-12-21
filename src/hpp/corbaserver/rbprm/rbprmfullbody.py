@@ -883,3 +883,6 @@ class FullBody (object):
     def quaternionFromVector(self,vector):
         return self.client.basic.robot.quaternionFromVector(vector)
 
+    ## Get configurations contained in lastStatesComputedTime_ and their times
+    def getlastStatesComputedTime(self):
+        return self.client.rbprm.rbprm.getlastStatesComputedTime()

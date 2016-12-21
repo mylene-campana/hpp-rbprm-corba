@@ -345,6 +345,7 @@ namespace hpp {
 	 const double theta, const double mu) throw (hpp::Error);
 
 	hpp::floatSeqSeq* getContactCones (const hpp::floatSeq& dofArray);
+	hpp::floatSeqSeq* getlastStatesComputedTime ();
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.

@@ -141,6 +141,7 @@ install(FILES
   data/urdf/etang_envir.urdf
   data/urdf/cliff.urdf
   data/urdf/rock.urdf
+  data/urdf/parkour_walls.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -275,6 +276,8 @@ install(FILES
         data/meshes/cliff.stl
 	data/meshes/rock.stl
 	data/meshes/cliff_panel.stl
+	data/meshes/parkour_walls.dae	
+	data/meshes/parkour_walls.stl	
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
   

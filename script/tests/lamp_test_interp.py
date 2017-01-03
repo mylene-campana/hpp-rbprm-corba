@@ -20,7 +20,7 @@ rootJointType = "freeflyer"
 urdfName = "lamp"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = tp.ecsSize
+ecsSize = 0 #tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 base_joint_xyz_limits = tp.base_joint_xyz_limits
@@ -28,8 +28,8 @@ base_joint_xyz_limits = tp.base_joint_xyz_limits
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
+#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf)
 r = tp.r; ps = tp.ps
@@ -172,3 +172,13 @@ q [fullBody.rankInConfiguration ['ShankJoint']] = -0.6;r(q)
 q [fullBody.rankInConfiguration ['AnkleJoint']] = 0.6;r(q)
 """
 
+""" # Visualize geometrical origin and COM
+psf = ProblemSolver(fullBody); rr = Viewer (psf)
+q_0 = fullBody.getCurrentConfig(); rr(q_0)
+origin = [0,0,0];
+sphName = "test"+str(origin[0])+str(origin[1])+str(origin[2]);
+plotSphere (origin, rr, sphName, [0,0,1,1], 0.03)
+com = fullBody.getCenterOfMass ();
+plotSphere (com, rr, "com", [1,0,0,1], 0.03)
+plotFrame(rr,'framy', origin,0.4)
+"""

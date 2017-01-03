@@ -17,8 +17,15 @@
   <link name="base_link"/>
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
-      <child link="Head"/>
+      <child link="base_link_comshift"/>
       <origin rpy="0 0 3.14159265359" xyz="0 0 0"/>
+   </joint>
+
+  <link name="base_link_comshift"/>
+  <joint name="base_link_comshift_J" type="fixed">
+      <parent link="base_link_comshift"/>
+      <child link="Head"/>
+      <origin rpy="0 0 0" xyz="-0.023 0 0.245"/>
    </joint>
 
   <link name="Head">
@@ -63,7 +70,7 @@
       </collision>
    </link>
 
-   <joint name="head_rom_joint" type="fixed">
+   <!--<joint name="head_rom_joint" type="fixed">
       <parent link="HeadLink"/>
       <child link="head_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -77,7 +84,7 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>
+   </link>-->
   
    <link name="ThighJoint"/>
    <link name="ThighJointBis"/>

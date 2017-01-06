@@ -418,12 +418,13 @@ def plotPointJointPath (r, ps, dt, nPath, jointName, pointInJoint, pathName, pat
 # ampl: length of the frame lines
 def plotJointFrame (r, ps, q, jointName, ampl):
     robot = ps.robot
+    classicRobot = ps.robot.client.basic.robot
     robot.setCurrentConfig (q)
     jointGlobTransf = robot.getJointPosition (jointName)
-    frameOrigin = robot.computeGlobalPosition (jointGlobTransf, [0,0,0])
-    framePositionX = robot.computeGlobalPosition (jointGlobTransf, [ampl,0,0])
-    framePositionY = robot.computeGlobalPosition (jointGlobTransf, [0,ampl,0])
-    framePositionZ = robot.computeGlobalPosition (jointGlobTransf, [0,0,ampl])
+    frameOrigin = classicRobot.computeGlobalPosition (jointGlobTransf, [0,0,0])
+    framePositionX = classicRobot.computeGlobalPosition (jointGlobTransf, [ampl,0,0])
+    framePositionY = classicRobot.computeGlobalPosition (jointGlobTransf, [0,ampl,0])
+    framePositionZ = classicRobot.computeGlobalPosition (jointGlobTransf, [0,0,ampl])
     r.client.gui.addLine('frameX'+jointName, frameOrigin, framePositionX,[1,0,0,1])
     r.client.gui.addLine('frameY'+jointName, frameOrigin, framePositionY,[0,1,0,1])
     r.client.gui.addLine('frameZ'+jointName, frameOrigin, framePositionZ,[0,0,1,1])

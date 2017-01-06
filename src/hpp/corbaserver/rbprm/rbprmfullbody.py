@@ -886,3 +886,6 @@ class FullBody (object):
     ## Get configurations contained in lastStatesComputedTime_ and their times
     def getlastStatesComputedTime(self):
         return self.client.rbprm.rbprm.getlastStatesComputedTime()
+    
+    def createState(self, configuration, contactLimbNames, isInContact, time):
+        return self.client.rbprm.rbprm.createState(configuration, contactLimbNames, isInContact, time)

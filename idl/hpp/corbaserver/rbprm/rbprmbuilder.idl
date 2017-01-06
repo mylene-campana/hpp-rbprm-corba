@@ -128,7 +128,7 @@ module hpp
 		/// \param q configuration
 		/// \param names list of effectors in contact
 		/// \return stateId
-		short createState(in floatSeq configuration, in Names_t contactLimbs) raises (Error);
+    short createState(in floatSeq configuration, in Names_t contactLimbs, in boolean isInContact, in double time) raises (Error);
 
     /// Get Sample configuration by its id
     /// \param sampleName name of the limb from which to retrieve a sample

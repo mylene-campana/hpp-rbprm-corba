@@ -641,26 +641,31 @@ namespace hpp {
         }
     }
 
-    CORBA::Short RbprmBuilder::createState(const hpp::floatSeq& configuration, const hpp::Names_t& contactLimbs) throw (hpp::Error)
+      CORBA::Short RbprmBuilder::createState(const hpp::floatSeq& configuration, const hpp::Names_t& contactLimbs, const bool isInContact, const double time) throw (hpp::Error)
     {
+      // if isInContact is True, all given limbs are supposed to be in contact
         model::Configuration_t config = dofArrayToConfig (fullBody_->device_, configuration);
         fullBody_->device_->currentConfiguration(config);
         fullBody_->device_->computeForwardKinematics();
         State state;
         state.configuration_ = config;
         std::vector<std::string> names = stringConversion(contactLimbs);
-        for(std::vector<std::string>::const_iterator cit = names.begin(); cit != names.end(); ++cit)
-        {
-            rbprm::RbPrmLimbPtr_t limb = fullBody_->GetLimbs().at(*cit);
-            const std::string& limbName = *cit;
-            state.contacts_[limbName] = true;
-            const fcl::Vec3f position = limb->effector_->currentTransformation().getTranslation();
-            state.contactPositions_[limbName] = position;
-            state.contactNormals_[limbName] = limb->effector_->currentTransformation().getRotation() * limb->normal_;
-            state.contactRotation_[limbName] = limb->effector_->currentTransformation().getRotation();
-
-        }
+	for(std::vector<std::string>::const_iterator cit = names.begin(); cit != names.end(); ++cit)
+	  {
+	    rbprm::RbPrmLimbPtr_t limb = fullBody_->GetLimbs().at(*cit);
+	    const std::string& limbName = *cit;
+	    state.contacts_[limbName] = isInContact;
+	    if (isInContact) {
+	      const fcl::Vec3f position = limb->effector_->currentTransformation().getTranslation();
+	      state.contactPositions_[limbName] = position;
+	      state.contactNormals_[limbName] = limb->effector_->currentTransformation().getRotation() * limb->normal_;
+	      state.contactRotation_[limbName] = limb->effector_->currentTransformation().getRotation();
+	    }
+	  }
         lastStatesComputed_.push_back(state);
+	if (time != -1) {
+	  lastStatesComputedTime_.push_back(std::make_pair(time,state));
+	}
         return lastStatesComputed_.size()-1;
     }
 
@@ -912,6 +917,7 @@ namespace hpp {
                 off[i] = offset[(_CORBA_ULong)i];
                 norm[i] = normal[(_CORBA_ULong)i];
             }
+	    hppDout (info, "norm= " << norm);
             ContactType cType = hpp::rbprm::_6_DOF;
             if(std::string(contactType) == "_3_DOF")
             {
@@ -2312,9 +2318,7 @@ namespace hpp {
 	  else
 	    newPath = interpolator->InterpolateFullPath(u_offset, &stateFrames);
 
-	  // TEST TMP: BALLISTIC PATH NOT ADDED, JUST UPDATE THE STATES
-	  //std::size_t newPathId = problemSolver_->addPath (newPath);
-
+	  // update the stacks of states (e.g. for comRRT)
 	  lastStatesComputedTime_.clear ();
 	  lastStatesComputedTime_.resize (stateFrames.size());
 	  lastStatesComputed_.clear ();
@@ -2323,6 +2327,9 @@ namespace hpp {
 	    lastStatesComputedTime_ [i] = stateFrames [i];
 	    lastStatesComputed_ [i] = stateFrames [i].second;
 	  }
+
+	  std::size_t newPathId = problemSolver_->addPath (newPath);
+
 	}
 	catch(std::runtime_error& e)
 	  {

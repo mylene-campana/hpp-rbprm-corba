@@ -204,7 +204,7 @@
       <child link="ThighJointBis"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.55" upper="0.05" velocity="1.0"/>
+      <limit effort="0" lower="-1.2" upper="0.25" velocity="1.0"/>
    </joint> 
    <joint name="Thigh" type="fixed">
       <parent link="ThighJointBis"/>
@@ -216,7 +216,7 @@
       <child link="ShankJoint"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-2.6" upper="2.1" velocity="1.0"/>
+      <limit effort="0" lower="-2.8" upper="2.1" velocity="1.0"/>
    </joint>
    <joint name="Shank" type="fixed">
       <parent link="ShankJoint"/>
@@ -250,7 +250,7 @@
    <joint name="LampFootSphere" type="fixed">
       <parent link="Foot"/>
       <child link="LampFootSphere"/>
-      <origin rpy="0 0 0" xyz="0 0 -0.007"/>
+      <origin rpy="0 0 3.1415926535" xyz="0 0 -0.007"/>
    </joint>
 
 

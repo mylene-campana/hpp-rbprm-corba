@@ -36,12 +36,16 @@ r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
 pp = PathPlayer (fullBody.client.basic, rr)
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
+#plotJointFrame (rr, psf, q_0, "LampFootSphere", 0.2)
+
+#qt = [-5,0,0.22,1,0,0,0,0.433586,-0.46911,1.12178,0.916087,-0.062895]
+#plotJointFrame (rr, psf, qt, "LampFootSphere", 0.2); rr(qt)
 
 #q_top= [-3.75,0,1.64135,1,0,0,0,0,-0.0227288,0.0226894,-0.0050107,1,0,0,0]
 #rr(q_top); fullBody.isConfigValid(q_top)
 
 #~ AFTER loading obstacles
-nbSamples = 20000
+"""nbSamples = 20000
 cType = "_6_DOF"
 x = 0.05 # contact surface width
 y = 0.05 # contact surface length
@@ -49,9 +53,13 @@ offset = [0,0,0]
 normal = [0,0,1]
 
 LegId = 'Foot'
-Leg = 'Thigh'
+Leg = 'ThighJoint'
 foot = 'LampFootSphere'
 fullBody.addLimb(LegId, Leg, foot, offset, normal, x, y, nbSamples, "EFORT_Normal", 0.01, cType)
+print("Limbs added to fullbody")"""
+LegId = 'Foot'
+fullBody.addLimbDatabase('./Lamp_leg_zPlus.db',LegId,'static') # 6DOF
+#fullBody.addLimbDatabase('./Lamp_leg_3DOF.db',LegId,'static')
 print("Limbs added to fullbody")
 
 
@@ -62,8 +70,8 @@ q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 # WARNING: q_init and q_goal may have changed in orientedPath
 entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
-q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
-q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
+q_init[0:confsize-tp.ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
+q_goal[0:confsize-tp.ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
 if (ecsSize > 0):
     q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
     q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
@@ -75,6 +83,7 @@ fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 
+
 com = fullBody.getCenterOfMass ();
 sphereColor = [1,0,0,1]; sphereSize = 0.03; sphereName = "comInit"
 plotSphere (com, r, sphereName, sphereColor, sphereSize)
@@ -84,26 +93,24 @@ fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 
-com = fullBody.getCenterOfMass (); sphereName = "comGoal"
-plotSphere (com, r, sphereName, sphereColor, sphereSize)
+#com = fullBody.getCenterOfMass (); sphereName = "comGoal"
+#plotSphere (com, r, sphereName, sphereColor, sphereSize)
 
 fullBody.setStartState(q_init_test,[LegId])
 fullBody.setEndState(q_goal_test,[LegId])
 
 ## Interpolation
 
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, -0.3, 0.0, 0,0,0,0]
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -0.58, 1.1, -0.5, 0.0, 0,0,0,0]
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, -0.3, 0.0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 2.0, -1.0, 0.0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
-timeStep = 0.001
+timeStep = 0.005
 
 print("Start ballistic-interpolation")
 psf.setPlannerIterLimit (50)
-fullBody.interpolateBallisticPath(entryPathId, 0.005) #  -> now also set lastComputedStates_ stack
-
-#configs = fullBody.interpolate(0.01,entryPathId,100, True)   # Steve  # timeStep, pathId, robThreshold   -> to set lastComputedStates_ stack
-#numberOfStatesComputed = len(configs)
+fullBody.interpolateBallisticPath(entryPathId, timeStep) #  -> now also set lastComputedStates_ stack
+print("ballistic-interpolation finished")
 
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1) # TODO debug !
@@ -117,7 +124,8 @@ numberOfStatesComputed = len(statesTime)-1
 configs = statesTime [:numberOfStatesComputed]
 times = statesTime [numberOfStatesComputed]
 
-fullBody.comRRT(0, 1, entryPathId, 0) # path = COM path (parabola ?)
+#print("Start comRRT")
+#fullBody.comRRT(0, 1, entryPathId, 0) # path = COM path (parabola ?)
 
 
 """
@@ -168,8 +176,9 @@ rm video.mp4
 
 """
 q = q_0 [::]
-q [fullBody.rankInConfiguration ['ShankJoint']] = -0.6;r(q)
-q [fullBody.rankInConfiguration ['AnkleJoint']] = 0.6;r(q)
+q [fullBody.rankInConfiguration ['ThighJointBis']] = 0.25;rr(q)
+q [fullBody.rankInConfiguration ['AnkleJoint']] = 0.6;rr(q)
+fullBody.isConfigValid(q)
 """
 
 """ # Visualize geometrical origin and COM
@@ -181,4 +190,7 @@ plotSphere (origin, rr, sphName, [0,0,1,1], 0.03)
 com = fullBody.getCenterOfMass ();
 plotSphere (com, rr, "com", [1,0,0,1], 0.03)
 plotFrame(rr,'framy', origin,0.4)
+
+fullBody.createState(q_init_test,["Foot"],False,0)
+fullBody.projectStateToCOM(0,q_init_test[0:3])
 """

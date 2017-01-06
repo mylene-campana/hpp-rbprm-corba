@@ -24,7 +24,7 @@ r = Viewer (ps)
 q_0 = fullBody.getCurrentConfig (); r(q_0)
 
 
-nbSamples = 10000
+nbSamples = 20000
 cType = "_6_DOF"
 x = 0.05 # contact surface width
 y = 0.05 # contact surface length
@@ -32,7 +32,7 @@ offset = [0,0,0]
 normal = [0,0,1]
 
 LegId = 'foot'
-Leg = 'Thigh'
+Leg = 'ThighJoint'
 foot = 'LampFootSphere'
 fullBody.addLimb(LegId, Leg, foot, offset, normal, x, y, nbSamples, "EFORT_Normal", 0.01, cType)
 print("Limbs added to fullbody")
@@ -42,18 +42,18 @@ q_0 = fullBody.getCurrentConfig ()
 fullBody.createOctreeBoxes(r.client.gui, r.windowId, LegId, q_0, [1,1,0.3,0.4])
 fullBody.draw (q_0, r) # display robot with octrees
 
-
+"""
 def printEffPosition(limbId, nbSamples):
     limit = nbSamples-1;
-    f1=open('./data/roms/lamp/'+limbId+'.erom', 'w+')
+    f1=open('./../../data/roms/lamp/'+limbId+'.erom', 'w+')
     for i in range(0,limit):
         q = fullBody.getSamplePosition(limbId,i)
         f1.write(str(q[0]) + "," + str(q[1]) + "," + str(q[2]) + "\n")
     f1.close()
 
 
-printEffPosition(LegId, 39988) # nbSamples collision-free hardcoded because of the collisionTest
-
+printEffPosition(LegId, nbSamples)
+"""
 
 
 #to generate .obj from .erom with Matlab scripts
@@ -61,7 +61,7 @@ printEffPosition(LegId, 39988) # nbSamples collision-free hardcoded because of t
 
 # Then Decimate (object/Modifiers) the .obj in Blender and save it as .stl
 # Decimate decrease the too high number of facets. (0.1 or 0.2)
-# rotations: x -90 deg, y 180 deg
+# rotations: x -90 deg
 
 """
 frameGroupName = "frame"

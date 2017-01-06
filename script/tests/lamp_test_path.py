@@ -54,7 +54,7 @@ rbprmBuilder.setNumberFilterMatch(1)
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-5.0, 0, 0.42, 1, 0, 0, 0]; r(q11)  # z = 0.59
+q11[0:7] = [-5.0, 0, 0.22, 1, 0, 0, 0]; r(q11)  # z = 0.59
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -62,7 +62,7 @@ rbprmBuilder.isConfigValid(q11)
 #plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
 
 q22 = q11[::]
-q22[0:7] = [-2.5, 0, 0.42, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-2.5, 0, 0.22, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -103,6 +103,10 @@ for i in range(1,len(pathOriWaypoints)-1):
 plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
 plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
 """
+
+# Move RB-robot away in viewer
+qAway = q11 [::]; qAway[0] = -8
+rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 """
 # Write data to log file

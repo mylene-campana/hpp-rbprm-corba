@@ -68,8 +68,8 @@ trunkPathwaypoints = ps.getWaypoints (entryPathId)
 #q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[1][0:confsize-ecsSize]; rr(q)
 #fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
 
-q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
-q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
+q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
+q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
 if (ecsSize > 0):
     q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
     q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]

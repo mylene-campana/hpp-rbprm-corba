@@ -142,6 +142,13 @@ install(FILES
   data/urdf/cliff.urdf
   data/urdf/rock.urdf
   data/urdf/parkour_walls.urdf
+  data/urdf/kangaroo/kangaroo.urdf
+  data/urdf/kangaroo/kangaroo_trunk.urdf
+  data/urdf/kangaroo/KangarooRHandSphere.urdf
+  data/urdf/kangaroo/KangarooLHandSphere.urdf
+  data/urdf/kangaroo/KangarooRFootSphere.urdf
+  data/urdf/kangaroo/KangarooLFootSphere.urdf
+  data/urdf/desert_for_kangaroo.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -219,6 +226,12 @@ install(FILES
   data/srdf/cubeWorld2.srdf
   data/srdf/cliff.srdf
   data/srdf/rock.srdf
+  data/srdf/kangaroo/kangaroo.srdf
+  data/srdf/kangaroo/kangaroo_trunk.srdf
+  data/srdf/kangaroo/KangarooRHandSphere.srdf
+  data/srdf/kangaroo/KangarooLHandSphere.srdf
+  data/srdf/kangaroo/KangarooRFootSphere.srdf
+  data/srdf/kangaroo/KangarooLFootSphere.srdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/srdf
   )
 install(FILES
@@ -261,10 +274,10 @@ install(FILES
 	data/meshes/ground_jump_bar.stl
 	data/meshes/ground_jump_med.stl
 	data/meshes/ground_with_bridge.stl
-	data/meshes/cave.dae
+	data/meshes/cave_simplified.dae
 	data/meshes/desert.dae
 	data/meshes/high_plateforms.dae	
-	data/meshes/cave.stl
+	data/meshes/cave_simplified.stl
 	data/meshes/desert.stl
 	data/meshes/cubeWorld.stl
 	data/meshes/cubeWorld2.stl
@@ -276,8 +289,10 @@ install(FILES
         data/meshes/cliff.stl
 	data/meshes/rock.stl
 	data/meshes/cliff_panel.stl
-	data/meshes/parkour_walls.dae	
-	data/meshes/parkour_walls.stl	
+	data/meshes/parkour_walls.stl
+	data/meshes/parkour_walls_reduced.stl
+	data/meshes/desert_for_kangaroo.dae
+	data/meshes/desert_for_kangaroo.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
   
@@ -324,6 +339,11 @@ install(DIRECTORY
 
 install(DIRECTORY
 	data/meshes/lamp
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
+  )
+
+install(DIRECTORY
+	data/meshes/kangaroo
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
   )
 

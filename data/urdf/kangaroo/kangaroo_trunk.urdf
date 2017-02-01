@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<robot name="kangaroo_trunk">
+  <material name="Gray"> <!-- for ROMs -->
+    <color rgba="0.6 0.6 0.6 0.4"/>
+  </material>
+  <material name="Green">
+    <color rgba="0 1 0 1"/>
+  </material>
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Pelvis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="virtualPelvis"/> <!-- for Blender Armature export -->
+  <joint name="virtualPelvis" type="fixed">
+      <parent link="base_link"/>
+      <child link="virtualPelvis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
+  <link name="Pelvis">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Pelvis_view.dae"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Pelvis_box.stl"/>
+         </geometry>
+      </collision>
+   </link>  
+
+   <!--<joint name="pelvis_lfoot_rom_joint" type="fixed">
+      <parent link="Pelvis"/>
+      <child link="lfoot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="lfoot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/lfoot_rom.stl"/>
+         </geometry>
+      </visual>
+   </link>
+
+   <joint name="pelvis_rfoot_rom_joint" type="fixed">
+      <parent link="Pelvis"/>
+      <child link="rfoot_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="rfoot_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/rfoot_rom.stl"/>
+         </geometry>
+      </visual>
+   </link>-->
+
+  <link name="Torso_rx"/>
+  <link name="Torso_ry"/>  
+  <link name="Torso">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Torso_view.dae"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Torso_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+   
+   <link name="Head_rx"/>
+   <link name="Head_ry"/>
+   <link name="Head">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Head_box.stl"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Head_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="Tailbase_rx"/>
+   <link name="Tailbase_ry"/>
+   <link name="Tailbase">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Tailbase_box.stl"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Tailbase_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="Tail_rx"/>
+   <link name="Tail_ry"/>
+   <link name="Tail">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="0"/>
+         <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Tail_box.stl"/>
+         </geometry>
+		 <material name="Gray"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/Tail_box.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+  <!-- JOINTS -->
+  <joint name="A_Torso_rx" type="revolute"> <!-- "A_" to put trunk joints before limb joints in joint chain built by ROS URDF parser -->
+      <parent link="Pelvis"/>
+      <child link="Torso_rx"/>
+      <origin rpy="0 0 0" xyz="0.007 0.0012 0.0982"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="Torso_ry" type="revolute">
+      <parent link="Torso_rx"/>
+      <child link="Torso_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="Torso_rz" type="revolute">
+      <parent link="Torso_ry"/>
+      <child link="Torso"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+  <joint name="Head_rx" type="revolute">
+      <parent link="Torso"/>
+      <child link="Head_rx"/>
+      <origin rpy="0 0 0" xyz="0.2629 -0.0018 0.299"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="Head_ry" type="revolute">
+      <parent link="Head_rx"/>
+      <child link="Head_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="Head_rz" type="revolute">
+      <parent link="Head_ry"/>
+      <child link="Head"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+  <joint name="A_Tailbase_rx" type="revolute"> <!-- "A_" to put trunk joints before limb joints in joint chain built by ROS URDF parser -->
+      <parent link="Pelvis"/>
+      <child link="Tailbase_rx"/>
+      <origin rpy="0 0 0" xyz="-0.0982 -0.001 -0.1713"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="Tailbase_ry" type="revolute">
+      <parent link="Tailbase_rx"/>
+      <child link="Tailbase_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.2" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="Tailbase_rz" type="revolute">
+      <parent link="Tailbase_ry"/>
+      <child link="Tailbase"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+  <joint name="Tail_rx" type="revolute">
+      <parent link="Tailbase"/>
+      <child link="Tail_rx"/>
+      <origin rpy="0 0 0" xyz="-0.2284 0.0005 -0.2151"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="Tail_ry" type="revolute">
+      <parent link="Tail_rx"/>
+      <child link="Tail_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.2" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="Tail_rz" type="revolute">
+      <parent link="Tail_ry"/>
+      <child link="Tail"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+</robot>

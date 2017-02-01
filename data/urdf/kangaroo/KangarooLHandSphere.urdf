@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<robot name="KangarooLHandSphere"> <!-- small meshed-box based at the origin of the Torso, should never be in collision -->
+
+  <link name="base_link"/>
+  <joint name="base_link_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="Pelvis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="virtualPelvis"/> <!-- for Blender Armature export -->
+  <joint name="virtualPelvis" type="fixed">
+      <parent link="base_link"/>
+      <child link="virtualPelvis"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+
+  <link name="Pelvis"/>
+  <link name="Torso_rx"/>
+  <link name="Torso_ry"/>    
+  <link name="Torso"/>
+
+   <joint name="torso_lhand_rom_joint" type="fixed">
+      <parent link="Torso"/>
+      <child link="lhand_rom"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+
+  <link name="lhand_rom">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/hand_rom.stl"/> <!-- box made in Blender -->
+         </geometry>
+      </visual>
+      <collision>
+		 <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/hand_rom.stl"/>
+         </geometry>
+	  </collision>
+   </link>
+   
+   <link name="Head_rx"/>
+   <link name="Head_ry"/>
+   <link name="Head"/>
+
+   <link name="Tailbase_rx"/>
+   <link name="Tailbase_ry"/>
+   <link name="Tailbase"/>
+
+   <link name="Tail_rx"/>
+   <link name="Tail_ry"/>
+   <link name="Tail"/>
+
+  <!-- JOINTS -->
+  <joint name="A_Torso_rx" type="revolute"> <!-- "A_" to put trunk joints before limb joints in joint chain built by ROS URDF parser -->
+      <parent link="Pelvis"/>
+      <child link="Torso_rx"/>
+      <origin rpy="0 0 0" xyz="0.007 0.0012 0.0982"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="Torso_ry" type="revolute">
+      <parent link="Torso_rx"/>
+      <child link="Torso_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.4" upper="0.7" velocity="1.0"/>
+   </joint>
+   <joint name="Torso_rz" type="revolute">
+      <parent link="Torso_ry"/>
+      <child link="Torso"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+  <joint name="Head_rx" type="revolute">
+      <parent link="Torso"/>
+      <child link="Head_rx"/>
+      <origin rpy="0 0 0" xyz="0.2629 -0.0018 0.299"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.1" upper="0.1" velocity="1.0"/>
+   </joint>
+   <joint name="Head_ry" type="revolute">
+      <parent link="Head_rx"/>
+      <child link="Head_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+   </joint>
+   <joint name="Head_rz" type="revolute">
+      <parent link="Head_ry"/>
+      <child link="Head"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.4" upper="0.4" velocity="1.0"/>
+   </joint>
+  <joint name="A_Tailbase_rx" type="revolute"> <!-- "A_" to put trunk joints before limb joints in joint chain built by ROS URDF parser -->
+      <parent link="Pelvis"/>
+      <child link="Tailbase_rx"/>
+      <origin rpy="0 0 0" xyz="-0.0982 -0.001 -0.1713"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="Tailbase_ry" type="revolute">
+      <parent link="Tailbase_rx"/>
+      <child link="Tailbase_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.2" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="Tailbase_rz" type="revolute">
+      <parent link="Tailbase_ry"/>
+      <child link="Tailbase"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+  <joint name="Tail_rx" type="revolute">
+      <parent link="Tailbase"/>
+      <child link="Tail_rx"/>
+      <origin rpy="0 0 0" xyz="-0.2284 0.0005 -0.2151"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+   <joint name="Tail_ry" type="revolute">
+      <parent link="Tail_rx"/>
+      <child link="Tail_ry"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="0" lower="-0.2" upper="0.5" velocity="1.0"/>
+   </joint>
+   <joint name="Tail_rz" type="revolute">
+      <parent link="Tail_ry"/>
+      <child link="Tail"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="0" lower="-0.2" upper="0.2" velocity="1.0"/>
+   </joint>
+</robot>

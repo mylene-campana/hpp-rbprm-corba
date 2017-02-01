@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="kangaroo_trunk">
+
+<!-- Disable collision pairs of inner links -->
+<!-- trunk -->
+<disable_collisions link1="Pelvis" link2="Torso" />
+<disable_collisions link1="Torso" link2="Head" />
+<disable_collisions link1="Pelvis" link2="Tailbase" />
+<disable_collisions link1="Tailbase" link2="Tail" />
+
+</robot>

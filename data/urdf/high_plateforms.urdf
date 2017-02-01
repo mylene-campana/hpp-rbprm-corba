@@ -9,7 +9,7 @@
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/high_plateforms.dae"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/high_plateforms.stl"/>
       </geometry>
     </visual>
     <collision>

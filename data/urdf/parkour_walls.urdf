@@ -9,13 +9,13 @@
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/parkour_walls.stl"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/parkour_walls_reduced.stl"/>
       </geometry>
     </visual>
     <collision>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/parkour_walls.stl"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/parkour_walls_reduced.stl"/>
       </geometry>
     </collision>
   </link>

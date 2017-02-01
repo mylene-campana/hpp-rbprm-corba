@@ -4,13 +4,13 @@
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/cave.stl"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/cave_simplified.stl"/>
       </geometry>
     </visual>
     <collision>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/cave.stl"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/cave_simplified.stl"/>
       </geometry>
     </collision>
   </link>

@@ -54,7 +54,7 @@ rbprmBuilder.setNumberFilterMatch(1)
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-5.0, 0, 0.22, 1, 0, 0, 0]; r(q11)  # z = 0.59
+q11[0:7] = [-5.0, 0, 0.18, 1, 0, 0, 0]; r(q11)  # z = 0.59
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -62,7 +62,7 @@ rbprmBuilder.isConfigValid(q11)
 #plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
 
 q22 = q11[::]
-q22[0:7] = [-2.5, 0, 0.22, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-2.5, 0, 0.18, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -104,9 +104,11 @@ plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
 plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
 """
 
+
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[0] = -8
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
+
 
 """
 # Write data to log file
@@ -120,10 +122,6 @@ f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
 
 rob = rbprmBuilder.client.basic.robot
-
-# Move RB-robot away in viewer
-qAway = q11 [::]; qAway[0] = -6.5; qAway[1] = -2
-rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 """
 
 """
@@ -143,8 +141,11 @@ writePathSamples (pathSamples, 'lamp_path.txt')
 pathToYamlFile (psf, rr, "lampTrunkTest_frames.yaml ", "lamp_trunk", pathId, q_goal_test, 0.01)
 """
 
+"""
 q = q11 # ideally, take waypoints
-cones = rbprmBuilder.getContactCones (q)
+conesDirAndPositions = rbprmBuilder.getContactCones (q)
+cones = conesDirAndPositions[0]
+positions = conesDirAndPositions[1]
 theta = math.atan2(q22 [1] - q11 [1] , q22 [0] - q11 [0])
 origin = q[0:3]; mu = 1.2; coneURDFName = "friction_cone2"
 
@@ -162,3 +163,4 @@ lineParsedBorders = "M_border = ("
 lineEndBorders = "END of border points ---"
 pointsIntersBorders = plotLogConvexConeInters (r, logID, lineParsedBorders, lineEndBorders, "IntersPointBorders_", 0.021, blue)
 plotStraightLines (origin, pointsIntersBorders, r, "CC_borderLine", blue)
+"""

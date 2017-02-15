@@ -78,6 +78,7 @@ namespace hpp {
     , bindShooter_()
     , analysisFactory_(0)
     , bindAnalysis_()
+    , fillGenerateContactState_ (false)
     {
         // NOTHING
     }
@@ -464,6 +465,7 @@ namespace hpp {
             fullBody_->device_->computeForwardKinematics();
             State state;
             state.configuration_ = config;
+	    hppDout (info, "HARDCODE LIMB CONTACT STATUS");
             state.contacts_[limbName] = true;
             const fcl::Vec3f position = limb->effector_->currentTransformation().getTranslation();
             state.contactPositions_[limbName] = position;
@@ -654,6 +656,7 @@ namespace hpp {
 	  {
 	    rbprm::RbPrmLimbPtr_t limb = fullBody_->GetLimbs().at(*cit);
 	    const std::string& limbName = *cit;
+	    hppDout (info, "HARDCODE LIMB CONTACT STATUS with isInContact");
 	    state.contacts_[limbName] = isInContact;
 	    if (isInContact) {
 	      const fcl::Vec3f position = limb->effector_->currentTransformation().getTranslation();
@@ -675,7 +678,7 @@ namespace hpp {
         return projectStateToCOMEigen(stateId, com_target);
     }
 
-    hpp::floatSeq* RbprmBuilder::generateContacts(const hpp::floatSeq& configuration, const hpp::floatSeq& direction, const bool noStability) throw (hpp::Error)
+      hpp::floatSeq* RbprmBuilder::generateContacts(const hpp::floatSeq& configuration, const hpp::floatSeq& direction, const bool noStability, const bool useFlexionPose) throw (hpp::Error)
     {
         if(!fullBodyLoaded_)
             throw Error ("No full body robot was loaded");
@@ -694,10 +697,12 @@ namespace hpp {
 			}
             model::Configuration_t config = dofArrayToConfig (fullBody_->device_, configuration);
 	    rbprm::State state = rbprm::ComputeContacts(fullBody_,config,
-							affMap, bindShooter_.affFilter_, dir);
+							affMap,
+							bindShooter_.affFilter_,
+							dir);
 
            core::Configuration_t q;
-           if(flexionPose_.size() > 0) {
+           if(useFlexionPose && flexionPose_.size() > 0) {
 	     hppDout (info, "generate contacts using flexionPose");
              q = rbprm::computeContactPose(state,flexionPose_,fullBody_);
 	   }
@@ -727,6 +732,19 @@ namespace hpp {
             dofArray->length(_CORBA_ULong(q.rows()));
             for(std::size_t i=0; i< _CORBA_ULong(q.rows()); i++)
               (*dofArray)[(_CORBA_ULong)i] = q [i];
+
+	    // display contacting limbs for debug
+	    for(rbprm::T_Limb::const_iterator lit = fullBody_->GetLimbs().begin();lit != fullBody_->GetLimbs().end(); ++lit){
+	      if(state.contacts_[lit->first]){ // limb is in contact
+		hppDout(info,"contacting limbs in generateContacts: " << lit->first);
+	      } else
+		hppDout(info,"NOT contacting limbs in generateContacts: " << lit->first);
+	    }
+	    if (fillGenerateContactState_) { // set by fillGenerateContactState
+	      hppDout(info,"generateContactState is filled");
+	      generateContactState_ = state;
+	    }
+
             return dofArray;
         } catch (const std::exception& exc) {
         throw hpp::Error (exc.what ());
@@ -785,6 +803,7 @@ namespace hpp {
                         {
                             std::string limbId = *cit;
                             rbprm::RbPrmLimbPtr_t limb = fullBody_->GetLimbs().at(*cit);
+			    hppDout (info, "HARDCODE LIMB CONTACT STATUS");
                             tmp.contacts_[limbId] = true;
                             tmp.contactPositions_[limbId] = limb->effector_->currentTransformation().getTranslation();
                             tmp.contactRotation_[limbId] = limb->effector_->currentTransformation().getRotation();
@@ -950,13 +969,15 @@ namespace hpp {
     }
 
     void SetPositionAndNormal(rbprm::State& state,
-			hpp::rbprm::RbPrmFullBodyPtr_t fullBody, const hpp::floatSeq& configuration,
-            std::vector<std::string>& names)
+			      hpp::rbprm::RbPrmFullBodyPtr_t fullBody,
+			      const hpp::floatSeq& configuration,
+			      std::vector<std::string>& names)
     {
         core::Configuration_t old = fullBody->device_->currentConfiguration();
         model::Configuration_t config = dofArrayToConfig (fullBody->device_, configuration);
         fullBody->device_->currentConfiguration(config);
         fullBody->device_->computeForwardKinematics();
+
         for(std::vector<std::string>::const_iterator cit = names.begin(); cit != names.end();++cit)
         {
             rbprm::T_Limb::const_iterator lit = fullBody->GetLimbs().find(*cit);
@@ -965,15 +986,15 @@ namespace hpp {
                 throw std::runtime_error ("Impossible to find limb for joint "
                                           + (*cit) + " to robot; limb not defined");
             }
-            const core::JointPtr_t joint = fullBody->device_->getJointByName(lit->second->effector_->name());
-            const fcl::Transform3f& transform =  joint->currentTransformation ();
-            const fcl::Matrix3f& rot = transform.getRotation();
-            state.contactPositions_[*cit] = transform.getTranslation();
-            state.contactRotation_[*cit] = rot;
-            const fcl::Vec3f z = transform.getRotation() * lit->second->normal_;
-            state.contactNormals_[*cit] = z;
-            state.contacts_[*cit] = true;
-            state.contactOrder_.push(*cit);
+	    const core::JointPtr_t joint = fullBody->device_->getJointByName(lit->second->effector_->name());
+	    const fcl::Transform3f& transform =  joint->currentTransformation ();
+	    const fcl::Matrix3f& rot = transform.getRotation();
+	    state.contactPositions_[*cit] = transform.getTranslation();
+	    state.contactRotation_[*cit] = rot;
+	    const fcl::Vec3f z = transform.getRotation()*lit->second->normal_;
+	    state.contactNormals_[*cit] = z;
+	    state.contacts_[*cit] = true;
+	    state.contactOrder_.push(*cit);
         }        
         state.nbContacts = state.contactNormals_.size() ;
         state.configuration_ = config;
@@ -982,12 +1003,22 @@ namespace hpp {
         fullBody->device_->currentConfiguration(old);
     }
 
-    void RbprmBuilder::setStartState(const hpp::floatSeq& configuration, const hpp::Names_t& contactLimbs) throw (hpp::Error)
+      void RbprmBuilder::setStartState (const hpp::floatSeq& configuration,
+					const hpp::Names_t& contactLimbs)
+	throw (hpp::Error)
     {
         try
         {
+	  if (!fillGenerateContactState_) {
+	    // create state from given configuration, assuming ALL limbs are in contact ...
+	    hppDout (info, "(startState) SetPositionAndNormal to set ALL contacts");
             std::vector<std::string> names = stringConversion(contactLimbs);
             SetPositionAndNormal(startState_,fullBody_, configuration, names);
+	  } else {
+	    // use state from generateContact (contact data already filled)
+	    hppDout (info, "use generateContactState_ for startState_");
+	    startState_ = generateContactState_;
+	  }
         }
         catch(std::runtime_error& e)
         {
@@ -1030,8 +1061,16 @@ namespace hpp {
     {
         try
         {
+	  if (!fillGenerateContactState_) {
+	    // create state from given configuration, assuming ALL limbs are in contact ...
+	    hppDout (info, "(endState) SetPositionAndNormal to set ALL contacts");
             std::vector<std::string> names = stringConversion(contactLimbs);
             SetPositionAndNormal(endState_,fullBody_, configuration, names);
+	    } else {
+	    // use state from generateContact (contact data already filled)
+	    hppDout (info, "use generateContactState_ for endState_");
+	    endState_ = generateContactState_;
+	  }
         }
         catch(std::runtime_error& e)
         {
@@ -2005,6 +2044,7 @@ namespace hpp {
         for(std::vector<std::string>::const_iterator cit = names.begin(); cit != names.end();++cit)
         {
             const hpp::rbprm::RbPrmLimbPtr_t limb =fullBody_->GetLimbs().at(std::string(*cit));
+	    hppDout (info, "HARDCODE LIMB CONTACT STATUS");
             testedState.contacts_[*cit] = true;
             testedState.contactPositions_[*cit] = limb->effector_->currentTransformation().getTranslation();
             testedState.contactRotation_[*cit] = limb->effector_->currentTransformation().getRotation();
@@ -2257,7 +2297,8 @@ namespace hpp {
       // --------------------------------------------------------------------
 
       void RbprmBuilder::interpolateBallisticPath (const CORBA::UShort pathId,
-						   const double u_offset)
+						   const double u_offset,
+						   const CORBA::Boolean timed)
 	throw (hpp::Error){
         try {
 	  std::size_t pid = (std::size_t) pathId;
@@ -2276,9 +2317,6 @@ namespace hpp {
 	    boost::dynamic_pointer_cast<ParabolaPath>(subpath1);
 
 	  const std::size_t subPathNumber = path->numberPaths ();
-	  core::PathVectorPtr_t newPath = core::PathVector::create 
-	    (fullBody_->device_->configSize (),
-	     fullBody_->device_->numberDof ());
 	  hpp::rbprm::BallisticInterpolationPtr_t interpolator = 
 	    rbprm::BallisticInterpolation::create((problemSolver_->problem ()),
 						  fullBody_, startState_,
@@ -2313,10 +2351,14 @@ namespace hpp {
 	  else
 	    hppDout (error, "No affordances can be given to interpolator");
 
+	  core::PathVectorPtr_t result = core::PathVector::create (fullBody_->device_->configSize (), fullBody_->device_->numberDof ());
+	  rbprm::T_PathVectorBP interpResult;
+	  // each path-vector corresponds to an interpolated parabola
+
 	  if (subPathNumber == 1)
-	    newPath = interpolator->InterpolateDirectPath(u_offset, &stateFrames);
+	    interpResult = interpolator->InterpolateDirectPath(u_offset, &stateFrames);
 	  else
-	    newPath = interpolator->InterpolateFullPath(u_offset, &stateFrames);
+	    interpResult = interpolator->InterpolateFullPath(u_offset, &stateFrames);
 
 	  // update the stacks of states (e.g. for comRRT)
 	  lastStatesComputedTime_.clear ();
@@ -2328,8 +2370,25 @@ namespace hpp {
 	    lastStatesComputed_ [i] = stateFrames [i].second;
 	  }
 
-	  std::size_t newPathId = problemSolver_->addPath (newPath);
+	  hppDout (info, "interpResult.size ()= " << interpResult.size ());
 
+	  // concatenate the interpolation results, according to
+	  // time-parametrization or not.
+	  if (!timed) {
+	    hppDout (info, "space-parametrized interpolation");
+	    for (std::size_t i = 0; i < interpResult.size (); i++) {
+	      // no time parametrization, simply concatenate path-vectors
+	      result->appendPath (interpResult [i].first);
+	    }
+	  } else {
+	    // time parametrization, convert and concatenate
+	    hppDout (info, "time-parametrized interpolation");
+	    for (std::size_t i = 0; i < interpResult.size (); i++) {
+	      result->appendPath (rbprm::TimedBallisticPath::create (interpResult [i]));
+	    } // for each i_th parabola in interpResult
+	  }
+	  
+	  problemSolver_->addPath (result);
 	}
 	catch(std::runtime_error& e)
 	  {
@@ -2655,7 +2714,9 @@ namespace hpp {
 					      waypoints [i+1], length, coefs,
 					      pp->V0_, pp->Vimp_,
 					      pp->initialROMnames_,
-					      pp->endROMnames_));
+					      pp->endROMnames_,
+					      pp->contactCones0_,
+					      pp->contactConesImp_));
 	    }
 	  }
 	  // add path vector to problemSolver
@@ -2663,37 +2724,6 @@ namespace hpp {
 	} catch(std::runtime_error& e) {
 	    throw Error(e.what());
 	  }
-      }
-      
-      void RbprmBuilder::timeParametrizedPath (const CORBA::UShort pathId) throw (hpp::Error){
-        std::size_t pid = (std::size_t) pathId;
-        if(problemSolver_->paths().size() <= pid) {
-          throw std::runtime_error ("No path computed");
-        }
-        core::DevicePtr_t robot = problemSolver_->robot ();        
-        const core::PathVectorPtr_t path = problemSolver_->paths () [pid];
-        core::PathPtr_t tmpPath;
-        rbprm::BallisticPathPtr_t castedPath1,castedPath1Max,castedPath2,castedPath2Max;
-        core::PathVectorPtr_t newPath = core::PathVector::create (robot->configSize (),
-                  robot->numberDof ());
-        const std::size_t num_subpaths  = (*path).numberPaths ();
-        if(num_subpaths%4 != 0 )
-          throw std::runtime_error ("interpolated path doesn't have 4 subpath per parabola");
-          
-        for (std::size_t i = 0; i < num_subpaths; i = i+4) { // convert each subpath
-          tmpPath = (*path).pathAtRank (i);
-          castedPath1= boost::dynamic_pointer_cast<rbprm::BallisticPath>(tmpPath);
-          if(!castedPath1)
-            throw std::runtime_error ("subPath isn't a BallisticPath");
-          castedPath1Max= boost::dynamic_pointer_cast<rbprm::BallisticPath>((*path).pathAtRank (i+1));
-          castedPath2Max= boost::dynamic_pointer_cast<rbprm::BallisticPath>((*path).pathAtRank (i+2));
-          castedPath2= boost::dynamic_pointer_cast<rbprm::BallisticPath>((*path).pathAtRank (i+3));
-          
-
-          newPath->appendPath(rbprm::TimedBallisticPath::create(castedPath1,castedPath1Max,castedPath2Max,castedPath2)); 
-        
-        }
-        problemSolver_->addPath (newPath);
       }
 
       // --------------------------------------------------------------------
@@ -2845,7 +2875,7 @@ namespace hpp {
 
       void RbprmBuilder::setFullbodyFrictionCoef (const double mu)
       {
-	//fullBody_->mu_ = mu;
+	fullBody_->mu_ = mu;
       }
 
 
@@ -2870,21 +2900,34 @@ namespace hpp {
 
       // ---------------------------------------------------------------
       hpp::floatSeqSeq* RbprmBuilder::getContactCones
-      (const hpp::floatSeq& dofArray) {
+      (const hpp::floatSeq& dofArray, hpp::floatSeqSeq_out conePositionOut)
+      throw (hpp::Error) {
 	// compute contact-cones DIRECTIONS (not location)
 	const core::DevicePtr_t robot = problemSolver_->robot ();
 	const core::Configuration_t q = dofArrayToConfig (robot, dofArray);
-	const std::vector<fcl::Vec3f> cones = 
-	  library::computeContactCones (problemSolver_->problem(), q);
+	library::ContactCones contactCones = library::computeContactCones (problemSolver_->problem(), q);
+	const std::vector<fcl::Vec3f> cones = contactCones.directions_;
+	const std::vector<fcl::Vec3f> conePositions = contactCones.positions_;
 
+	if (cones.size () != conePositions.size ()) {
+	  hppDout (info, "cones.size ()= " << cones.size ());
+	  hppDout (info, "conePositions.size ()= " << conePositions.size ());
+	  throw Error ("problem with contact-cone positions");
+	}
+	const std::size_t size = cones.size ();
 	hpp::floatSeq* dofArrayCone;
-	hpp::floatSeqSeq *conesSequence;
-	conesSequence = new hpp::floatSeqSeq ();
-	conesSequence->length ((CORBA::ULong) cones.size ());
-	for (std::size_t i = 0; i < cones.size (); i++) {
+	hpp::floatSeqSeq *conesSequence = new hpp::floatSeqSeq ();
+	conesSequence->length ((CORBA::ULong) size);
+	hpp::floatSeq* dofArrayPosition;
+	hpp::floatSeqSeq *conePositionSeq = new hpp::floatSeqSeq ();
+	conePositionSeq->length ((CORBA::ULong) size);
+	for (std::size_t i = 0; i < size; i++) {
 	  dofArrayCone = vectorToFloatseq (cones [i]);
 	  (*conesSequence) [(CORBA::ULong) i] = *dofArrayCone;
+	  dofArrayPosition = vectorToFloatseq (conePositions [i]);
+	  (*conePositionSeq) [(CORBA::ULong) i] = *dofArrayPosition;
 	}
+	conePositionOut = conePositionSeq;
 	return conesSequence;
       }
 
@@ -2909,6 +2952,49 @@ namespace hpp {
 	dofArray = vectorToFloatseq (times);
 	(*statesTimeSequence) [(CORBA::ULong) size] = *dofArray;
 	return statesTimeSequence;
+      }
+
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::setFullbodyV0fThetaCoefs (const char* Vquery,
+						   const CORBA::Boolean clean,
+						   const hpp::floatSeq& Varray,
+						   const double theta)
+	throw (hpp::Error) {
+	std::string Vquery_str = std::string(Vquery);
+	if(Vquery_str.compare ("V0") != 0 && Vquery_str.compare ("after") != 0
+	   && Vquery_str.compare ("Vimp") != 0
+	   && Vquery_str.compare ("before") != 0) {
+	  throw std::runtime_error ("Query problem, ask for V0/after or Vimp/before");
+	}
+	core::vector_t v (3);
+	for (std::size_t i = 0; i < 3; i++)
+	  v [i] = Varray [(CORBA::ULong) i];
+	if (Vquery_str.compare ("V0") == 0 || Vquery_str.compare ("after") ==0){
+	  if (!clean) {
+	    fullBody_->V0dir_ = v;
+	    fullBody_->thetaAfter_ = theta;
+	  }
+	  else {
+	    fullBody_->V0dir_.resize (0);
+	    fullBody_->thetaAfter_ = NULL;
+	  }
+	}
+	if (Vquery_str.compare ("Vimp") == 0 || Vquery_str.compare ("before") ==0) {
+	  if (!clean) {
+	    fullBody_->Vfdir_ = v;
+	    fullBody_->thetaBefore_ = theta;
+	  }
+	  else {
+	    fullBody_->Vfdir_.resize (0);
+	    fullBody_->thetaBefore_ = NULL;
+	  }
+	}
+      }
+
+
+      void RbprmBuilder::setFillGenerateContactState (const CORBA::Boolean b) {
+	fillGenerateContactState_ = b;
       }
 
     } // namespace impl

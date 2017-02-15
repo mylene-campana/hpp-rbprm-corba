@@ -202,8 +202,8 @@ class FullBody (object):
     # \param configuration the initial robot configuration
     # \param direction a 3d vector specifying the desired direction of motion
     # \param noStability enable or disable stable contact computation
-    def generateContacts(self, configuration, direction, noStability):
-		return self.client.rbprm.rbprm.generateContacts(configuration, direction, noStability)
+    def generateContacts(self, configuration, direction, noStability = False, useFlexionPose = True):
+		return self.client.rbprm.rbprm.generateContacts(configuration, direction, noStability, useFlexionPose)
 		
 	## Generate an autocollision free configuration with limbs in contact with the ground
     # \param contactLimbs name of the limbs to project in contact
@@ -341,8 +341,8 @@ class FullBody (object):
 		return Ps, Ns
 
 	## Given start and goal states, return a path where we keep the parabola path for trunk and we try to interpolate the limbs around keyframes. 
-    def interpolateBallisticPath(self, pathId = 0, u_offset = 0):
-		return self.client.rbprm.rbprm.interpolateBallisticPath(pathId, u_offset)
+    def interpolateBallisticPath(self, pathId = 0, u_offset = 0, timed = False):
+		return self.client.rbprm.rbprm.interpolateBallisticPath(pathId, u_offset, timed)
 
     ## Transforms path waypoint-configurations in contact-configurations
     def generateWaypointContacts(self, pathId = 0):
@@ -854,9 +854,6 @@ class FullBody (object):
     # Set extending or flexion pose
     def setPose (self, config, query):
         return self.client.rbprm.rbprm.setPose (config, query)
-
-    def timeParametrizedPath (self, pathId):
-     return self.client.rbprm.rbprm.timeParametrizedPath (pathId)
  
     # Set reference pose for the heuristic
     #def setReferenceConfig (self, config):
@@ -889,3 +886,11 @@ class FullBody (object):
     
     def createState(self, configuration, contactLimbNames, isInContact, time):
         return self.client.rbprm.rbprm.createState(configuration, contactLimbNames, isInContact, time)
+
+    def setFullbodyV0fThetaCoefs(self, Vquery, clean, Varray, theta):
+        return self.client.rbprm.rbprm.setFullbodyV0fThetaCoefs (Vquery, clean, Varray, theta)
+
+    ## Set if state computed by "generateContacts" is saved and used when
+    #  setStartState and setEndState are called
+    def setFillGenerateContactState (self, b):
+        return self.client.rbprm.rbprm.setFillGenerateContactState (b)

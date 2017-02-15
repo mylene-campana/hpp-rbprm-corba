@@ -180,7 +180,7 @@ module hpp
     /// \param dofArray initial configuration of the robot
     /// \param direction desired direction of motion for the robot
     /// \return transformed configuration for which all possible contacts have been created
-    floatSeq generateContacts(in floatSeq dofArray, in floatSeq direction, in boolean noStability) raises (Error);
+    floatSeq generateContacts(in floatSeq dofArray, in floatSeq direction, in boolean noStability, in boolean useFlexionPose) raises (Error);
 
     /// Generate an autocollision free configuration with limbs in contact with the ground
     /// \param contactLimbs name of the limbs to project in contact
@@ -502,8 +502,10 @@ module hpp
     /// and goal states for the limbs
     /// \param pathId: ID path (in Problem Solver path stack) to interpolate
     /// \param u_offset: normalized curvilinear abcissa of contact maintain
+    /// \param timed: if true, the parametrization is made with time, and not with x distance
     void interpolateBallisticPath (in unsigned short pathId,
-				   in double u_offset) raises (Error);
+				   in double u_offset,
+				   in boolean timed) raises (Error);
 
     /// Generate contact on the waypoint-configurations of the given path
     floatSeqSeq generateWaypointContacts (in unsigned short pathId)
@@ -534,10 +536,6 @@ module hpp
     /// (returns path vector of parabola-paths)
     void rotateAlongPath (in unsigned short pathId,
               in boolean fullbody,in boolean rotateAfterJump, in boolean trunkOrientation,in boolean getCloseToContact) raises (Error);
-     
-    /// Add new path vector to Problem Solver, where the parametrization is made with time, and not x distance
-    /// \param pathId: reference path to apply time parametrization
-    void timeParametrizedPath (in unsigned short pathId) raises (Error);
 
     /// Set fullOrientationMode of rbprm-shooter
     /// \param fullOrientationMode: True if robot fully oriented according to obstacle surface normal, False if robot randomly oriented
@@ -607,10 +605,12 @@ module hpp
 					  in double theta, in double mu)
       raises (Error);
 
-    /// Get contact-cones directions corresponding to given rbprm-configuration.
-    /// Contact-cones are located at the center of the
+    /// Get contact-cones directions and positions
+    /// corresponding to given rbprm-configuration.
+    /// Contact-cones should be located at the center of the
     /// ROM-obstacle intersections.
-    floatSeqSeq getContactCones (in floatSeq dofArray);
+    floatSeqSeq getContactCones (in floatSeq dofArray,
+				 out floatSeqSeq conePositions) raises (Error);
 
     /// Get configurations contained in lastStatesComputedTime_ and their times
     floatSeqSeq getlastStatesComputedTime ();
@@ -619,6 +619,19 @@ module hpp
     /// dump the profiling data into a logFile
     /// \param logFile name of the file where to dump the profiling data
     void dumpProfile(in string logFile) raises (Error);
+
+    /// Depending on string query, fill attributes:
+    /// - thetaBefore_ and Vimp_ or
+    /// - thetaAfter_ and V0_
+    /// of fullbody for convex-cone validation of contact.
+    /// If clean is true, set to NULL the attributes (no validation).
+    void setFullbodyV0fThetaCoefs (in string Vquery, in boolean clean,
+				   in floatSeq Varray,
+				   in double theta) raises (Error);
+
+    /// Set if state computed by "generateContacts" is saved and used when
+    /// setStartState and setEndState are called
+    void setFillGenerateContactState (in boolean b);
 
   }; // interface Robot
   }; // module rbprm

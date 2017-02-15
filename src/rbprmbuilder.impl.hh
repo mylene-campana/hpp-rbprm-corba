@@ -207,7 +207,8 @@ namespace hpp {
 
         virtual hpp::floatSeq* generateContacts(const hpp::floatSeq& configuration,
                                                 const hpp::floatSeq& direction,
-						const bool noStability = false)
+						const bool noStability = false,
+						const bool useFlexionPose =true)
 	  throw (hpp::Error);
 
         virtual hpp::floatSeq* generateGroundContact(const hpp::Names_t& contactLimbs) throw (hpp::Error);
@@ -305,7 +306,8 @@ namespace hpp {
 			   CORBA::Boolean& romValidity,
 			   CORBA::String_out report) throw (hpp::Error);
 	void interpolateBallisticPath (const CORBA::UShort pathId,
-				       const double u_offset)
+				       const double u_offset,
+				       const CORBA::Boolean timed = false)
 	  throw (hpp::Error);
 	hpp::floatSeqSeq* generateWaypointContacts (CORBA::UShort pathId)
 	  throw (hpp::Error);
@@ -320,8 +322,6 @@ namespace hpp {
 
 	void rotateAlongPath (const CORBA::UShort pathId,
                   const bool fullbody, const bool rotateAfterJump, const bool trunkOrientation, const bool getCloseToContact) throw (hpp::Error);
-  
-  void timeParametrizedPath (const CORBA::UShort pathId) throw (hpp::Error);
 
 	void setFullOrientationMode (const bool fullOrientationMode);
 
@@ -340,12 +340,20 @@ namespace hpp {
 
 	void setFullbodyFrictionCoef (const double mu);
 
+	void setFullbodyV0fThetaCoefs (const char* Vquery,
+				       const CORBA::Boolean clean,
+				       const hpp::floatSeq& Varray,
+				       const double theta) throw (hpp::Error);
+
 	hpp::floatSeq* convexConePlaneIntersection
-	(const unsigned short  Ncones, const hpp::floatSeqSeq& cones,
+	(const unsigned short Ncones, const hpp::floatSeqSeq& cones,
 	 const double theta, const double mu) throw (hpp::Error);
 
-	hpp::floatSeqSeq* getContactCones (const hpp::floatSeq& dofArray);
+	virtual hpp::floatSeqSeq* getContactCones
+	(const hpp::floatSeq& dofArray, hpp::floatSeqSeq_out conePositionSeq)
+	  throw (hpp::Error);
 	hpp::floatSeqSeq* getlastStatesComputedTime ();
+	void setFillGenerateContactState (const CORBA::Boolean b);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.
@@ -356,6 +364,7 @@ namespace hpp {
         bool fullBodyLoaded_;
         BindShooter bindShooter_;
         std::map<std::string,BindAnalysis> bindAnalysis_;
+	rbprm::State generateContactState_;
         rbprm::State startState_;
         rbprm::State endState_;
         std::vector<rbprm::State> lastStatesComputed_;
@@ -367,6 +376,7 @@ namespace hpp {
 	core::Configuration_t flexionPose_; // parabola extremity
 	core::Configuration_t takeoffContactPose_; // when releasing contact
 	core::Configuration_t landingContactPose_; // when starting contact
+	CORBA::Boolean fillGenerateContactState_;
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

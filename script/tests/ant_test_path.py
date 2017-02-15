@@ -54,6 +54,9 @@ afftool = AffordanceTool ()
 afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
 afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
 
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(4)
+
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
@@ -61,21 +64,19 @@ q11[0:7] = [-5.0, 0, 0.1, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
-#V = rbprmBuilder.computeConfigGIWC (q11,0.02,0.02)
-#plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
-
 q22 = q11[::]
 q22[0:7] = [-2.5, 0, 0.1, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
-rbprmBuilder.setNumberFilterMatch(4)
+
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(8)#(4.5)
+frictionCoef = 1.2
+rbprmBuilder.setFrictionCoef(frictionCoef)
+rbprmBuilder.setMaxTakeoffVelocity(4.5) # one waypoint
+#rbprmBuilder.setMaxTakeoffVelocity(8) # direct path
 rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
@@ -86,7 +87,6 @@ pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1
-#pp(orientedpathId)
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
@@ -98,11 +98,11 @@ for i in range(1,len(pathWaypoints)-1):
         print('problem with waypoints number: ' + str(i))
 
 
-plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
-plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
+#plotConeWaypoints (ps, solutionPathId, r, "cone_wp_group", "friction_cone2")
+#plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
 
 
-
+"""
 # Write data to log file
 pfr = rbprmBuilder.getResultValues ()
 if isinstance(t, list):
@@ -112,6 +112,7 @@ f.write("ant_test_path\n")
 f.write("path computation: " + str(timeSec) + "\n")
 f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
+"""
 
 rob = rbprmBuilder.client.basic.robot
 r(q11)

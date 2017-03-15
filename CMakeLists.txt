@@ -283,7 +283,8 @@ install(FILES
 	data/meshes/cubeWorld2.stl
 	data/meshes/cubeWorld2_panel.stl
 	data/meshes/cubeWorld_panel.stl
-	data/meshes/high_plateforms.stl	
+	data/meshes/high_plateforms.stl
+	data/meshes/high_plateforms_planning.stl	
 	data/meshes/etang_envir.dae
 	data/meshes/etang_envir.stl	
         data/meshes/cliff.stl

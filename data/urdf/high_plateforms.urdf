@@ -9,13 +9,13 @@
     <visual>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/high_plateforms.stl"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/high_plateforms_planning.stl"/>
       </geometry>
     </visual>
     <collision>
       <origin xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hpp-rbprm-corba/meshes/high_plateforms.stl"/>
+        <mesh filename="package://hpp-rbprm-corba/meshes/high_plateforms_planning.stl"/>
       </geometry>
     </collision>
   </link>

@@ -122,7 +122,9 @@ namespace hpp {
 	    (robotcast, problemSolver_->problem ()->collisionObstacles(), affMap_, romFilter_,affFilter_,shootLimit_,displacementLimit_,effectiveNbFilterMatch);
 
 	  shooter->fullOrientationMode (fullOrientationMode_);
+	  shooter->interiorPoint (interiorPoint_);
 	  hppDout (info, "fullOrientationMode = " << fullOrientationMode_);
+	  hppDout (info, "interiorPoint= " << interiorPoint_);
             if(!so3Bounds_.empty())
                 shooter->BoundSO3(so3Bounds_);
             return shooter;
@@ -159,6 +161,7 @@ namespace hpp {
         std::size_t nbFilterMatch_;
         bool fullOrientationMode_;
 	affMap_t affMap_;
+        fcl::Vec3f interiorPoint_;
     };
 
       // -----------------------------------------------------------------
@@ -300,6 +303,9 @@ namespace hpp {
 
 	virtual hpp::floatSeq* setOrientation (const hpp::floatSeq& dofArray)
 	  throw (hpp::Error);
+	virtual hpp::floatSeq* computeOrientationQuat
+	(const hpp::floatSeq& normal, const double theta,
+	 const char* robotName) throw (hpp::Error);
 	void setRbShooter () throw (hpp::Error);
 	void isRbprmValid (const hpp::floatSeq& dofArray,
 			   CORBA::Boolean& trunkValidity,
@@ -321,7 +327,9 @@ namespace hpp {
 	  throw (hpp::Error);
 
 	void rotateAlongPath (const CORBA::UShort pathId,
-                  const bool fullbody, const bool rotateAfterJump, const bool trunkOrientation, const bool getCloseToContact) throw (hpp::Error);
+			      const bool rotateAfterJump,
+			      const bool trunkOrientation,
+			      const bool getCloseToContact) throw (hpp::Error);
 
 	void setFullOrientationMode (const bool fullOrientationMode);
 
@@ -354,6 +362,7 @@ namespace hpp {
 	  throw (hpp::Error);
 	hpp::floatSeqSeq* getlastStatesComputedTime ();
 	void setFillGenerateContactState (const CORBA::Boolean b);
+	void setInteriorPoint (const hpp::floatSeq& point);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.

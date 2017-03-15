@@ -484,8 +484,13 @@ module hpp
 				in double dist) raises (Error);
 
     /// Return a configuration whose orientation part respect the
-    /// given normale and theta (see hpp::core::setOrientation)
+    /// given normale and theta (see hpp::rbprm::setOrientation)
     floatSeq setOrientation (in floatSeq dofArray) raises (Error);
+
+    /// Return a quatertion whose orientation part respect the
+    /// given normale and theta (see hpp::rbprm::quaternionFromNormalAndTheta)
+    floatSeq computeOrientationQuat (in floatSeq normal, in double theta,
+				     in string robotName) raises (Error);
 	
     /// Set create instance of RBprmShooter from BindShooter_ as a rbShooter_ attribute
     /// This allows to shoot different configurations from the same shooter (and not 
@@ -534,8 +539,9 @@ module hpp
     ///                            as close as possible of the contact
     /// vector of ballistic-paths), False if applied on a rbprm robot 
     /// (returns path vector of parabola-paths)
-    void rotateAlongPath (in unsigned short pathId,
-              in boolean fullbody,in boolean rotateAfterJump, in boolean trunkOrientation,in boolean getCloseToContact) raises (Error);
+    void rotateAlongPath (in unsigned short pathId, in boolean rotateAfterJump,
+			  in boolean trunkOrientation,
+			  in boolean getCloseToContact) raises (Error);
 
     /// Set fullOrientationMode of rbprm-shooter
     /// \param fullOrientationMode: True if robot fully oriented according to obstacle surface normal, False if robot randomly oriented
@@ -632,6 +638,12 @@ module hpp
     /// Set if state computed by "generateContacts" is saved and used when
     /// setStartState and setEndState are called
     void setFillGenerateContactState (in boolean b);
+
+    /// Set interior point of mesh to biais the random-shooter triangle
+    /// normals toward it. This is introduced because the AFFORDANCE lost 
+    /// the notion of interior defined in the .stl or .dae files 
+    /// (points of triangle correctly ordered)
+    void setInteriorPoint (in floatSeq point) raises (Error);
 
   }; // interface Robot
   }; // module rbprm

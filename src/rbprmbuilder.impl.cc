@@ -2253,6 +2253,29 @@ namespace hpp {
 	  (*dofArray_out)[i] = q (i);
 	return dofArray_out;
       }
+
+      // --------------------------------------------------------------------
+
+      hpp::floatSeq* RbprmBuilder::computeOrientationQuat
+      (const hpp::floatSeq& normal, const double theta,
+       const char* robotName) throw (hpp::Error)
+      {
+	const std::string robotName_str = robotName;
+	fcl::Vec3f normal_vec;
+	for (int i = 0; i < 3; i++)
+	  normal_vec [i] = normal [i];
+	Eigen::Quaternion<value_type> quat = quaternionFromNormalAndTheta
+	  (normal_vec, theta, robotName_str);
+
+	hpp::floatSeq *quat_out = 0x0;
+	quat_out = new hpp::floatSeq();
+	quat_out->length (4);
+	(*quat_out)[0] = quat.w ();
+	(*quat_out)[1] = quat.x ();
+	(*quat_out)[2] = quat.y ();
+	(*quat_out)[3] = quat.z ();
+	return quat_out;
+      }
 	  
       // --------------------------------------------------------------------
 	  
@@ -2545,8 +2568,10 @@ namespace hpp {
 
       // --------------------------------------------------------------------
 
-      void RbprmBuilder::rotateAlongPath (const CORBA::UShort pathId,
-                      const bool fullbody, const bool rotateAfterJump, const bool trunkOrientation, const bool getCloseToContact)
+      // if no param given, rotate to face the next parab direction
+      // if rotateAfterJump = true, rotate to face the current parab direction
+      // (actually matching the direction at the end of the parab)
+      void RbprmBuilder::rotateAlongPath (const CORBA::UShort pathId, const bool rotateAfterJump, const bool trunkOrientation, const bool getCloseToContact)
 	throw (hpp::Error) {
 	std::size_t pid = (std::size_t) pathId;
 	if(problemSolver_->paths().size() <= pid) {
@@ -2581,149 +2606,139 @@ namespace hpp {
 	  // update theta values
 	  value_type theta_i;
 	  value_type alpha_i;
-    if(rotateAfterJump){
-      theta_i = atan2 (waypoints [1][1]-waypoints [0][1],
-					waypoints [1][0]-waypoints [0][0]);
+	  if(rotateAfterJump) {
+	    theta_i = atan2 (waypoints [1][1]-waypoints [0][1],
+			     waypoints [1][0]-waypoints [0][0]);
 	    waypoints [0][index + 3] = theta_i;
-    }
+	  }
 	  for (std::size_t i = 0 + rotateAfterJump; i < (waypoints.size () - 1 + rotateAfterJump); i++) {
 	    // theta_(i,i+1)
 	    theta_i = atan2 (waypoints [i+1 - rotateAfterJump][1]-waypoints [i - rotateAfterJump][1],
-					waypoints [i+1- rotateAfterJump][0]-waypoints [i- rotateAfterJump][0]);
+			     waypoints [i+1- rotateAfterJump][0]-waypoints [i- rotateAfterJump][0]);
 	    //hppDout (info, "theta_i: " << theta_i);
 	    waypoints [i][index + 3] = theta_i;
 
 
 	  }
 	  // ! last orientation (qEnd) = last theta_i
-    if(rotateAfterJump)
-    {
-        waypoints [waypoints.size () - 1][index + 3] = atan2 (waypoints [waypoints.size()-1][1]-waypoints [waypoints.size()-2][1],
-        waypoints [waypoints.size()-1][0]-waypoints [waypoints.size()-2][0]);
-    }
-    else  
-      waypoints [waypoints.size () - 1][index + 3] = theta_i;
+	  if(rotateAfterJump)
+	    {
+	      waypoints [waypoints.size () - 1][index + 3] = atan2 (waypoints [waypoints.size()-1][1]-waypoints [waypoints.size()-2][1],
+								    waypoints [waypoints.size()-1][0]-waypoints [waypoints.size()-2][0]);
+	    }
+	  else  
+	    waypoints [waypoints.size () - 1][index + 3] = theta_i;
 
 	  // update waypoints orientations
-	  //const JointPtr_t skullJoint = robot_->getJointByName ("Skull");
-	  //const std::size_t rank = skullJoint->rankInConfiguration ();
-	  // TODO: if fullbody, use OrientationConstraint for skullJoint ??
 	  for (std::size_t i = 0; i < waypoints.size (); i++) {
 	    qTmp = rbprm::setOrientation (robot, waypoints [i]);
 	    if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
-	      hppDout (info, "waypoint with alpha orientation is valid");
+	      hppDout (info, "waypoint with orientation is valid");
 	      waypoints[i] = qTmp;
-	      } else {
-	      hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
-	      }
+	    } else {
+	      hppDout (info, "waypoint with orientation is NOT valid= " << displayConfig(qTmp));
+	    }
 	    //waypoints [i][rank] = skullJoint->lowerBound (0);
 	    hppDout (info, "new wp(i): " << displayConfig (waypoints [i]));
 	  }
 
 
-      // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
-    if(trunkOrientation) {
-      Eigen::Vector3d yTheta;
-      Eigen::Quaterniond qr ,qi,qf;
+	  // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
+	  if(trunkOrientation) {
+	    Eigen::Vector3d yTheta;
+	    Eigen::Quaterniond qr ,qi,qf;
       
-      for(std::size_t i = 0 ; i< waypoints.size() -1 ; i++ ){
-        qTmp = waypoints[i];
-        alpha_i = (boost::dynamic_pointer_cast<ParabolaPath>((*path).pathAtRank (i)))->coefficients()[4];
-        theta_i = qTmp[index+3];
-        yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
-        qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-        qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
-        qf = qr*qi;
+	    for(std::size_t i = 0 ; i< waypoints.size() -1 ; i++ ){
+	      qTmp = waypoints[i];
+	      alpha_i = (boost::dynamic_pointer_cast<ParabolaPath>((*path).pathAtRank (i)))->coefficients()[4];
+	      theta_i = qTmp[index+3];
+	      yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
+	      qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
+	      qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
+	      qf = qr*qi;
         
-        qTmp[3]= qf.w();
-        qTmp[4]= qf.x();
-        qTmp[5]= qf.y();
-        qTmp[6]= qf.z();
-        if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
-          hppDout (info, "waypoint with alpha orientation is valid");
-          waypoints[i] = qTmp;
-        } else {
-          hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
-        }
-      }
-      // goal state : use last alpha and theta value
-      qTmp = waypoints[waypoints.size () - 1];
-      yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
-      qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
-      qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
-      qf = qr*qi;
+	      qTmp[3]= qf.w();
+	      qTmp[4]= qf.x();
+	      qTmp[5]= qf.y();
+	      qTmp[6]= qf.z();
+	      if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+		hppDout (info, "waypoint with alpha orientation is valid");
+		waypoints[i] = qTmp;
+	      } else {
+		hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+	      }
+	    }
+	    // goal state : use last alpha and theta value
+	    qTmp = waypoints[waypoints.size () - 1];
+	    yTheta = Eigen::Vector3d(-sin(theta_i), cos(theta_i),0);
+	    qr= Eigen::AngleAxisd((M_PI/2)-alpha_i, yTheta); // rotation needed
+	    qi = Eigen::Quaterniond(qTmp[3],qTmp[4],qTmp[5],qTmp[6]);
+	    qf = qr*qi;
       
-      qTmp[3]= qf.w();
-      qTmp[4]= qf.x();
-      qTmp[5]= qf.y();
-      qTmp[6]= qf.z();
-      if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
-        hppDout (info, "waypoint with alpha orientation is valid");
-        waypoints[waypoints.size () - 1] = qTmp;
-      } else {
-        hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
-      }
-    }
-      // end test Pierre
+	    qTmp[3]= qf.w();
+	    qTmp[4]= qf.x();
+	    qTmp[5]= qf.y();
+	    qTmp[6]= qf.z();
+	    if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
+	      hppDout (info, "waypoint with alpha orientation is valid");
+	      waypoints[waypoints.size () - 1] = qTmp;
+	    } else {
+	      hppDout (info, "waypoint with alpha orientation is NOT valid= " << displayConfig(qTmp));
+	    }
+	  }
+	  // end test Pierre
 
-    // now that the correct orientaion is set, we try to set the trunk as close as possible as the obstacle : 
-    if(getCloseToContact){
-        Eigen::Vector3d normal;
-        for(std::size_t i = 0 ; i< waypoints.size() ; i++ ){
-          normal = Eigen::Vector3d(waypoints [i][index],waypoints [i][index+1],waypoints [i][index+2]);
-          normal = normal*0.01;
-          hppDout(notice,"Direction of motion for getting close to contact :"<<normal[0] << " , "<<normal[1] << " , "<<normal[2]);
-          qTmp = waypoints[i];
-          qTmp[0] = qTmp[0] - normal[0];
-          qTmp[1] = qTmp[1] - normal[1];
-          qTmp[2] = qTmp[2] - normal[2];
-          while(problemSolver_->problem ()->configValidations()->validate(qTmp,report)){
-            qTmp[0] = qTmp[0] - normal[0];
-            qTmp[1] = qTmp[1] - normal[1];
-            qTmp[2] = qTmp[2] - normal[2];
-            hppDout(notice,"new config =  :"<<displayConfig(qTmp));          
-          }
-          waypoints[i][0] = qTmp[0] + normal[0];
-          waypoints[i][1] = qTmp[1] + normal[1];
-          waypoints[i][2] = qTmp[2] + normal[2];
-        }
-    }
+	  // now that the correct orientaion is set, we try to set the trunk as close as possible as the obstacle : 
+	  if(getCloseToContact){
+	    Eigen::Vector3d normal;
+	    for(std::size_t i = 0 ; i< waypoints.size() ; i++ ){
+	      normal = Eigen::Vector3d(waypoints [i][index],waypoints [i][index+1],waypoints [i][index+2]);
+	      normal = normal*0.01;
+	      hppDout(notice,"Direction of motion for getting close to contact :"<<normal[0] << " , "<<normal[1] << " , "<<normal[2]);
+	      qTmp = waypoints[i];
+	      qTmp[0] = qTmp[0] - normal[0];
+	      qTmp[1] = qTmp[1] - normal[1];
+	      qTmp[2] = qTmp[2] - normal[2];
+	      while(problemSolver_->problem ()->configValidations()->validate(qTmp,report)){
+		qTmp[0] = qTmp[0] - normal[0];
+		qTmp[1] = qTmp[1] - normal[1];
+		qTmp[2] = qTmp[2] - normal[2];
+		hppDout(notice,"new config =  :"<<displayConfig(qTmp));          
+	      }
+	      waypoints[i][0] = qTmp[0] + normal[0];
+	      waypoints[i][1] = qTmp[1] + normal[1];
+	      waypoints[i][2] = qTmp[2] + normal[2];
+	    }
+	  }
 
 	  // loop to construct new path vector with parabPath constructor
-    ParabolaPathPtr_t pp;
+	  ParabolaPathPtr_t pp;
 	  for (std::size_t i = 0; i < num_subpaths; i++) {
 	    const core::PathPtr_t subpath = (*path).pathAtRank (i);
 	    pp =  boost::dynamic_pointer_cast<ParabolaPath>(subpath);
-      if(!pp){
-        const core::PathVectorPtr_t pv = boost::dynamic_pointer_cast<core::PathVector>(subpath);
-        const core::PathPtr_t subPathEdge = (*pv).pathAtRank (0);
-        pp = boost::dynamic_pointer_cast<ParabolaPath>(subPathEdge);
-      }
+	    if(!pp){
+	      const core::PathVectorPtr_t pv = boost::dynamic_pointer_cast<core::PathVector>(subpath);
+	      const core::PathPtr_t subPathEdge = (*pv).pathAtRank (0);
+	      pp = boost::dynamic_pointer_cast<ParabolaPath>(subPathEdge);
+	    }
 	    const vector_t coefs = pp->coefficients ();
 	    const value_type length = pp->length ();
 
 
-
-	    if (fullbody) {
-	      newPath->appendPath
-		(rbprm::BallisticPath::create (robot, waypoints [i],
-					       waypoints [i+1],length, coefs));
-	    } else { // rbprm
-	      newPath->appendPath
-		(rbprm::ParabolaPath::create (robot, waypoints [i],
-					      waypoints [i+1], length, coefs,
-					      pp->V0_, pp->Vimp_,
-					      pp->initialROMnames_,
-					      pp->endROMnames_,
-					      pp->contactCones0_,
-					      pp->contactConesImp_));
-	    }
+	    newPath->appendPath
+	      (rbprm::ParabolaPath::create (robot, waypoints [i],
+					    waypoints [i+1], length, coefs,
+					    pp->V0_, pp->Vimp_,
+					    pp->initialROMnames_,
+					    pp->endROMnames_,
+					    pp->contactCones0_,
+					    pp->contactConesImp_));
 	  }
 	  // add path vector to problemSolver
 	  problemSolver_->addPath (newPath);
 	} catch(std::runtime_error& e) {
-	    throw Error(e.what());
-	  }
+	  throw Error(e.what());
+	}
       }
 
       // --------------------------------------------------------------------
@@ -2995,6 +3010,13 @@ namespace hpp {
 
       void RbprmBuilder::setFillGenerateContactState (const CORBA::Boolean b) {
 	fillGenerateContactState_ = b;
+      }
+
+      void RbprmBuilder::setInteriorPoint (const hpp::floatSeq& point) {
+	fcl::Vec3f ip;
+	for (std::size_t i = 0; i < 3; i++)
+	  ip [i] = point [(CORBA::ULong) i];
+	bindShooter_.interiorPoint_ = ip;
       }
 
     } // namespace impl

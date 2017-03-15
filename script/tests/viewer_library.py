@@ -116,7 +116,21 @@ def plotConeWaypoints (ps, nPath, r, coneGroupName, coneURDFname, skip=1):
 # To avoid problem with cone names in Blender, use also "friction_cone_SG"...
 def plotCone (q, ps, r, coneName, coneURDFname):
     robot = ps.robot # rbprmBuilder or fullBody
-    qCone = robot.client.rbprm.rbprm.setOrientation (q) # rotate cone along normal direction
+    cSize = robot.client.basic.robot.getConfigSize() # with Extra-configs
+    ecSize = robot.client.basic.robot.getExtraConfigSize()
+    if (len(q) < 6):
+        print ('config must be at least of size 6 (position + extra-config normal)')
+        return 0
+    qCone = [0]*7
+    qCone [0:3] = q [0:3]
+    if (len(q) <= 6):
+        normal = q [len(q) - 3 : len(q)] # 3 last values
+    else:
+        normal = q [len(q) - ecSize : len(q) - 1] # 3 before the last value
+    print normal
+    quat = robot.client.rbprm.rbprm.computeOrientationQuat (normal, 0, "") # rotate cone along normal direction
+    qCone [3:7] = quat
+    print qCone
     r.loadObstacleModel ("animals_description",coneURDFname,coneName)
     r.client.gui.applyConfiguration (coneName, qCone[0:7])
     r.client.gui.refresh ()
@@ -416,7 +430,7 @@ def plotPointJointPath (r, ps, dt, nPath, jointName, pointInJoint, pathName, pat
 # q: configuration
 # jointName: name of joint whose center will be displayed
 # ampl: length of the frame lines
-def plotJointFrame (r, ps, q, jointName, ampl):
+def plotJointFrame (r, ps, q, jointName, ampl, linePrefixName):
     robot = ps.robot
     classicRobot = ps.robot.client.basic.robot
     robot.setCurrentConfig (q)
@@ -425,12 +439,12 @@ def plotJointFrame (r, ps, q, jointName, ampl):
     framePositionX = classicRobot.computeGlobalPosition (jointGlobTransf, [ampl,0,0])
     framePositionY = classicRobot.computeGlobalPosition (jointGlobTransf, [0,ampl,0])
     framePositionZ = classicRobot.computeGlobalPosition (jointGlobTransf, [0,0,ampl])
-    r.client.gui.addLine('frameX'+jointName, frameOrigin, framePositionX,[1,0,0,1])
-    r.client.gui.addLine('frameY'+jointName, frameOrigin, framePositionY,[0,1,0,1])
-    r.client.gui.addLine('frameZ'+jointName, frameOrigin, framePositionZ,[0,0,1,1])
-    r.client.gui.addToGroup('frameX'+jointName,r.sceneName)
-    r.client.gui.addToGroup('frameY'+jointName,r.sceneName)
-    r.client.gui.addToGroup('frameZ'+jointName,r.sceneName)
+    r.client.gui.addLine(linePrefixName+'localFrameX'+jointName, frameOrigin, framePositionX,[1,0,0,1])
+    r.client.gui.addLine(linePrefixName+'localFrameY'+jointName, frameOrigin, framePositionY,[0,1,0,1])
+    r.client.gui.addLine(linePrefixName+'localFrameZ'+jointName, frameOrigin, framePositionZ,[0,0,1,1])
+    r.client.gui.addToGroup(linePrefixName+'localFrameX'+jointName,r.sceneName)
+    r.client.gui.addToGroup(linePrefixName+'localFrameY'+jointName,r.sceneName)
+    r.client.gui.addToGroup(linePrefixName+'localFrameZ'+jointName,r.sceneName)
 
 # --------------------------------------------------------------------#
 
@@ -443,13 +457,14 @@ def plotJointFrame (r, ps, q, jointName, ampl):
 # jointName: name of joint whose center will be displayed
 # ampl: length of the frame lines
 # lineColor: osg-color of displayed line (e.g. [1,0.3,0,1])
-def plotVectorInJointFrame (r, cl, q, jointName, vector, lineColor):
+def plotVectorInJointFrame (r, ps, q, jointName, vector, lineColor, linePrefixName):
     robot = ps.robot
+    classicRobot = ps.robot.client.basic.robot
     robot.setCurrentConfig (q)
     jointPosition = robot.getJointPosition (jointName)
-    framePosition = robot.computeGlobalPosition (jointPosition, [0,0,0]) 
-    extrPosition = robot.computeGlobalPosition (jointPosition, [vector[0],vector[1],vector[2]])
-    lineName = 'lineIn'+jointName
+    framePosition = classicRobot.computeGlobalPosition (jointPosition, [0,0,0]) 
+    extrPosition = classicRobot.computeGlobalPosition (jointPosition, [vector[0],vector[1],vector[2]])
+    lineName = linePrefixName+'localLineIn'+jointName
     r.client.gui.addLine(lineName,[framePosition[0],framePosition[1],framePosition[2]], [extrPosition[0],extrPosition[1],extrPosition[2]],lineColor)
     r.client.gui.addToGroup(lineName,r.sceneName)
 
@@ -605,6 +620,20 @@ def getNewestLogID ():
     print ("logID= " +str(logID))
     return logID
 
+# --------------------------------------------------------------------#
+
+## Plot contact-cones obtained from rbprmBuilder function ##
+def plotContactCones (contactCones, ps, r, coneName, coneURDFname):
+    numCones = len(contactCones[0])
+    contactConesDirs = contactCones[0]
+    contactConesPos = contactCones[1]
+    for i in range(0, numCones):
+        q = [0]*6
+        q[0:3] = contactConesPos [i]
+        q[3:6] = contactConesDirs [i]
+        print ("q in plotContactCones")
+        print q
+        plotCone (q, ps, r, coneName + "_contactCones_" + str(i), coneURDFname)
 
 # --------------------------------------------------------------------#
 # ----------------------------## BLENDER ##------------------------------------#

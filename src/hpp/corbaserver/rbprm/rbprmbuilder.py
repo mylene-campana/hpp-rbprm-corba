@@ -310,6 +310,9 @@ class Builder (object):
     def setOrientation (self, config):
         return self.client.rbprm.rbprm.setOrientation (config)
 
+    def computeOrientationQuat (self, normal, theta, robotName):
+        return self.client.rbprm.rbprm.computeOrientationQuat (normal, theta, robotName)
+
     def rbShoot (self):
         return self.client.rbprm.rbprm.rbShoot ()
     
@@ -322,8 +325,8 @@ class Builder (object):
     def getsubPathsV0Vimp (self, Vquery, pathId):
         return self.client.rbprm.rbprm.getsubPathsV0Vimp (Vquery, pathId)
 
-    def rotateAlongPath (self, pathId,rotateAfterJump = False,trunkOrientation = False, getCloseToContact =  False):
-        return self.client.rbprm.rbprm.rotateAlongPath (pathId, False,rotateAfterJump, trunkOrientation,getCloseToContact)
+    def rotateAlongPath (self, pathId, rotateAfterJump = False, trunkOrientation = False, getCloseToContact =  False):
+        return self.client.rbprm.rbprm.rotateAlongPath (pathId, rotateAfterJump, trunkOrientation, getCloseToContact)
 
     def setFullOrientationMode (self, fullOrientationMode):
         return self.client.rbprm.rbprm.setFullOrientationMode (fullOrientationMode)
@@ -358,3 +361,6 @@ class Builder (object):
 
     def getContactCones (self, config):
         return self.client.rbprm.rbprm.getContactCones (config)
+
+    def setInteriorPoint (self, point):
+        return self.client.rbprm.rbprm.setInteriorPoint (point)

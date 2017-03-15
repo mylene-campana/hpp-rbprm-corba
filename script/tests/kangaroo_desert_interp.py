@@ -9,7 +9,7 @@ from hpp.gepetto import Viewer, PathPlayer
 import math
 from viewer_library import *
 
-import skeleton_desert_path as tp
+import kangaroo_desert_path as tp # it's long because of Affordance generation
 
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
@@ -19,7 +19,7 @@ rootJointType = "freeflyer"
 urdfName = "kangaroo"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = tp.ecsSize
+ecsSize = 0 #tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 
@@ -27,8 +27,7 @@ fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
 fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
-#fullBody.setFullbodyFrictionCoef(0.5)
+fullBody.setFullbodyFrictionCoef (tp.frictionCoef)
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
@@ -68,37 +67,41 @@ trunkPathwaypoints = ps.getWaypoints (entryPathId)
 #q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[1][0:confsize-ecsSize]; rr(q)
 #fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
 
-q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
-q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
+q_init[0:confsize-tp.ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
+q_goal[0:confsize-tp.ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
 if (ecsSize > 0):
     q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
     q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
+theta_0 = math.atan2(trunkPathwaypoints[1][1] - q_init[1], trunkPathwaypoints[1][0] - q_init[0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("V0", False, V0list[0], theta_0)
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, dir_init, False); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
-
-dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
-fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, dir_goal, False); rr (q_goal_test)
-fullBody.isConfigValid(q_goal_test)
-
-
 fullBody.setStartState(q_init_test,[rLegId,lLegId])
+
+dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
+theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[0], theta_goal)
+fullBody.setCurrentConfig (q_goal)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
+fullBody.isConfigValid(q_goal_test)
 fullBody.setEndState(q_goal_test,[rLegId,lLegId])
 
-psf.setPlannerIterLimit (100)
+
+psf.setPlannerIterLimit (5)
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
-
+#fullBody.interpolateBallisticPath(entryPathId, 0.002) # no timed-interpolation
+fullBody.interpolateBallisticPath(entryPathId, 0.002, True) # timed-interpolation
+print("ballistic-interpolation finished")
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=3
+pp.speed=1
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
 #pp(psf.numberPaths ()-1)

@@ -52,8 +52,13 @@ plotFrame (r, "frameGroupName", [0,0,0], 0.5)
 
 from hpp.corbaserver.affordance.affordance import AffordanceTool
 afftool = AffordanceTool ()
+afftool.setAffordanceConfig('Support', [2.5, 0.004, 0.1]) # error, angle and area   # default (0.3,0.3,0.05)
+afftool.setNeighbouringTriangleMargin ('Support', 0.1)
 afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
 afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
+
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(4)
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
@@ -68,20 +73,19 @@ q22[0:7] = [-0.35, -3.45, 0.035, 1, 0, 0, 0]; r(q22) # etang
 
 rbprmBuilder.isConfigValid(q22)
 
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
-rbprmBuilder.setNumberFilterMatch(4)
+
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFrictionCoef(1.2)
-rbprmBuilder.setMaxTakeoffVelocity(5)
-rbprmBuilder.setMaxLandingVelocity(9)
+rbprmBuilder.setMaxTakeoffVelocity(6)
+rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 
-waypoints = [q11,[0.7568593392134035, 2.5001776108010154, -0.016627106595112656, 0.7669881208375589, 0.021052203660743424, -0.05214600253234064, 0.639192319755951, 0.0, 0.0, 0.0, -0.05307791519517043, -0.09895622889977937, 0.9936751982818474, 1.3913848017526247], [0.1874940972479516, 0.14929621880323268, 0.004508710268820125, 0.9452909290642296, 0.037779238914688505, 0.009565348237867363, 0.32389240906356687, 0.0, 0.0, 0.0, 0.04255689125452609, -0.06522845633742118, 0.9969624664402306, 0.65995381762137], [-0.6038954269369067, -2.0266558500396945, 0.04205823660655854, 0.5282008965036383, -0.0006806265025383335, 0.004078508951508424, -0.8491093660094966, 0.0, 0.0, 0.0, 0.005464396845288899, -0.006207185242508982, 0.9999658050245931, -2.028633313001989],q22] # limVelocity = 5
+"""waypoints = [q11,[0.7568593392134035, 2.5001776108010154, -0.016627106595112656, 0.7669881208375589, 0.021052203660743424, -0.05214600253234064, 0.639192319755951, 0.0, 0.0, 0.0, -0.05307791519517043, -0.09895622889977937, 0.9936751982818474, 1.3913848017526247], [0.1874940972479516, 0.14929621880323268, 0.004508710268820125, 0.9452909290642296, 0.037779238914688505, 0.009565348237867363, 0.32389240906356687, 0.0, 0.0, 0.0, 0.04255689125452609, -0.06522845633742118, 0.9969624664402306, 0.65995381762137], [-0.6038954269369067, -2.0266558500396945, 0.04205823660655854, 0.5282008965036383, -0.0006806265025383335, 0.004078508951508424, -0.8491093660094966, 0.0, 0.0, 0.0, 0.005464396845288899, -0.006207185242508982, 0.9999658050245931, -2.028633313001989],q22] # limVelocity = 5
 for i in range(0,len(waypoints)-1):
     ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); ps.solve (); ps.resetGoalConfigs ()
-
+"""
 
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
@@ -121,11 +125,11 @@ for i in range(1,len(pathOriBisWaypoints)-1):
         print('problem with waypoints number: ' + str(i))
 
 
-plotConeWaypoints (ps, solutionPathId, r, "cone_rb_wp_group", "friction_cone2")
-plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_22", "friction_cone2")
+#plotConeWaypoints (ps, solutionPathId, r, "cone_rb_wp_group", "friction_cone2")
+#plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_22", "friction_cone2")
 
 
-
+"""
 # Write data to log file
 pfr = rbprmBuilder.getResultValues ()
 if isinstance(t, list):
@@ -135,10 +139,29 @@ f.write("frog_spond_path\n")
 f.write("path computation: " + str(timeSec) + "\n")
 f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
-
+"""
 
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[0] = -6.5; qAway[1] = -2
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
+
+
+
+
+"""
+INFO:/local/mcampana/devel/hpp/src/hpp-rbprm/src/utils/algorithms.cc:497: p1 of plane=  
+INFO:/local/mcampana/devel/hpp/src/hpp-rbprm/src/utils/algorithms.cc:498: p2 of plane= 
+INFO:/local/mcampana/devel/hpp/src/hpp-rbprm/src/utils/algorithms.cc:499: p3 of plane= 
+
+p1= [0.236487,   3.86812, -0.103003]
+p2= [-0.0684885,    3.82471,  -0.174735]
+p3= [0.0729408,   3.82965, -0.142151]
+ 
+sphereColor = [1,0,0,1]; sphereSize = 0.02; sphereName = "pointsPlane"
+plotSphere (p1, r, sphereName+"11", sphereColor, sphereSize)
+plotSphere (p2, r, sphereName+"22", sphereColor, sphereSize)
+plotSphere (p3, r, sphereName+"33", sphereColor, sphereSize)
+
+"""
 
 

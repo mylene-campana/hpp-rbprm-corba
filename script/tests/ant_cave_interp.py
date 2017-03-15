@@ -20,7 +20,7 @@ rootJointType = "freeflyer"
 urdfName = "ant"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = tp.ecsSize
+ecsSize = 0 #tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 base_joint_xyz_limits = tp.base_joint_xyz_limits
@@ -28,8 +28,7 @@ base_joint_xyz_limits = tp.base_joint_xyz_limits
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.setFullbodyFrictionCoef (tp.frictionCoef)
 
 #psf = ProblemSolver(fullBody); rr = tp.Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps

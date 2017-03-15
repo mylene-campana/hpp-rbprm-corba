@@ -25,24 +25,14 @@ urdfNameRoms = ['LFootSphere','RFootSphere']
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
-base_joint_xyz_limits = [-9, 7, -7, 7, -1.7, 2.5]
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
-rbprmBuilder.boundSO3([-3.14,3.14,-3.14,3.14,-3.14,3.14])
-rbprmBuilder.setFilter(urdfNameRoms)
-filterRange = 0.3
-rbprmBuilder.setNormalFilter('LFootSphere', [0,0,1], filterRange)
-rbprmBuilder.setNormalFilter('RFootSphere', [0,0,1], filterRange)
 rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 ps = ProblemSolver (rbprmBuilder)
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-rbprmBuilder.setNumberFilterMatch(2)
 r = Viewer (ps); gui = r.client.gui
-addLight (r, [0,-1,0,1,0,0,0], "li"); addLight (r, [0,1,0,1,0,0,0], "li2")
 q_0 = rbprmBuilder.getCurrentConfig () [::]; q_0 [0] = -5
 r(q_0)
 
@@ -71,9 +61,12 @@ cones = [[0,0.4,0.6],[0,-0.4,0.6]]; theta = 0.0  # VI_p  problem P
 cones = [[0,1,0],[0,-0.4,0.6]]; theta = 0.0  # PROBLEM III_p  (P is OK...)
 cones = [[0,-0.4,0.6],[0,1,0]]; theta = 0.0  # PROBLEM III_p  (P is OK...)
 cones = [[0.5,0.5,0.8],[-0.5,0.5,0.8],[0.5,-0.5,0.8]]; theta = 0  # PROBLEM mu = 1.2 and 0.5
+cones = [[-7.42143e-07,1,0], [-1,-6.87383e-07,0]]; theta = 1.41649  # BUG skeleton parkourWalls
+cones = [[1,6.38285e-07,-2.73808e-08], [0,-0,1]]; theta = -2.73553  # BUG skeleton parkourWalls
+cones = [[-0.358692, 0.908778, -0.213219]]; theta = 2.84719
 
 origin = [0,0,0]
-mu = 0.5; coneURDFName = "friction_cone"
+mu = 1.2; coneURDFName = "friction_cone2"
 
 t = rbprmBuilder.convexConePlaneIntersection (len(cones), cones, theta, mu)
 
@@ -83,6 +76,7 @@ logID = getNewestLogID ()
 CC2D_dir = t [1:4]; phi_CC = t [0]
 
 #plotThetaPlaneBis (origin, theta, 1, r, "thetaPlane", planeThetaColor)
+#q = q_0 [::]; q [0] = 0; q [len(q_0)-4:len(q_0)-1] = cones[0]; plotCone (q, ps, r, "testCone", coneURDFName)
 plotConvexConeInters (ps, r, origin, CC2D_dir, cones, "CC_center", black, 0.02, "CC_dir", "contactCones", coneURDFName)
 #plotFrame (r, "frame", origin, 0.2)
 

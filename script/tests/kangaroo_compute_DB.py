@@ -119,7 +119,7 @@ def runallRArm(lid, dbName):
     fullBody.saveLimbDatabase(lid, dbName)
 
 runallLLeg(lLegId, './kangaroo_lleg_6DOF.db')
-runallRLeg(rLegId, './kangaroo_rleg_3DOF.db')
+runallRLeg(rLegId, './kangaroo_rleg_6DOF.db')
 runallLArm(larmId, './kangaroo_larm_3DOF.db')
 runallRArm(rarmId, './kangaroo_rarm_3DOF.db')
 

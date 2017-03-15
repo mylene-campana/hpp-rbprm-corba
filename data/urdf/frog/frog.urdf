@@ -31,7 +31,7 @@
   <link name="Torso">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="4"/>
+         <mass value="1"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -70,7 +70,7 @@
    <link name="Head">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="2"/>
+         <mass value="0"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -133,7 +133,7 @@
    <link name="LShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.6"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -156,7 +156,7 @@
    <link name="LFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.4"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -176,7 +176,7 @@
    <link name="LFootToe">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -232,7 +232,7 @@
    <link name="RShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.6"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -255,7 +255,7 @@
    <link name="RFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.4"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -275,7 +275,7 @@
    <link name="RFootToe">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -308,7 +308,7 @@
    <link name="LHumerus">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.8"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -331,7 +331,7 @@
    <link name="LForearm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.5"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -354,7 +354,7 @@
    <link name="LHand">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -368,6 +368,27 @@
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/frog/LHand.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="LHandFingers">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LHandFingers.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/LHandRHandFingers.stl"/>
          </geometry>
       </collision>
    </link>
@@ -387,7 +408,7 @@
    <link name="RHumerus">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.8"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -410,7 +431,7 @@
    <link name="RForearm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.5"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -433,7 +454,7 @@
    <link name="RHand">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="1"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -447,6 +468,27 @@
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/frog/RHand.stl"/>
+         </geometry>
+      </collision>
+   </link>
+
+   <link name="RHandFingers">
+      <inertial>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+         <mass value="1"/>
+         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RHandFingers.stl"/>
+         </geometry>
+         <material name="Green"/>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://hpp-rbprm-corba/meshes/frog/RHandRHandFingers.stl"/>
          </geometry>
       </collision>
    </link>
@@ -559,7 +601,7 @@
    <joint name="FrogLFootSphere" type="fixed">
       <parent link="LFootToe"/>
       <child link="FrogLFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.0016 0.0010 -0.0122"/>
+      <origin rpy="0 0 0" xyz="-0.0016 0.0010 -0.013"/>
    </joint>
    
   <joint name="LHumerus_rx" type="revolute">
@@ -625,10 +667,15 @@
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
    </joint>
+   <joint name="FrogLHandFingers" type="fixed">
+      <parent link="LHand"/>
+      <child link="FrogLHandFingers"/>
+      <origin rpy="0 0 0" xyz="0.0141 -0.0119 0.001"/>
+   </joint>
    <joint name="FrogLHandSphere" type="fixed">
       <parent link="LHand"/>
       <child link="FrogLHandSphere"/>
-      <origin rpy="0 -0.1 0" xyz="0.0184 -0.0116 -0.0103"/>
+      <origin rpy="0 0 0" xyz="0.0059 -0.0038 -0.0137"/>
    </joint>
    
    <!-- right side -->
@@ -705,7 +752,7 @@
    <joint name="FrogRFootSphere" type="fixed">
       <parent link="RFootToe"/>
       <child link="FrogRFootSphere"/>
-      <origin rpy="0 0 0" xyz="-0.0019 -0.0007 -0.0112"/>
+      <origin rpy="0 0 0" xyz="-0.0019 -0.0007 -0.013"/>
    </joint>
    
   <joint name="RHumerus_rx" type="revolute">
@@ -771,9 +818,14 @@
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-0.5" upper="0.5" velocity="1.0"/>
    </joint>
+   <joint name="FrogRHandFingers" type="fixed">
+      <parent link="RHand"/>
+      <child link="FrogRHandFingers"/>
+      <origin rpy="0 0 0" xyz="0.0134 0.0117 0.0018"/>
+   </joint>
    <joint name="FrogRHandSphere" type="fixed">
       <parent link="RHand"/>
       <child link="FrogRHandSphere"/>
-      <origin rpy="0 -0.1 0" xyz="0.0169 0.0106 -0.0096"/>
+      <origin rpy="0 0 0" xyz="0.007 0.0039 -0.0129"/>
    </joint>
 </robot>

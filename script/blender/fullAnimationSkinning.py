@@ -467,10 +467,10 @@ def mainTest ():
 	# Parameters that do not change from one problem to another
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
-	beginMotionFrame = 120
+	beginMotionFrame = 0
 	print ("--------  load motion armature  --------")
-	#fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
-	fileName = 'frog_jointConfigs_toe.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
+	fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
+	#fileName = 'frog_jointConfigs_toe.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
 	armatureName = "Armature"
 	#fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
 	#fileName = 'frog_pond_jointConfigs_new1goal.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
@@ -513,9 +513,24 @@ def irosRoadmapVisibility (): # IROS 2016 PRESENTATION: change Roadmap Visibilit
 	setObjectNotInListVisibility (coneNamePrefix, numberOfCones, [], initFrame, True)
 	setVisibility ('Cone', initFrame, True) # 'cause first RM cone name is not following the prefix
 
+def displayAntContactConfig ():
+	# Parameters that do not change from one problem to another
+	daeFilePath = '/local/mcampana/devel/hpp/videos/'
+	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
+	beginMotionFrame = 0
+	print ("--------  load motion armature  --------")
+	#fileName = 'ant_contactFlexionConfig.txt'
+	#fileName = 'ant_contactEFORTbis.txt'
+	fileName = 'ant_contactFromRefConfig.txt'
+	reOrientFrames = True; rotationOrder = 'ZXY' # ANT
+	armatureName = "Armature"
+	jointConfigsFileName = daeFilePath + fileName
+	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
+
 #---------------------------------------------------------------------------#
 #main  ()
 #mainTest  ()
 #mainTestBis ()
 #justImportDamnPath ()
 #irosRoadmapVisibility ()
+displayAntContactConfig ()

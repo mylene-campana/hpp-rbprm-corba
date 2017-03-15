@@ -110,13 +110,13 @@ psf.setPlannerIterLimit (2)
 
 print("Start ballistic-interpolation")
 #fullBody.interpolateBallisticPath(entryPathId, 0.002) # no timed-interpolation
-fullBody.interpolateBallisticPath(entryPathId, 0.002, True)
+fullBody.interpolateBallisticPath(entryPathId, 0.002, True) # timed-interpolation
 print("ballistic-interpolation finished")
 
 
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1)
-pp.speed=0.6
+pp.speed=0.4
 pp(psf.numberPaths ()-1)
 
 #pathJointConfigsToFile (psf, rr, "antTestInDirect_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.005)

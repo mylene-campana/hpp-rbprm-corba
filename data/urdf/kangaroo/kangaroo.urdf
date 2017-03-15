@@ -8,10 +8,10 @@
     <color rgba="1 1 1 1"/>
   </material>
   <material name="Gray">
-    <color rgba="0.6 0.6 0.6 0.4"/>
+    <color rgba="0.6 0.6 0.6 1"/>
   </material>
   <material name="Green"> <!-- for ROMs -->
-    <color rgba="0 1 0 1"/>
+    <color rgba="0 1 0 0.4"/>
   </material>
 
   <link name="base_link"/>
@@ -61,6 +61,7 @@
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/lfoot_rom.stl"/>
          </geometry>
+         <material name="Green"/>
       </visual>
    </link>
 
@@ -76,6 +77,7 @@
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/kangaroo/rfoot_rom.stl"/>
          </geometry>
+         <material name="Green"/>
       </visual>
    </link>-->
 

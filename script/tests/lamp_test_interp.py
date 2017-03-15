@@ -105,27 +105,28 @@ extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, -0.3, 0.0]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 2.0, -1.0, 0.0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
-timeStep = 0.005
+timeStep = 0.002
 
 print("Start ballistic-interpolation")
-psf.setPlannerIterLimit (50)
+psf.setPlannerIterLimit (10)
 fullBody.interpolateBallisticPath(entryPathId, timeStep) #  -> now also set lastComputedStates_ stack
 print("ballistic-interpolation finished")
 
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1) # TODO debug !
-pp.speed=2
+pp.speed=0.2
 #pp(psf.numberPaths ()-1)
 
 #test = []; rr(test); fullBody.isConfigValid(test)
 
+"""
 statesTime = fullBody.getlastStatesComputedTime ()
 numberOfStatesComputed = len(statesTime)-1
 configs = statesTime [:numberOfStatesComputed]
 times = statesTime [numberOfStatesComputed]
-
+"""
 #print("Start comRRT")
-#fullBody.comRRT(0, 1, entryPathId, 0) # path = COM path (parabola ?)
+#fullBody.comRRT(0, 1, entryPathId, 0) # path = COM path (parabola ?)    NOT WORKING
 
 
 """

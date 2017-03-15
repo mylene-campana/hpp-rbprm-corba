@@ -685,7 +685,9 @@
   <joint name="SpidermanRHandSphere" type="fixed">
       <parent link="RHand"/>
       <child link="SpidermanRHandSphere"/>
-      <origin rpy="0 0.2 -0.2" xyz="-0.0 -0.0184 -0.06"/>
+      <!--<origin rpy="0 0.2 -0.2" xyz="-0.0 -0.0184 -0.06"/>-->
+      <!--<origin rpy="0 0 0" xyz="-0.005 -0.047 -0.061"/>-->
+      <origin rpy="0 0 0" xyz="0.0152 -0.0559 -0.081"/> <!-- normal 0.0873, -0.0176, -0.03516-->
    </joint>
    <joint name="LHumerus_rx" type="revolute">
       <parent link="Thorax"/>
@@ -739,6 +741,8 @@
   <joint name="SpidermanLHandSphere" type="fixed">
       <parent link="LHand"/>
       <child link="SpidermanLHandSphere"/>
-      <origin rpy="0 0.2 -0.2" xyz="-0.01 -0.0184 -0.04"/>
+      <!--<origin rpy="0 0.2 -0.2" xyz="-0.01 -0.0184 -0.04"/>-->
+      <!--<origin rpy="0 0 0" xyz="-0.01 -0.039 -0.058"/>-->
+      <origin rpy="0 0 0" xyz="-0.0111 -0.0454 -0.0761"/> <!-- normal -0.08541, -0.03916, -0.04994-->
    </joint>
 </robot>

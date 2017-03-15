@@ -84,9 +84,15 @@ ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 t = ps.solve ()
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
+#pp(solutionPathId)
 
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathId = ps.numberPaths () - 1
+#pp(orientedpathId)
+
+rbprmBuilder.rotateAlongPath (solutionPathId, True)
+orientedpathIdBis = ps.numberPaths () - 1
+#pp(orientedpathIdBis)
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)

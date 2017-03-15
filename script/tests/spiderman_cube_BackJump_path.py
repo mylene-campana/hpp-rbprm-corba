@@ -15,6 +15,7 @@ from hpp.gepetto import Viewer, PathPlayer
 import math
 from viewer_library import *
 
+orientX = 0.707107 #math.sqrt(2)/2.0
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
@@ -23,10 +24,11 @@ urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere','SpidermanLHandSph
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
+base_joint_xyz_limits = [-10, 10, -10, 15, 0, 10]
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
-rbprmBuilder.setJointBounds ("base_joint_xyz", [-10, 10, -5, 15, 0, 20])
+rbprmBuilder.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
 rbprmBuilder.boundSO3([-0.2,0.2,-3.14,3.14,-0.3,0.3])
 rbprmBuilder.setFilter(urdfNameRoms)
 affordanceType = ['Support']
@@ -39,17 +41,26 @@ rbprmBuilder.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
 rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
 
 ps = ProblemSolver (rbprmBuilder)
-ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation
-rbprmBuilder.setNumberFilterMatch(2)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
 obstacleName = "cubeWorld2"
-r.loadObstacleModel ("iai_maps", obstacleName, obstacleName+"_obst")
-r.addLandmark(r.sceneName,2)
-r.addLandmark("spiderman_trunk/base_link",1)
+r.loadObstacleModel (packageName, obstacleName, obstacleName+"_obst")
+#r.addLandmark(r.sceneName,2); r.addLandmark("spiderman_trunk/base_link",1) # frames
 addLight (r, [-10,-5,5,1,0,0,0], "li");
+
+
+from hpp.corbaserver.affordance.affordance import AffordanceTool
+afftool = AffordanceTool ()
+afftool.setAffordanceConfig('Support', [6., 0.01, 0.05]) # default (0.3,0.3,0.05) error, angle and area
+afftool.setNeighbouringTriangleMargin ('Support', 0.1)
+afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
+afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
+
+ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also configValidation; call after loading obstacles for affordance
+rbprmBuilder.setNumberFilterMatch(1)
+
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
@@ -60,17 +71,15 @@ q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
 #q11[0:7] =  [-2.7,-2.25,4, 0.9217, 0.1022, 0.2192, 0.3034] #WORKING : SIDE
 
 
-q11[0:7] =  [-1.5,-7,2.5, 1, 0, 0, 0]; r(q11) # back plateform R
-#q11[0:7] = [-1.0, -2.7, 4.0,0.8866176165698721, 0.0, 0.0,0.4625031913273241]
-r(q11)
-
+q11[0:7] =  [-1.5,-7,2.5, orientX, 0, 0, orientX]; r(q11) # back plateform R
+#q11[0:7] = [-1.0, -2.7, 4.0,0.8866176165698721, 0.0, 0.0,0.4625031913273241]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
 
 #q22[0:7] =  [-7.2,0,2.6, 1, 0, 0, 0]; r(q22) # back plateform
-q22[0:7] =  [1.5,-7,2.5, 1, 0, 0, 0]; r(q22) # back plateform L
+q22[0:7] =  [1.5,-7,2.5, -orientX, 0, 0, orientX]; r(q22) # back plateform L
 #q22[0:7] =   [5,0,3.8,  0.9537, 0, 0.3, 0]; r(q22) # front plateform
 rbprmBuilder.isConfigValid(q22)
 
@@ -82,39 +91,34 @@ ps.client.problem.selectConFigurationShooter("RbprmShooter")
 ps.client.problem.selectSteeringMethod("SteeringParabola")
 
 ps.clearRoadmap();
-ps.setInitialConfig (q11); ps.addGoalConfig (q22)
+
 
 ## manually add way point (faster computation for test, work without but it's slow (~ <1minute )
 
 q_cube = q11[::]
-
-q_cube[0:7] =  [-1.2,-2.7,3.9, 1, 0, 0, 0]
+#q_cube[0:7] =  [-1.2,-2.7,3.9, orientX, 0, 0, orientX]; r(q_cube); rbprmBuilder.isConfigValid(q_cube)
+q_cube[0:7] =  [-1.2,-2.8,3.6, orientX, 0, 0, orientX]; r(q_cube); rbprmBuilder.isConfigValid(q_cube) # lower
 #q_cube[0:7] = [0,-1.5,5.4, 1, 0, 0, 0]
-waypoints = [q_cube]
-pbCl = ps.client.problem
-ps.client.problem.prepareSolveStepByStep()
-q11 = ps.node(0)
-q22 = ps.node(1)
-pbCl.addConfigToRoadmap (waypoints[0])
-ps.directPath (q11, waypoints[0],False)
-pathIds0 = ps.numberPaths () - 1
-ps.directPath (waypoints[0], q22,False)
-pathId2g = ps.numberPaths () - 1
-pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
-pbCl.addEdgeToRoadmap (waypoints[0], q22, pathId2g, True)
+#cones = rbprmBuilder.getContactCones(q_cube)
 
-##########
+
+waypoints = [q11,q_cube,q22]
+for i in range(0,len(waypoints)-1):
+    ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); ps.solve (); ps.resetGoalConfigs()
+
+ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
 
 t = ps.solve ()
 
-
-q11 = ps.node(0)
-q22 = ps.node(1)
+#q11 = ps.node(0)
+#q22 = ps.node(1)
 #plotCone (q11, ps, r, "cone_first", "friction_cone_SG2");
 solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 
+V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
+Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 
 """ 
 plotCone (q22, ps, r, "cone_second", "friction_cone_SG2")
@@ -133,6 +137,21 @@ rbprmBuilder.rotateAlongPath (solutionPathId,True)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 r(pp.client.problem.configAtParam(orientedpathId,0))
+
+
+print("Verify that all RB-waypoints are valid: ")
+pathWaypoints = ps.getWaypoints(solutionPathId)
+for i in range(1,len(pathWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
+
+print("-- Verify that all RB-waypoints are valid (oriented path): ")
+pathOriWaypoints = ps.getWaypoints(orientedpathId)
+for i in range(1,len(pathOriWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathOriWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
+
+
 
 """
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
@@ -181,6 +200,22 @@ rbprmBuilder.client.rbprm.rbprm.setRbShooter ()
 r(rbprmBuilder.client.rbprm.rbprm.rbShoot ())
 
 ps.client.problem.getResultValues ()
+"""
+
+""" # Pierre's roadmap manual initialization
+ps.setInitialConfig (q11); ps.addGoalConfig (q22)
+waypoints = [q_cube]
+pbCl = ps.client.problem
+ps.client.problem.prepareSolveStepByStep()
+q11 = ps.node(0)
+q22 = ps.node(1)
+pbCl.addConfigToRoadmap (waypoints[0])
+ps.directPath (q11, waypoints[0],False)
+pathIds0 = ps.numberPaths () - 1
+ps.directPath (waypoints[0], q22,False)
+pathId2g = ps.numberPaths () - 1
+pbCl.addEdgeToRoadmap (q11, waypoints[0], pathIds0, True)
+pbCl.addEdgeToRoadmap (waypoints[0], q22, pathId2g, True)
 """
 
 ## 3D viewer tools ##
@@ -277,5 +312,12 @@ r(pp.client.problem.configAtParam(orientedpathId,0))
 pp(orientedpathId)
 """
 
-
-
+"""
+sphereColor = [1,0,0,1]; sphereSize = 0.1; sphereName = "pointsPlane"
+p1 = [-1.01465, -9.03957,  1.87606]
+p2 = [-1.01465, -9.03957, -0.12394]
+p3 = [-1.01465, -6.03957, -0.12394]
+plotSphere (p1, r, sphereName+"1", sphereColor, sphereSize)
+plotSphere (p2, r, sphereName+"2", sphereColor, sphereSize)
+plotSphere (p3, r, sphereName+"3", sphereColor, sphereSize)
+"""

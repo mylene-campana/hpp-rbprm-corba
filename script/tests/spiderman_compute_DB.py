@@ -30,8 +30,8 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 
 
 q_jump= fullBody.getCurrentConfig()
-q_jump  = [0.0,0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0, 0,0, 0.0, 0.0, 0, -0.7, -1.5, -0.4, -0.5, -1.2, -0.4, 0.1, -0.7, 1.5,0.4, -0.5, 1.2, -0.4, -0.1, -1.2, -0.3, -0.2, 2.2, -0.9,0, 0.0, -1.2, 0.3, 0.2, 2.2, -0.9, 0, 0.0]
-
+q_jump  = [0.0,0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0, 0,0, 0.0, 0.0, 0, -0.7, -1.5, -0.4, -0.5, -1.2, -0.4, 0.1, -0.7, 1.5,0.4, -0.5, 1.2, -0.4, -0.1, -1.2, -0.3, -0.2, 2.2, -0.9,0, 0.0, -1.2, 0.3, 0.2, 2.2, -0.9, 0, 0.0] # flexion 2
+#q_jump = [0, 0, 0, 1, 0, 0, 0,  0.0, 0, 0, 0.0, 0.0, 0.0, -2, 0.3, -0.3, 0, -0.6, 0.0, 0.0, -2, -0.3, 0.3, 0, 0.6, 0.0,-0.0, -1.9, -0.3, -0.2, 1.9, -0.6, 0, 0.0, -1.9, 0.3, 0.2, 1.9, -0.6, 0, 0.0] # qcontact 4
 
 # q_jump[0:7] = q_init_test[0:7] ; rr(q_jump)
 
@@ -51,23 +51,23 @@ fullBody.addRefConfigAnalysis(q_rarm,"RefPoseRArm")
 
 #~ AFTER loading obstacles
 nbSamples = 50000
-cType = "_3_DOF"
 x = 0.03 # contact surface width
 y = 0.08 # contact surface length
-# By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
+handNormal = [] #  hand normals
+# By default, all offset are set to [0,0,0]
 
 #~ AFTER loading obstacles
 rLegId = 'rfoot'
 rLeg = 'RThigh_rx'
 rfoot = 'SpidermanRFootSphere'
 rLegx = x; rLegy = y
-fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,"_3_DOF")
 
 lLegId = 'lfoot'
 lLeg = 'LThigh_rx'
 lfoot = 'SpidermanLFootSphere'
 lLegx = x; lLegy = y
-fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,-0.01],[0,0,1], x, y, nbSamples, "manipulability", 0.01,"_3_DOF")
 
 print("Legs added to fullbody")
 
@@ -75,13 +75,13 @@ rarmId = 'rhand'
 rLeg = 'RHumerus_rx'
 rfoot = 'SpidermanRHandSphere'
 rarmx = x; rarmy = y
-fullBody.addLimb(rarmId,rLeg,rfoot,[0,0,0],[-1,0,0], x, y, nbSamples, "manipulability", 0.01,"_3_DOF")
+#fullBody.addLimb(rarmId,rLeg,rfoot,[0,0,0],handNormal, x, y, nbSamples, "manipulability", 0.01,"_6_DOF")
 
 larmId = 'lhand'
 lLeg = 'LHumerus_rx'
 lfoot = 'SpidermanLHandSphere'
 larmx = x; larmy = y
-fullBody.addLimb(larmId,lLeg,lfoot,[0,0,0],[-1,0,0], x, y, nbSamples, "manipulability", 0.01,"_3_DOF")
+#fullBody.addLimb(larmId,lLeg,lfoot,[0,0,0],handNormal, x, y, nbSamples, "manipulability", 0.01,"_6_DOF")
 
 print("Arms added to fullbody")
 
@@ -134,13 +134,29 @@ def runallRArm(lid, dbName):
 
 
 print("Run all legs : ")
-runallLLeg(lLegId, './Spiderman_lleg.db')
-runallRLeg(rLegId, './Spiderman_rleg.db')
+runallLLeg(lLegId, './Spiderman_lleg_flexion_6DOF.db')
+runallRLeg(rLegId, './Spiderman_rleg_flexion_6DOF.db')
 print("Run all arms : ")
-runallLArm(larmId, './Spiderman_larm.db')
-runallRArm(rarmId, './Spiderman_rarm.db')
+#runallLArm(larmId, './Spiderman_larm_flexion_6DOF.db')
+#runallRArm(rarmId, './Spiderman_rarm_flexion_6DOF.db')
 
-
+"""
+print("Run all legs : ")
+runallLLeg(lLegId, './Spiderman_lleg_qcontact_3DOF.db')
+runallRLeg(rLegId, './Spiderman_rleg_qcontact_3DOF.db')
+print("Run all arms : ")
+runallLArm(larmId, './Spiderman_larm_qcontact_3DOF.db')
+runallRArm(rarmId, './Spiderman_rarm_qcontact_3DOF.db')
+"""
 
 ##plotOctreeValues(fullBody, "isotropy", lLegId)
 
+"""
+## DEBUG joint orientation
+fullBody.setCurrentConfig(q_0); rr(q_0)
+psf.client.robot.getCurrentTransformation("SpidermanRHandSphere")
+plotJointFrame (rr, psf, q_0, "SpidermanRHandSphere", 0.2)
+plotFrame(rr,"framy",[0,0,0],0.2)
+psf.client.robot.getCurrentTransformation("SpidermanLHandSphere")
+plotJointFrame (rr, psf, q_0, "SpidermanLHandSphere", 0.2)
+"""

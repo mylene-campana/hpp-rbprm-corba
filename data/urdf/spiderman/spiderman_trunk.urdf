@@ -133,14 +133,14 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-skull.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-skull_box.stl"/>
          </geometry>
          <material name="White"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-skull.stl"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-skull_box.stl"/>
          </geometry>
       </collision>
    </link>

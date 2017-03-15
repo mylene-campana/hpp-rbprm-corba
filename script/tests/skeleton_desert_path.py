@@ -54,6 +54,7 @@ addLight (r, [-4,4,3,1,0,0,0], "li3"); addLight (r, [4,-4,3,1,0,0,0], "li4")
 from hpp.corbaserver.affordance.affordance import AffordanceTool
 afftool = AffordanceTool ()
 afftool.setAffordanceConfig('Support', [0.6, 0.6, 0.03]) # error, angle and area   # default (0.3,0.3,0.05)   # all ground [0.6, 0.6, 0.06]
+#afftool.setNeighbouringTriangleMargin ('Support',0.02)
 #afftool.setAffordanceConfig('Lean', [1.2, 1., 0.06]) # error, angle and area   # default (0.1,0.3,0.05)
 afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
 SupportColour = [0.0, 0.95, 0.80]; LeanColour = [0.9, 0.5, 0]

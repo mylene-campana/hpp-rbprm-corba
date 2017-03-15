@@ -52,7 +52,7 @@ fullBody.addRefConfigAnalysisWeight(q_RMfeet,"RefPoseRMFeet",[2., 5., 1, 2., 5.,
 fullBody.addRefConfigAnalysisWeight(q_RBfeet,"RefPoseRBFeet",[1., 5., 2., 1., 5., 1., 1., 1., 1.])
 
 #~ AFTER loading obstacles
-nbSamples = 10000
+nbSamples = 50000
 cType = "_6_DOF"
 x = 0.03 # contact surface width
 y = 0.03 # contact surface length
@@ -150,24 +150,24 @@ def runallRBLeg(lid, dbName):
     fullBody.saveLimbDatabase(lid, dbName)
 
 # 50k samples
-"""
+
 runallLFLeg(lfLegId, './ant_LFleg_6DOF.db') # 6DOF
 runallLMLeg(lmLegId, './ant_LMleg_6DOF.db') # 6DOF
 runallLBLeg(lbLegId, './ant_LBleg_6DOF.db') # 6DOF
 runallRFLeg(rfLegId, './ant_RFleg_6DOF.db') # 6DOF
 runallRMLeg(rmLegId, './ant_RMleg_6DOF.db') # 6DOF
 runallRBLeg(rbLegId, './ant_RBleg_6DOF.db') # 6DOF
-"""
+
 
 # 10k samples
-
+"""
 runallLFLeg(lfLegId, './ant_LFleg_6DOF_low.db') # 6DOF
 runallLMLeg(lmLegId, './ant_LMleg_6DOF_low.db') # 6DOF
 runallLBLeg(lbLegId, './ant_LBleg_6DOF_low.db') # 6DOF
 runallRFLeg(rfLegId, './ant_RFleg_6DOF_low.db') # 6DOF
 runallRMLeg(rmLegId, './ant_RMleg_6DOF_low.db') # 6DOF
 runallRBLeg(rbLegId, './ant_RBleg_6DOF_low.db') # 6DOF
-
+"""
 
 # 50k samples
 """

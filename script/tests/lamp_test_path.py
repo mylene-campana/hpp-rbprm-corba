@@ -54,7 +54,7 @@ rbprmBuilder.setNumberFilterMatch(1)
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-5.0, 0, 0.18, 1, 0, 0, 0]; r(q11)  # z = 0.59
+q11[0:7] = [-5.0, 0, 0.28, 1, 0, 0, 0]; r(q11)  # z = 0.59
 
 rbprmBuilder.isConfigValid(q11)
 
@@ -62,7 +62,7 @@ rbprmBuilder.isConfigValid(q11)
 #plotGIWC (q11, V, r, 0, [0,1,0.1,1]) # attente reponse Steve
 
 q22 = q11[::]
-q22[0:7] = [-2.5, 0, 0.18, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-2.5, 0, 0.29, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -70,7 +70,7 @@ rbprmBuilder.isConfigValid(q22)
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-rbprmBuilder.setFrictionCoef(1.2)
+frictionCoef = 1.; rbprmBuilder.setFrictionCoef(frictionCoef)
 rbprmBuilder.setMaxTakeoffVelocity(8)#(4.5)
 rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();

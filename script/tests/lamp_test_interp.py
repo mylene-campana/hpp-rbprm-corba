@@ -28,8 +28,7 @@ base_joint_xyz_limits = tp.base_joint_xyz_limits
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
-#fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
+fullBody.setFullbodyFrictionCoef (tp.frictionCoef)
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf)
 r = tp.r; ps = tp.ps
@@ -78,26 +77,27 @@ if (ecsSize > 0):
 
 
 dir_init = (-np.array(V0list [len(V0list)-1])).tolist() # first V0
+theta_0 = math.atan2(trunkPathwaypoints[1][1] - q_init[1], trunkPathwaypoints[1][0] - q_init[0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("V0", False, V0list[0], theta_0)
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
+fullBody.setStartState(q_init_test,[LegId])
 
-
-com = fullBody.getCenterOfMass ();
-sphereColor = [1,0,0,1]; sphereSize = 0.03; sphereName = "comInit"
-plotSphere (com, r, sphereName, sphereColor, sphereSize)
+#com = fullBody.getCenterOfMass ();; sphereColor = [1,0,0,1]; sphereSize = 0.03; sphereName = "comInit"; plotSphere (com, r, sphereName, sphereColor, sphereSize)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
+theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[0], theta_goal)
 fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
-
-#com = fullBody.getCenterOfMass (); sphereName = "comGoal"
-#plotSphere (com, r, sphereName, sphereColor, sphereSize)
-
-fullBody.setStartState(q_init_test,[LegId])
 fullBody.setEndState(q_goal_test,[LegId])
+
+
+#com = fullBody.getCenterOfMass (); sphereName = "comGoal"; plotSphere (com, r, sphereName, sphereColor, sphereSize)
+
 
 ## Interpolation
 
@@ -108,14 +108,15 @@ fullBody.setPose (flexion, "flexion")
 timeStep = 0.002
 
 print("Start ballistic-interpolation")
-psf.setPlannerIterLimit (10)
+psf.setPlannerIterLimit (5)
 fullBody.interpolateBallisticPath(entryPathId, timeStep) #  -> now also set lastComputedStates_ stack
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, True) # timed-interpolation
 print("ballistic-interpolation finished")
 
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1) # TODO debug !
 pp.speed=0.2
-#pp(psf.numberPaths ()-1)
+pp(psf.numberPaths ()-1)
 
 #test = []; rr(test); fullBody.isConfigValid(test)
 

@@ -8,10 +8,13 @@
     <color rgba="1 1 1 1"/>
   </material>
   <material name="Gray">
-    <color rgba="0.6 0.6 0.6 0.4"/>
+    <color rgba="0.6 0.6 0.6 1"/>
   </material>
   <material name="Green"> <!-- for ROMs -->
     <color rgba="0 1 0 0.4"/>
+  </material>
+  <material name="Red">
+    <color rgba="1 0 0 1"/>
   </material>
 
   <link name="base_link"/>
@@ -38,9 +41,9 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Head_view.dae"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/lamp/Head_box.stl"/>
          </geometry>
-		 <material name="Gray"/>
+		 <material name="Red"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -72,7 +75,7 @@
       </collision>-->
    </link>
 
-  <!--<joint name="head_rom_joint" type="fixed">
+  <joint name="head_rom_joint" type="fixed">
       <parent link="HeadLink"/>
       <child link="head_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -84,9 +87,9 @@
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/lamp/foot_rom.stl"/>
          </geometry>
-         <material name="Gray"/>
+         <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
    <!-- JOINTS -->
    <joint name="Head" type="fixed">

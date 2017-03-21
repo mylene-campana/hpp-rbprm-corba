@@ -364,3 +364,6 @@ class Builder (object):
 
     def setInteriorPoint (self, point):
         return self.client.rbprm.rbprm.setInteriorPoint (point)
+
+    def quaternionDifference (self, config1, config2):
+        return self.client.rbprm.rbprm.quaternionDifference (config1, config2)

@@ -3011,13 +3011,31 @@ namespace hpp {
       void RbprmBuilder::setFillGenerateContactState (const CORBA::Boolean b) {
 	fillGenerateContactState_ = b;
       }
-
       void RbprmBuilder::setInteriorPoint (const hpp::floatSeq& point) {
 	fcl::Vec3f ip;
 	for (std::size_t i = 0; i < 3; i++)
 	  ip [i] = point [(CORBA::ULong) i];
 	bindShooter_.interiorPoint_ = ip;
       }
+
+      // ---------------------------------------------------------------
+
+      hpp::floatSeq* RbprmBuilder::quaternionDifference
+      (const hpp::floatSeq& quat1, const hpp::floatSeq& quat2) {
+	const core::DevicePtr_t& robot = problemSolver_->robot ();
+	const core::JointPtr_t jointSO3 = robot->getJointVector () [1];
+	const size_type indexSO3 = 0;//jointSO3->rankInConfiguration ();
+	const size_type indexVelSO3 = 0;//jointSO3->rankInConfiguration ();
+	//const core::Configuration_t q1 = dofArrayToConfig (robot->configSize(), config1);
+	//const core::Configuration_t q2 = dofArrayToConfig (robot->configSize(), config2);
+	const core::Configuration_t q1 = dofArrayToConfig (4, quat1);
+	const core::Configuration_t q2 = dofArrayToConfig (4, quat2);
+	core::vector_t angVelVector (3);
+	jointSO3->configuration ()->difference (q1, q2, indexSO3, indexVelSO3, angVelVector);
+	hpp::floatSeq* result = vectorToFloatseq (angVelVector);
+	return result;
+      }
+
 
     } // namespace impl
   } // namespace rbprm

@@ -363,6 +363,8 @@ namespace hpp {
 	hpp::floatSeqSeq* getlastStatesComputedTime ();
 	void setFillGenerateContactState (const CORBA::Boolean b);
 	void setInteriorPoint (const hpp::floatSeq& point);
+	hpp::floatSeq* quaternionDifference (const hpp::floatSeq& quat1,
+					     const hpp::floatSeq& quat2);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.

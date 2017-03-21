@@ -645,6 +645,10 @@ module hpp
     /// (points of triangle correctly ordered)
     void setInteriorPoint (in floatSeq point) raises (Error);
 
+    /// Compute the velocity vector resulting from the difference between
+    /// the two given quaternion configurations
+    floatSeq quaternionDifference (in floatSeq config1, in floatSeq config2);
+
   }; // interface Robot
   }; // module rbprm
   }; // module corbaserver

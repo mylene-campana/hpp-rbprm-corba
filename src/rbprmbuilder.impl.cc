@@ -2321,6 +2321,7 @@ namespace hpp {
 
       void RbprmBuilder::interpolateBallisticPath (const CORBA::UShort pathId,
 						   const double u_offset,
+						   const CORBA::UShort maxIter,
 						   const CORBA::Boolean timed)
 	throw (hpp::Error){
         try {
@@ -2348,6 +2349,7 @@ namespace hpp {
 	  const ParabolaPathPtr_t pp = 
 	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
 	  rbprm::T_StateFrame stateFrames;
+	  interpolator->setMaxIterMaintainContacts ((size_t) maxIter);
 
 	  if (extendingPose_.rows() > 0)
 	    interpolator->extendingPose (extendingPose_);

@@ -104,18 +104,18 @@ extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, -0.3, 0.0]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 2.0, -1.0, 0.0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
-timeStep = 0.002
+timeStep = 0.0005
 
 print("Start ballistic-interpolation")
 psf.setPlannerIterLimit (5)
-fullBody.interpolateBallisticPath(entryPathId, timeStep) #  -> now also set lastComputedStates_ stack
+fullBody.interpolateBallisticPath(entryPathId, timeStep, 400) #  -> now also set lastComputedStates_ stack
 #fullBody.interpolateBallisticPath(entryPathId, timeStep, True) # timed-interpolation
 print("ballistic-interpolation finished")
 
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1) # TODO debug !
-pp.speed=1
-#pp(psf.numberPaths ()-1)
+pp.speed=0.6
+pp(psf.numberPaths ()-1)
 
 #test = []; rr(test); fullBody.isConfigValid(test)
 

@@ -313,6 +313,7 @@ namespace hpp {
 			   CORBA::String_out report) throw (hpp::Error);
 	void interpolateBallisticPath (const CORBA::UShort pathId,
 				       const double u_offset,
+				       const CORBA::UShort maxIter,
 				       const CORBA::Boolean timed = false)
 	  throw (hpp::Error);
 	hpp::floatSeqSeq* generateWaypointContacts (CORBA::UShort pathId)

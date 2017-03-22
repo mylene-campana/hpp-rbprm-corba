@@ -341,8 +341,8 @@ class FullBody (object):
 		return Ps, Ns
 
 	## Given start and goal states, return a path where we keep the parabola path for trunk and we try to interpolate the limbs around keyframes. 
-    def interpolateBallisticPath(self, pathId = 0, u_offset = 0, timed = False):
-		return self.client.rbprm.rbprm.interpolateBallisticPath(pathId, u_offset, timed)
+    def interpolateBallisticPath(self, pathId = 0, u_offset = 0, maxIter = 100, timed = False):
+		return self.client.rbprm.rbprm.interpolateBallisticPath(pathId, u_offset, maxIter, timed)
 
     ## Transforms path waypoint-configurations in contact-configurations
     def generateWaypointContacts(self, pathId = 0):

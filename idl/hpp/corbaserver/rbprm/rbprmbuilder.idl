@@ -510,6 +510,7 @@ module hpp
     /// \param timed: if true, the parametrization is made with time, and not with x distance
     void interpolateBallisticPath (in unsigned short pathId,
 				   in double u_offset,
+				   in unsigned short maxIter,
 				   in boolean timed) raises (Error);
 
     /// Generate contact on the waypoint-configurations of the given path

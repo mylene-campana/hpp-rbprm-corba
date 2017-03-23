@@ -81,7 +81,7 @@ fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
-fullBody.setStartState(q_init_test,[rLegId,lLegId])
+fullBody.setStartState(q_init_test,[rLegId, lLegId])
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
 theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
@@ -89,22 +89,23 @@ fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[0], theta_goal)
 fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
-fullBody.setEndState(q_goal_test,[rLegId,lLegId])
-
+fullBody.setEndState(q_goal_test,[rLegId, lLegId])
 
 psf.setPlannerIterLimit (5)
+timeStep = 0.0005
+maxIter = 400
 
 print("Start ballistic-interpolation")
-#fullBody.interpolateBallisticPath(entryPathId, 0.002) # no timed-interpolation
-fullBody.interpolateBallisticPath(entryPathId, 0.002, True) # timed-interpolation
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter) # no timed-interpolation
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True) # timed-interpolation
 print("ballistic-interpolation finished")
 
 
 pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=1
+pp.speed=0.6
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-#pp(psf.numberPaths ()-1)
+pp(psf.numberPaths ()-1)
 
 
 #r.startCapture("skeletonDesert_pbIntersectionRomObst","png") ; r.stopCapture()
@@ -125,7 +126,8 @@ pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, 
 #gui.writeNodeFile('cone_start','cone_start.dae')
 #gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'kangaroo_desert_path.txt')
-pathToYamlFile (psf, rr, "kangarooDesert_frames.yaml ", "kangaroo", psf.numberPaths()-1, q_goal_test, 0.025)
+
+pathJointConfigsToFile (psf, rr, "kangarooDesert_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.005)
 """
 
 """
@@ -224,13 +226,3 @@ q = [6.2666,-2.6362,-0.952683,-0.0849639,-0.13228,0.113626,0.981006,0,0,0,0,0,0,
 fullBody.isConfigValid(q); rr(q)
 
 """
-
-""" # without solving path
-q_init[0:confsize-ecsSize] = tp.q11[0:confsize-ecsSize]
-q_goal[0:confsize-ecsSize] = tp.q22[0:confsize-ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = tp.q11[confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = tp.q22[confsize-ecsSize:confsize]
-
-dir_init = [0,0,-1]; dir_goal = [0,0, 1]"""
-

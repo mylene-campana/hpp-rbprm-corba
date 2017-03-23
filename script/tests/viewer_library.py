@@ -742,7 +742,7 @@ def writePathSamples (pathSamples, fileName):
     numPathSamples = len(pathSamples)
     f = open(fileName,'a')
     for i in range (0,numPathSamples):
-        print ("sample number: " + str(i))
+        #print ("sample number: " + str(i))
         f.write(str(pathSamples [i]).strip('[]')+'\n') # write point i
     
     f.close()

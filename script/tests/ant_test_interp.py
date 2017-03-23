@@ -119,8 +119,6 @@ print("ballistic-interpolation finished")
 pp.speed=0.4
 pp(psf.numberPaths ()-1)
 
-#pathJointConfigsToFile (psf, rr, "antTestInDirect_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.005)
-
 
 #ID = gui.createWindow("w"); gui.addSceneToWindow("0_scene_hpp_",ID)
 
@@ -138,7 +136,7 @@ gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'path.txt')
-pathJointConfigsToFile (psf, rr, "jointConfigs.txt", pathId, q_goal_test, 0.02)
+pathJointConfigsToFile (psf, rr, "antTestInDirect_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.005)
 """
 
 """
@@ -162,48 +160,4 @@ mencoder video.mp4 -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup 
 avconv -i video.mp4 -vcodec mpeg4 -crf 24 spiderman_jump_slowmo.mp4
 rm capture*.png
 rm video.mp4
-"""
-
-"""
-q = extending[::]
-q = q_0 [::]
-q [fullBody.rankInConfiguration ['LFThigh_ry']] = 1.1 ; rr(q)
-q [fullBody.rankInConfiguration ['LFShank_ry']] = -0.5 ; rr(q)
-q [fullBody.rankInConfiguration ['LFFoot_ry']] = 0 ; rr(q)
-
-q [fullBody.rankInConfiguration ['LMThigh_ry']] = 1.1 ; rr(q)
-q [fullBody.rankInConfiguration ['LMShank_ry']] = -0.5 ; rr(q)
-q [fullBody.rankInConfiguration ['LMFoot_ry']] = 0.2 ; rr(q)
-
-q [fullBody.rankInConfiguration ['LBThigh_ry']] = 1.1 ; rr(q)
-q [fullBody.rankInConfiguration ['LBShank_ry']] = -0.5 ; rr(q)
-q [fullBody.rankInConfiguration ['LBFoot_ry']] = 0.2 ; rr(q)
-
-q [fullBody.rankInConfiguration ['RFThigh_ry']] = -1.1 ; rr(q)
-q [fullBody.rankInConfiguration ['RFShank_ry']] = 0.5 ; rr(q)
-q [fullBody.rankInConfiguration ['RFFoot_ry']] = 0 ; rr(q)
-
-q [fullBody.rankInConfiguration ['RMThigh_ry']] = -1.1 ; rr(q)
-q [fullBody.rankInConfiguration ['RMShank_ry']] = 0.5 ; rr(q)
-q [fullBody.rankInConfiguration ['RMFoot_ry']] = -0.2 ; rr(q)
-
-q [fullBody.rankInConfiguration ['RBThigh_ry']] = -1.1 ; rr(q)
-q [fullBody.rankInConfiguration ['RBShank_ry']] = 0.5 ; rr(q)
-q [fullBody.rankInConfiguration ['RBFoot_ry']] = -0.2 ; rr(q)
-
-p1= [-3.20403, -1.13039, -8.00642e-19]
-p2= [-3.56603, -0.914465, 9.34082e-19]
-p3= [-3.34256, -1.05825, -1.02043e-19]
-p4= [-2.92027, -0.722541, -3.46945e-19]
-p5= [-3.31152, -0.479053, 1.85037e-18]
-p6= [-3.04735, -0.542559, 0]
-
-sphereColor = [1,0,0,1]; sphereSize = 0.02; sphereName = "pointsPlane"
-plotSphere (p1, rr, sphereName+"1", sphereColor, sphereSize)
-plotSphere (p2, rr, sphereName+"2", sphereColor, sphereSize)
-plotSphere (p3, rr, sphereName+"3", sphereColor, sphereSize)
-plotSphere (p4, rr, sphereName+"4", sphereColor, sphereSize)
-plotSphere (p5, rr, sphereName+"5", sphereColor, sphereSize)
-plotSphere (p6, rr, sphereName+"6", sphereColor, sphereSize)
-
 """

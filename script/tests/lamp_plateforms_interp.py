@@ -2,6 +2,8 @@
 # author: Mylene Campana (mcampana@laas.fr)
 # Script which goes with hpp-rbprm-corba package.
 
+#blender/urdf_to_blender.py -p rbprmBuilder/ -i /local/mcampana/devel/hpp/src/hpp-rbprm-corba/data/urdf/lamp/lamp.urdf -o lamp_blend.py
+
 from hpp.corbaserver.rbprm.rbprmbuilder import Builder
 from hpp.corbaserver.rbprm.rbprmfullbody import FullBody
 from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
@@ -120,6 +122,8 @@ pp.speed=0.6
 
 #test = []; rr(test); fullBody.isConfigValid(test)
 
+pathToYamlFile (psf, rr, "lampPlateforms_frames.yaml", "lamp", psf.numberPaths ()-1, q_goal_test, 0.007)
+
 """
 statesTime = fullBody.getlastStatesComputedTime ()
 numberOfStatesComputed = len(statesTime)-1
@@ -150,7 +154,7 @@ gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'path.txt')
-pathToYamlFile (psf, rr, "lampPlateforms_frames.yaml ", "lamp", psf.numberPaths ()-1, q_goal_test, 0.001)
+pathToYamlFile (psf, rr, "lampPlateforms_frames.yaml", "lamp", psf.numberPaths ()-1, q_goal_test, 0.001)
 """
 
 """

@@ -5,8 +5,6 @@
 # It defines init and final configs, and solve them with RBPRM.
 # Range Of Motions are spheres linked to the 4 end-effectors
 
-#blender/urdf_to_blender.py -p rbprmBuilder/ -i /local/mcampana/devel/hpp/src/animals_description/urdf/skeleton.urdf -o skeleton_blend.py
-
 
 from hpp.corbaserver import Client
 from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
@@ -147,40 +145,22 @@ f.write("path computation: " + str(timeSec) + "\n")
 f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
 
-#pathSamples = plotSampleSubPath (ps.client.problem, r, ps.numberPaths () - 1, 70, "sampledPath1", [1,0,0,1])
-#writePathSamples (pathSamples, 'lampPlateforms_path.txt')
+##### Blender
 
+pathSamples = plotSampleSubPath (ps.client.problem, r, ps.numberPaths () - 1, 70, "sampledPath", [1,0,0,1])
+writePathSamples (pathSamples, 'lampPlateforms_path.txt')
 
-INFO:/local/mcampana/devel/hpp/src/hpp-rbprm/src/utils/algorithms.cc:604: p1 of plane=  
-INFO:/local/mcampana/devel/hpp/src/hpp-rbprm/src/utils/algorithms.cc:605: p2 of plane=  
-INFO:/local/mcampana/devel/hpp/src/hpp-rbprm/src/utils/algorithms.cc:606: p3 of plane=  
-
-p1= [5.70592, -2.05007,   4.0979]
-p2= [6.24272, -3.10795,   4.0979]
-p3= [6.24272, -3.10795,  2.83942]
- 
-sphereColor = [1,0,0,1]; sphereSize = 0.1; sphereName = "pointsPlane"
-plotSphere (p1, r, sphereName+"11", sphereColor, sphereSize)
-plotSphere (p2, r, sphereName+"22", sphereColor, sphereSize)
-plotSphere (p3, r, sphereName+"33", sphereColor, sphereSize)
+q_goal = ps.configAtParam(solutionPathId,ps.pathLength(solutionPathId))
+pathToYamlFile (ps, r, "lampTrunkPlateforms_frames.yaml", "lamp_trunk", orientedpathIdBis, q_goal, 0.01)
 
 plotFrame (r, "framy", [0,0,0], 1)
-"""
-
-"""for i in range(0,len(waypoints)):
-    jointConfigsToFile (ps, r, "lampPlateforms_wp"+str(i)+".txt", waypoints[i])"""
-
-"""
-q_goal = ps.configAtParam(solutionPathId,ps.pathLength(solutionPathId))
-pathToYamlFile (ps, r, "lampTrunkPlateforms_frames.yaml ", "lamp_trunk", orientedpathIdBis, q_goal, 0.001)
-
-"""
 
 # plot contact-cones of waypoints
-"""coneGroupName = "ConesWP_contactCones"; r.client.gui.createGroup (coneGroupName)
+coneGroupName = "ConesWP_contactCones"; r.client.gui.createGroup (coneGroupName)
 for i in range(0,len(waypoints)):
     q = waypoints[i]; conesWP = rbprmBuilder.getContactCones (q); coneName = "ConesWP"+str(i); contactConeName = coneName+"_contactCones_0"; plotContactCones (conesWP, ps, r, coneName, "friction_cone1"); r.client.gui.addToGroup (contactConeName, coneGroupName)
 
 
 #r.client.gui.writeNodeFile(coneGroupName,'ConesWP_contactCones1_lampPlateforms.dae')
 """
+

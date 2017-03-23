@@ -53,10 +53,10 @@ addLight (r, [-4,4,3,1,0,0,0], "li3"); addLight (r, [4,-4,3,1,0,0,0], "li4")
 
 from hpp.corbaserver.affordance.affordance import AffordanceTool
 afftool = AffordanceTool ()
-#afftool.setAffordanceConfig('Support', [0.6, 0.6, 0.08]) # error, angle and area   # default (0.3,0.3,0.05)   # all ground [0.6, 0.6, 0.06]   ## THIS ONE IS NOT WORKING WELL (many 'Ok' configs with no ROM-obst correct intersection)
-afftool.setAffordanceConfig('Support', [1., 0.0001, 0.05]) # error, angle and area   # default (0.3,0.3,0.05)   # CA POURRAIT MARCHER ...... A TESTER !!!
-afftool.setNeighbouringTriangleMargin ('Support', 0.01)    # CA POURRAIT MARCHER ...... A TESTER !!!
-afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
+afftool.setAffordanceConfig('Support', [1., 0.0001, 0.05]) # error, angle and area   # default (0.3,0.3,0.05) 
+afftool.setNeighbouringTriangleMargin ('Support', 0.01)
+print("Load affordances")
+afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r); print("Affordances OK")
 SupportColour = [0.0, 0.95, 0.80];
 #afftool.visualiseAffordances('Support', r, SupportColour)
 
@@ -92,16 +92,17 @@ cones2 = rbprmBuilder.getContactCones (q22); cones2
 
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
+ps.selectSteeringMethod("SteeringParabola")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 frictionCoef = 1.2; rbprmBuilder.setFrictionCoef(frictionCoef)
-rbprmBuilder.setMaxTakeoffVelocity(6.5)
+rbprmBuilder.setMaxTakeoffVelocity(7)
 rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 
-#waypoints = [q11, [1.4682346589202155, 1.3721742911882595, -0.3177500175158776, -0.47980079307050877, -0.42470043369655597, -0.12553328442064984, 0.7574048686729129, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5228784135749911, -0.5977022514113965, 0.6077418722410429, -1.8515503036956853], [-2.2428656093342907, 3.705981508906953, -0.43171314034458386, -0.19511109369718505, -0.39497095366864815, -0.20585489417778283, 0.8738154092355094, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6099342639403275, -0.5138847866960039, 0.6032434166022648, -2.8579343885809663], [-4.980684904172251, 2.518180830037141, 0.7837057291683014, 0.9527709249186042, 0.12448725029738976, 0.27422176447773133, 0.03915243325595655, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5322890058654917, -0.21574276655074562, 0.8186106968002294, 0.16720644997193632], q22] # 7 - 8
-"""for i in range(0,len(waypoints)-1):
-    ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); ps.solve (); ps.resetGoalConfigs()"""
-
+waypoints = [q11, [1.4682346589202155, 1.3721742911882595, -0.3177500175158776, -0.47980079307050877, -0.42470043369655597, -0.12553328442064984, 0.7574048686729129, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5228784135749911, -0.5977022514113965, 0.6077418722410429, -1.8515503036956853], [-2.2428656093342907, 3.705981508906953, -0.43171314034458386, -0.19511109369718505, -0.39497095366864815, -0.20585489417778283, 0.8738154092355094, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6099342639403275, -0.5138847866960039, 0.6032434166022648, -2.8579343885809663], [-4.980684904172251, 2.518180830037141, 0.7837057291683014, 0.9527709249186042, 0.12448725029738976, 0.27422176447773133, 0.03915243325595655, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5322890058654917, -0.21574276655074562, 0.8186106968002294, 0.16720644997193632], q22] # 7 - 8
+#ps.directPath (waypoints[0] , waypoints[1], False)
+for i in range(0,len(waypoints)-1):
+    ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); t = ps.solve (); t; ps.resetGoalConfigs()
 
 
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
@@ -142,13 +143,21 @@ for i in range(1,len(pathOriBisWaypoints)-1):
         print('problem with waypoints number: ' + str(i))
 
 # Move RB-robot away in viewer
-qAway = q11 [::]; qAway[0] = -8
-rbprmBuilder.setCurrentConfig (qAway); r(qAway)
+qAway = q11 [::]; qAway[0] = -8; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 
 
-#plotConeWaypoints (ps, solutionPathId, r, "cone_planning_wp_group", "friction_cone")
-#plotCone (q11, ps, r, "cone_11", "friction_cone"); plotCone (q22, ps, r, "cone_21", "friction_cone")
+#plotConeWaypoints (ps, solutionPathId, r, "cone_planning_wp_group", "friction_cone2") # gui.writeNodeFile('cone_planning_wp_group','conesWP_COM_kangarooDesert.dae')
+#plotCone (q11, ps, r, "cone_11", "friction_cone2"); plotCone (q22, ps, r, "cone_21", "friction_cone2")
+# r.client.gui.writeNodeFile('cone_11','Cone_start_mu2_kangarooDesert.dae'); r.client.gui.writeNodeFile('cone_21','Cone_goal_mu1_kangarooDesert.dae')
+
+"""
+q_goal = ps.configAtParam(orientedpathIdBis,ps.pathLength(orientedpathIdBis))
+pathToYamlFile (ps, r, "kangarooTrunkDesert_frames.yaml", "kangaroo_trunk", orientedpathIdBis, q_goal, 0.015)
+
+pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
+writePathSamples (pathSamples, 'kangaroo_desert_path.txt')
+"""
 
 
 """
@@ -173,7 +182,7 @@ writePathSamples (pathSamples, 'fullSkeleton_newDesert_path.txt')
 
 """
 
-#r.startCapture("skeletonDesert_pbIntersectionRomObst","png") ; r.stopCapture()
+#r.startCapture("kangarooDesert_contactConesImage","png") ; r.stopCapture()
 
 """
 p1= [-3.88244,   4.18888, -0.891968]
@@ -220,5 +229,13 @@ lineEndBorders = "END of border points ---"
 pointsIntersBorders = plotLogConvexConeInters (r, logID, lineParsedBorders, lineEndBorders, "IntersPointBorders_", 0.021, blue)
 plotStraightLines (origin, pointsIntersBorders, r, "CC_borderLine", blue)
 
+"""
 
+# plot contact-cones of waypoints
+"""coneGroupName = "ConesWP_contactCones"; r.client.gui.createGroup (coneGroupName)
+for i in range(0,len(waypoints)):
+    q = waypoints[i]; conesWP = rbprmBuilder.getContactCones (q); coneName = "ConesWP"+str(i); contactConeName = coneName+"_contactCones_0"; plotContactCones (conesWP, ps, r, coneName, "friction_cone2"); r.client.gui.addToGroup (contactConeName, coneGroupName)
+
+
+#r.client.gui.writeNodeFile(coneGroupName,'ConesWP_contactCones2_kangarooDesert.dae')
 """

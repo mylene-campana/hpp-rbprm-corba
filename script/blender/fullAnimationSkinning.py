@@ -1,6 +1,6 @@
 import bpy
 from math import *
-#import yaml #Windaube
+import yaml #Windaube
 """
 Contains all Blender actions to:
   - import initial and final cones, (and create associated spheres ?)
@@ -188,6 +188,8 @@ def createSphereMesh (sphereName, spherePose, sphereMat, numSegments, numRings, 
 	bpy.context.object.data.materials.append(sphereMat)
 
 def loadMotionBodies (filename, startFrame): # from stonneau@laas.fr
+	#root = bpy.data.objects[rootName]
+	#offsetArmatureQuarternion = [root.rotation_quaternion[0],root.rotation_quaternion[1],root.rotation_quaternion[2],root.rotation_quaternion[3]]
 	with open (filename) as file:
 		data = yaml.load (file)
 		for frameId in range (len(data.keys())):
@@ -199,7 +201,8 @@ def loadMotionBodies (filename, startFrame): # from stonneau@laas.fr
 					currentObj.rotation_mode = 'QUATERNION'
 					posF = [float(x) for x in pos]
 					currentObj.location = posF[0:3]
-					currentObj.rotation_quaternion = posF[3:7]
+					#quatProd = quaternionListProduct (posF[3:7],offsetArmatureQuarternion)
+					currentObj.rotation_quaternion = posF[3:7] #quatProd
 					currentObj.keyframe_insert (data_path="location", frame=frameId+startFrame)
 					currentObj.keyframe_insert (data_path="rotation_quaternion", frame=frameId+startFrame)
 				else:
@@ -479,7 +482,7 @@ def mainTest ():
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
 
 
-def mainTestBis (): # no armature
+def mainTestBis (): # no armature (no motion actually)
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
 	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
@@ -527,10 +530,20 @@ def displayAntContactConfig ():
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
 
+def importTrunkMotion ():
+	viewerFilePath = '/local/mcampana/devel/hpp/videos/'
+	#fileName = 'lampPlateforms_frames.yaml'
+	fileName = 'kangarooTrunkDesert_frames.yaml'
+	yamlFileName = viewerFilePath + fileName
+	beginMotionFrame = 0
+	endMotionFrame = loadMotionBodies (yamlFileName, beginMotionFrame)
+
+
 #---------------------------------------------------------------------------#
 #main  ()
 #mainTest  ()
 #mainTestBis ()
 #justImportDamnPath ()
 #irosRoadmapVisibility ()
-displayAntContactConfig ()
+#displayAntContactConfig ()
+importTrunkMotion ()

@@ -105,17 +105,18 @@ flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 2.0, -1.0, 0.0]
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 timeStep = 0.0005
+maxIter = 400
 
 print("Start ballistic-interpolation")
 psf.setPlannerIterLimit (5)
-fullBody.interpolateBallisticPath(entryPathId, timeStep, 400) #  -> now also set lastComputedStates_ stack
-#fullBody.interpolateBallisticPath(entryPathId, timeStep, True) # timed-interpolation
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter) #  -> now also set lastComputedStates_ stack
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True) # timed-interpolation
 print("ballistic-interpolation finished")
 
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1) # TODO debug !
 pp.speed=0.6
-pp(psf.numberPaths ()-1)
+#pp(psf.numberPaths ()-1)
 
 #test = []; rr(test); fullBody.isConfigValid(test)
 
@@ -149,7 +150,7 @@ gui.writeNodeFile('cone_wp_group','cones_path.dae')
 gui.writeNodeFile('cone_start','cone_start.dae')
 gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'path.txt')
-pathToYamlFile (psf, rr, "lampTest_frames.yaml ", "lamp", pathId, q_goal_test, 0.01)
+pathToYamlFile (psf, rr, "lampPlateforms_frames.yaml ", "lamp", psf.numberPaths ()-1, q_goal_test, 0.001)
 """
 
 """

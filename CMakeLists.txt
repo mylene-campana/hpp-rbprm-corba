@@ -103,7 +103,7 @@ install(FILES
 	data/urdf/ground_jump_med.urdf
 	data/urdf/ground_with_bridge.urdf
   data/urdf/skeleton/skeleton.urdf
-  data/urdf/skeleton/skeleton_trunk_flexible.urdf
+  data/urdf/skeleton/skeleton_trunk.urdf
   data/urdf/skeleton/armlessSkeleton.urdf
   data/urdf/skeleton/armlessSkeleton_trunk.urdf
   data/urdf/skeleton/RHandSphere.urdf
@@ -149,6 +149,10 @@ install(FILES
   data/urdf/kangaroo/KangarooRFootSphere.urdf
   data/urdf/kangaroo/KangarooLFootSphere.urdf
   data/urdf/desert_for_kangaroo.urdf
+  data/urdf/cones/friction_cone.urdf
+  data/urdf/cones/friction_cone06.urdf
+  data/urdf/cones/friction_cone1.urdf
+  data/urdf/cones/friction_cone2.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -189,7 +193,7 @@ install(FILES
 	data/srdf/ground_jump_med.srdf
 	data/srdf/ground_with_bridge.srdf
   data/srdf/skeleton/skeleton.srdf
-  data/srdf/skeleton/skeleton_trunk_flexible.srdf
+  data/srdf/skeleton/skeleton_trunk.srdf
   data/srdf/skeleton/armlessSkeleton.srdf
   data/srdf/skeleton/armlessSkeleton_trunk.srdf
   data/srdf/skeleton/RHandSphere.srdf
@@ -347,7 +351,11 @@ install(DIRECTORY
 	data/meshes/kangaroo
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
   )
-
+  
+install(DIRECTORY
+	data/meshes/cones
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes/
+  )
 #install(DIRECTORY data/hyq_description
 #  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/../)
   

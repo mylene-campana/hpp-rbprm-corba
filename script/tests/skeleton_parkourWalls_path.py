@@ -16,7 +16,7 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'skeleton_trunk_flexible'
+urdfName = 'skeleton_trunk'
 urdfNameRoms = ['LFootSphere','RFootSphere','LHandSphere','RHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""
@@ -42,11 +42,16 @@ rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.1
 ps = ProblemSolver (rbprmBuilder)
 r = Viewer (ps); gui = r.client.gui
 r(rbprmBuilder.getCurrentConfig ())
+q_0 = rbprmBuilder.getCurrentConfig ()
+
+rbprmBuilder.getLinkPosition("Thorax")
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
 obstacleName = "parkour_walls"
 r.loadObstacleModel (packageName, obstacleName, obstacleName+"_obst")
 addLight (r, [0,-1,7,1,0,0,0], "li"); addLight (r, [0,1,7,1,0,0,0], "li4");
+gui.setCaptureTransform ("skeletonTrunk_frames.yaml", [urdfName]) # FOR BLENDER EXPORT ONLY
+
 
 from hpp.corbaserver.affordance.affordance import AffordanceTool
 afftool = AffordanceTool ()
@@ -76,12 +81,22 @@ q22[0:7] = [0, 1, 0.6, 1, 0, 0, 0]; r(q22)
 rbprmBuilder.isConfigValid(q22)
 
 ## TRY to give manual waypoints
-qwp1 = q11 [::]; qwp1[0:7] = [-1.55, 0, 5.25, 1, 0, 0, 0]; r(qwp1); rbprmBuilder.isConfigValid(qwp1)
+qwp1 = q11 [::]; qwp1[0:7] = [-1.55, 0, 5.25, 1, 0, 0, 0]; qwp1[(len(qwp1)-4):]=[0.051,-0.0006,0.228,0]; r(qwp1); rbprmBuilder.isConfigValid(qwp1)
 qwp2 = q11 [::]; qwp2[0:7] = [0.7, 0, 3.8, 1, 0, 0, 0]; r(qwp2); rbprmBuilder.isConfigValid(qwp2)
 qwp3 = q11 [::]; qwp3[0:7] = [-0.8, 0, 2.6, 0, 0, 0, 1]; r(qwp3); rbprmBuilder.isConfigValid(qwp3)
 qwp4 = q11 [::]; qwp3[0:7] = [0.7, 0, 1.6, 01, 0, 0, 0]; r(qwp3); rbprmBuilder.isConfigValid(qwp3)
 
-conesWP = rbprmBuilder.getContactCones (qwp1); plotContactCones (conesWP, ps, r, "qConesWPtest", "friction_cone2"); qAway = q11 [::]; qAway[0] = -6.5; r(qAway)
+
+qt = q11 [::]; 
+qt[0:7] = [-1.887, 0, 5.444, 0, -0.27564, 0, 0.96126]; r(qt) # rot 180 z and -15 y
+rbprmBuilder.isConfigValid(qt)
+
+q = qt; conesWP = rbprmBuilder.getContactCones (q); plotContactCones (conesWP, ps, r, "contactCones_test", "friction_cone06"); qAway = q11 [::]; qAway[0] = -6.5; r(qAway); conesWP
+#q = qt; r (q); ps.robot.setCurrentConfig(q); gui.refresh (); gui.captureTransform () # BLENDER EXPORT
+
+
+
+#conesWP = rbprmBuilder.getContactCones (qwp1); plotContactCones (conesWP, ps, r, "qConesWPtest", "friction_cone"); qAway = q11 [::]; qAway[0] = -6.5; r(qAway)
 #intersection3D = [[-1.27977,0.856698,4.59634],[-1.27932,0.792132,4.50904],[-1.27927,0.783744,4.49959],[-1.27923,0.774587,4.49188],[-1.27847,0.578437,4.34569],[-1.2782,0.470018,4.29326],[-1.27808,0.418282,4.26993],[-1.27789,0.272664,4.23112],[-1.27778,0.187655,4.2112],[-1.27778,0.15676,4.20937],[-1.27778,0.15676,4.20937],[-1.27781,0.0295551,4.2153],[-1.2779,-0.0797504,4.23182],[-1.27812,-0.275248,4.27282],[-1.27818,-0.299129,4.28436],[-1.27843,-0.358018,4.33299],[-1.27921,-0.521692,4.48153],[-1.27977,-0.563851,4.58897]]
 
 #for i in range(0,len(intersection3D)-2):
@@ -102,22 +117,23 @@ ps.setInitialConfig (qwp3); ps.addGoalConfig (qwp4); ps.solve (); pp.displayPath
 ps.setInitialConfig (qwp4); ps.addGoalConfig (q22); ps.solve (); pp.displayPath(ps.numberPaths ()-1, [0.0, 0.0, 0.8, 1.0]); ps.resetGoalConfigs()
 """
 
-
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setInteriorPoint([0,0,6])
-rbprmBuilder.setFrictionCoef(1.2)
+frictionCoef = 0.6; rbprmBuilder.setFrictionCoef(frictionCoef)
 rbprmBuilder.setMaxTakeoffVelocity(9.2)    #direct path will land with a speed norm of 
 rbprmBuilder.setMaxLandingVelocity(9.2)
 ps.clearRoadmap();
+
+#ps.directPath ( q11, qwp1, False)
 
 # 9.4 lim (ok with 9.3)
 #waypoints = [q11, [0.8970849555733145, -0.5295706331948731, 1.9004868435490172, 0.9550302922058136, 0.23028287060758557, 0.18559178967829196, -0.02103872805130798, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.9302261190519835, -0.04529197497967405, 0.3641812796340932, -0.9144760180568767], [-0.2952067650662399, 0.8096100928352825, 0.5260294719785452, 0.9974445668009648, 0.0, 0.0, 0.07144463702221228, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.14301111325920662], q22]
 #for i in range(0,len(waypoints)-1):
 #    ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); ps.solve (); ps.resetGoalConfigs()
 
-
+"""
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
 print('start solve')
@@ -144,6 +160,9 @@ for i in range(1,len(pathOriWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathOriWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
 
+"""
+
+#qAway = q11 [::]; qAway[0] = -8; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 #r.startCapture ("problem_ROM_obst_skel1","png"); r.stopCapture()
 
@@ -164,8 +183,6 @@ f.write("parabola fail results: " + str(pfr) + "\n" + "\n")
 f.close()
 rob = rbprmBuilder.client.basic.robot
 # Move RB-robot away in viewer
-qAway = q11 [::]; qAway[0] = -6.5; qAway[1] = -2
-rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 """
 
 """
@@ -222,4 +239,33 @@ plotSphere (p2, r, sphereName+"2", sphereColor, sphereSize)
 plotSphere (p3, r, sphereName+"3", sphereColor, sphereSize)
 
 plotFrame (r, "framy", [0,0,0], 1)
+"""
+
+
+"""
+q_goal = ps.configAtParam(orientedpathIdBis,ps.pathLength(orientedpathIdBis))
+pathToYamlFile (ps, r, "kangarooTrunkDesert_forcedOrientation_frames.yaml", "kangaroo_trunk", orientedpathIdBis, q_goal, 0.015)
+
+pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
+writePathSamples (pathSamples, 'kangaroo_desert_path.txt')
+"""
+
+# plot first of contact-cones of waypoints
+"""coneGroupName = "ConesWP_contactCones"; r.client.gui.createGroup (coneGroupName)
+for i in range(0,len(waypoints)):
+    q = waypoints[i]; conesWP = rbprmBuilder.getContactCones (q); coneName = "ConesWP"+str(i); contactConeName = coneName+"_contactCones_1"; plotContactCones (conesWP, ps, r, coneName, "friction_cone2"); r.client.gui.addToGroup (contactConeName, coneGroupName)
+
+
+#r.client.gui.writeNodeFile(coneGroupName,'ConesWP_contactCones2bis_kangarooDesert.dae')
+"""
+
+"""
+# plot all contact-cones of ONE config
+coneName = "contactCones_test"
+q = qt; conesWP = rbprmBuilder.getContactCones (q); plotContactCones (conesWP, ps, r, coneName, "friction_cone06")
+coneGroupName = "contactConesGroup"; r.client.gui.createGroup (coneGroupName)
+for i in range(0,len(conesWP[0])):
+    contactConeName = coneName+"_contactCones_"+str(i); r.client.gui.addToGroup (contactConeName, coneGroupName)
+
+#r.client.gui.writeNodeFile(coneGroupName,'contactCones_skeletonParkour.dae')
 """

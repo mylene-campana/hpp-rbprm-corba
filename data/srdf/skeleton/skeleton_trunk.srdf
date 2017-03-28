@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="skeleton_trunk_flexible">
+<robot name="skeleton_trunk">
 
 <!-- Disable collision pairs of inner links -->
 <!-- torso -->

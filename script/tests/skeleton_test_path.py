@@ -18,7 +18,7 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'skeleton_trunk_flexible'
+urdfName = 'skeleton_trunk'
 urdfNameRoms = ['LFootSphere','RFootSphere','LHandSphere','RHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""

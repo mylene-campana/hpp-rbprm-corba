@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
-<robot name="skeleton_trunk_flexible">
+<robot name="skeleton_trunk">
   <material name="White"> <!-- for bones -->
     <color rgba="1 1 1 1"/>
   </material>
-  <material name="Green"> <!-- for bones -->
+  <material name="Red"> <!-- for boxes -->
+    <color rgba="1 0 0 1"/>
+  </material>
+  <material name="Green"> <!-- for roms -->
     <color rgba="0 1 0.1 0.2"/>
   </material>
 
@@ -23,9 +26,9 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/Pelvis_view.dae"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/pelvis_box.stl"/>
          </geometry>
-         <material name="White"/>
+         <material name="Red"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -36,7 +39,7 @@
    </link>
 
 
- <!--<joint name="pelvis_rfoot_rom_joint" type="fixed">
+   <joint name="pelvis_rfoot_rom_joint" type="fixed">
       <parent link="Pelvis"/>
       <child link="pelvis_rfoot_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -52,7 +55,7 @@
       </visual>
    </link>-->
 
-  <!--<joint name="pelvis_lfoot_rom_joint" type="fixed">
+  <joint name="pelvis_lfoot_rom_joint" type="fixed">
       <parent link="Pelvis"/>
       <child link="pelvis_lfoot_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -66,7 +69,7 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
 
    <link name="PelvisSacrum_J1"/>
@@ -167,6 +170,7 @@
    </link>
    <link name="L1Thorax_J1"/>
    <link name="L1Thorax_J2"/>
+   <link name="ThoraxShift"/>
    <link name="Thorax">
       <inertial>
          <origin rpy="0 0 0" xyz="0.035889 0 0.14072"/>
@@ -174,14 +178,14 @@
          <inertia ixx="-0.16485" ixy="0.25777" ixz="0.0015499" iyy="0.20309" iyz="-0.0061998" izz="-0.18263"/>
       </inertial>
       <visual>
-         <origin xyz="0.035889 0 0.14072" rpy="0 0 0"/>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/Thorax_view.dae"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/thorax_box.stl"/>
          </geometry>
-         <material name="White"/>
+         <material name="Red"/>
       </visual>
       <collision>
-         <origin xyz="0.035889 0 0.14072" rpy="0 0 0"/>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/thorax_box.stl"/>
          </geometry>
@@ -189,8 +193,8 @@
    </link>
 
 
-  <!--<joint name="thorax_rhand_rom_joint" type="fixed">
-      <parent link="Thorax"/>
+   <joint name="thorax_rhand_rom_joint" type="fixed">
+      <parent link="ThoraxShift"/>
       <child link="thorax_rhand_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
    </joint>
@@ -203,10 +207,10 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
-  <!--<joint name="thorax_lhand_rom_joint" type="fixed">
-      <parent link="Thorax"/>
+  <joint name="thorax_lhand_rom_joint" type="fixed">
+      <parent link="ThoraxShift"/>
       <child link="thorax_lhand_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
    </joint>
@@ -219,7 +223,7 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
    <link name="ThoraxSkull_J1"/>
    <link name="ThoraxSkull_J2"/>
@@ -232,9 +236,9 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/Skull_view.dae"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/skeleton/skull_box.stl"/>
          </geometry>
-         <material name="White"/>
+         <material name="Red"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -384,15 +388,20 @@
       <axis xyz="0 0 1"/>
       <limit effort="0" lower="-1.5" upper="1.5" velocity="1.0"/>
    </joint>
-   <joint name="Thorax" type="revolute">
+   <joint name="Thorax" type="revolute"> <!-- revolute is before Thorax origin shift -->
       <parent link="L1Thorax_J2"/>
-      <child link="Thorax"/>
+      <child link="ThoraxShift"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
       <limit effort="0" lower="-0.5" upper="0.6" velocity="1.0"/>
    </joint>
+   <joint name="ThoraxShift" type="fixed">
+      <parent link="ThoraxShift"/>
+      <child link="Thorax"/>
+      <origin rpy="0 0 0" xyz="0.035889 0 0.14072"/> <!-- origin shift moved from link to joint -->
+   </joint>
    <joint name="A_ThoraxSkull_J1" type="revolute"> <!-- A_ added for order while parsing with ROS -->
-      <parent link="Thorax"/>
+      <parent link="ThoraxShift"/>
       <child link="ThoraxSkull_J1"/>
       <origin rpy="0 0 0" xyz="0.0037778 0 0.42122"/>
       <axis xyz="1 0 0"/>

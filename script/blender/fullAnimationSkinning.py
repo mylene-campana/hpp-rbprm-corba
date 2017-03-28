@@ -500,9 +500,9 @@ def mainTestBis (): # no armature (no motion actually)
 	importDaeObjects (daeGoalConeFileName, 'Cone', matConeSG)
 	importDaeObjects (daePathConeFileName, 'Cone', matConePath)
 
-def justImportDamnPath ():
+def importPath ():
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
-	pathFileName = daeFilePath + 'fullSkeleton_newDesert_path.txt'
+	pathFileName = daeFilePath + 'kangaroo_desert_path.txt'
 	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
 	pathName = 'path'
 	pathPoints = parsePathPoints (pathFileName)
@@ -533,7 +533,8 @@ def displayAntContactConfig ():
 def importTrunkMotion ():
 	viewerFilePath = '/local/mcampana/devel/hpp/videos/'
 	#fileName = 'lampPlateforms_frames.yaml'
-	fileName = 'kangarooTrunkDesert_frames.yaml'
+	#fileName = 'kangarooTrunkDesert_frames.yaml'
+	fileName = 'kangarooTrunkDesert_forcedOrientation_frames.yaml'
 	yamlFileName = viewerFilePath + fileName
 	beginMotionFrame = 0
 	endMotionFrame = loadMotionBodies (yamlFileName, beginMotionFrame)
@@ -543,7 +544,7 @@ def importTrunkMotion ():
 #main  ()
 #mainTest  ()
 #mainTestBis ()
-#justImportDamnPath ()
+#importPath ()
 #irosRoadmapVisibility ()
 #displayAntContactConfig ()
 importTrunkMotion ()

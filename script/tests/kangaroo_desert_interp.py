@@ -92,7 +92,7 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setEndState(q_goal_test,[rLegId, lLegId])
 
 psf.setPlannerIterLimit (5)
-timeStep = 0.0005
+timeStep = 0.0002
 maxIter = 400
 
 print("Start ballistic-interpolation")
@@ -127,7 +127,7 @@ pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, 
 #gui.writeNodeFile('cone_goal','cone_goal.dae')
 writePathSamples (pathSamples, 'kangaroo_desert_path.txt')
 
-pathJointConfigsToFile (psf, rr, "kangarooDesert_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.005)
+pathJointConfigsToFile (psf, rr, "kangarooDesert_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.003)
 """
 
 """

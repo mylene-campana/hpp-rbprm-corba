@@ -2634,18 +2634,21 @@ namespace hpp {
 	  // update waypoints orientations
 	  for (std::size_t i = 0; i < waypoints.size (); i++) {
 	    qTmp = rbprm::setOrientation (robot, waypoints [i]);
+	    hppDout (info, "rotateAfterJump= " << rotateAfterJump);
+
+	    //waypoints[i] = qTmp; // TEST FORCING ORIENTATION !!!!!!
+
 	    if (problemSolver_->problem ()->configValidations()->validate(qTmp,report)) {
 	      hppDout (info, "waypoint with orientation is valid");
 	      waypoints[i] = qTmp;
 	    } else {
 	      hppDout (info, "waypoint with orientation is NOT valid= " << displayConfig(qTmp));
 	    }
-	    //waypoints [i][rank] = skullJoint->lowerBound (0);
 	    hppDout (info, "new wp(i): " << displayConfig (waypoints [i]));
 	  }
 
 
-	  // Test Pierre : (set orientation of Z trunk axis to the direction of alpha0)
+	  // set orientation of Z trunk axis to the direction of alpha0
 	  if(trunkOrientation) {
 	    Eigen::Vector3d yTheta;
 	    Eigen::Quaterniond qr ,qi,qf;
@@ -2715,6 +2718,9 @@ namespace hpp {
 
 	  // loop to construct new path vector with parabPath constructor
 	  ParabolaPathPtr_t pp;
+	  core::PathValidationPtr_t pathValidation = problemSolver_->problem ()->pathValidation ();
+	  core::PathPtr_t validPart;
+	  core::PathValidationReportPtr_t pathReport;
 	  for (std::size_t i = 0; i < num_subpaths; i++) {
 	    const core::PathPtr_t subpath = (*path).pathAtRank (i);
 	    pp =  boost::dynamic_pointer_cast<ParabolaPath>(subpath);
@@ -2726,15 +2732,21 @@ namespace hpp {
 	    const vector_t coefs = pp->coefficients ();
 	    const value_type length = pp->length ();
 
-
-	    newPath->appendPath
-	      (rbprm::ParabolaPath::create (robot, waypoints [i],
-					    waypoints [i+1], length, coefs,
-					    pp->V0_, pp->Vimp_,
-					    pp->initialROMnames_,
-					    pp->endROMnames_,
-					    pp->contactCones0_,
-					    pp->contactConesImp_));
+	    ParabolaPathPtr_t new_pp = 
+	      rbprm::ParabolaPath::create (robot, waypoints [i],
+					   waypoints [i+1], length, coefs,
+					   pp->V0_, pp->Vimp_,
+					   pp->initialROMnames_,
+					   pp->endROMnames_,
+					   pp->contactCones0_,
+					   pp->contactConesImp_);
+	    if (!pathValidation->validate (new_pp, false, validPart, pathReport)) {
+	      newPath->appendPath (pp);
+	      hppDout (error, "Oriented path was NOT appended AS it is NOT valid");
+	    } else {
+	      newPath->appendPath (new_pp);
+	    }
+	    
 	  }
 	  // add path vector to problemSolver
 	  problemSolver_->addPath (newPath);

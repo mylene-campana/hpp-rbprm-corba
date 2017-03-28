@@ -113,14 +113,14 @@ solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 #pp(solutionPathId)
 
-rbprmBuilder.rotateAlongPath (solutionPathId,True)
-orientedpathId = ps.numberPaths () - 1
+#rbprmBuilder.rotateAlongPath (solutionPathId,True)
+#orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathIdBis = ps.numberPaths () - 1
 #pp(orientedpathIdBis)
-
+"""
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 
@@ -144,7 +144,7 @@ for i in range(1,len(pathOriBisWaypoints)-1):
 
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[0] = -8; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
-
+"""
 
 
 #plotConeWaypoints (ps, solutionPathId, r, "cone_planning_wp_group", "friction_cone2") # gui.writeNodeFile('cone_planning_wp_group','conesWP_COM_kangarooDesert.dae')
@@ -153,7 +153,7 @@ qAway = q11 [::]; qAway[0] = -8; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 """
 q_goal = ps.configAtParam(orientedpathIdBis,ps.pathLength(orientedpathIdBis))
-pathToYamlFile (ps, r, "kangarooTrunkDesert_frames.yaml", "kangaroo_trunk", orientedpathIdBis, q_goal, 0.015)
+pathToYamlFile (ps, r, "kangarooTrunkDesert_forcedOrientation_frames.yaml", "kangaroo_trunk", orientedpathIdBis, q_goal, 0.015)
 
 pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
 writePathSamples (pathSamples, 'kangaroo_desert_path.txt')
@@ -234,8 +234,8 @@ plotStraightLines (origin, pointsIntersBorders, r, "CC_borderLine", blue)
 # plot contact-cones of waypoints
 """coneGroupName = "ConesWP_contactCones"; r.client.gui.createGroup (coneGroupName)
 for i in range(0,len(waypoints)):
-    q = waypoints[i]; conesWP = rbprmBuilder.getContactCones (q); coneName = "ConesWP"+str(i); contactConeName = coneName+"_contactCones_0"; plotContactCones (conesWP, ps, r, coneName, "friction_cone2"); r.client.gui.addToGroup (contactConeName, coneGroupName)
+    q = waypoints[i]; conesWP = rbprmBuilder.getContactCones (q); coneName = "ConesWP"+str(i); contactConeName = coneName+"_contactCones_1"; plotContactCones (conesWP, ps, r, coneName, "friction_cone2"); r.client.gui.addToGroup (contactConeName, coneGroupName)
 
 
-#r.client.gui.writeNodeFile(coneGroupName,'ConesWP_contactCones2_kangarooDesert.dae')
+#r.client.gui.writeNodeFile(coneGroupName,'ConesWP_contactCones2bis_kangarooDesert.dae')
 """

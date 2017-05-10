@@ -29,18 +29,19 @@ fullBody.setJointBounds ("base_joint_xyz", [0,0,0,0,0,0])
 q_0 = fullBody.getCurrentConfig()
 
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.1, 0.2, -1.4, -1.2, 0.0, 0.0, -0.6, -0.1, 0.2, -1.4, 1.2, 0.0, 0.0, 0.1, 0.2, -1.1, 2.2, -1.2, 0.1, 0.0, -0.1, -0.2, -1.1, 2.2, -1.2, -0.1, 0.0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -0.2, -1, -2.5, 0.0, 0.0, -0.2, -0.1, -0.2, -1, 2.5, 0.0, 0.0, 0, 0.1, -2, 2.5, -0.7, 0, -0.2, 0, -0.1, -2, 2.5, -0.7, 0, -0.2]
 
 """
 from hpp.gepetto import Viewer
-psf = ProblemSolver( fullBody ); r = Viewer (psf)
+psf = ProblemSolver( fullBody ); rr = Viewer (psf)
 r(q_0)
+plotJointFrame (rr, psf, q_0, "RHand", 0.2,"RHand_frame")
 """
 
-q_lfeet = flexion[45:52]
-q_rfeet = flexion[52:59]
-q_larm = flexion[31:38]
-q_rarm = flexion[38:45]
+q_lfeet = flexion[fullBody.rankInConfiguration ['LHip_J1']:fullBody.rankInConfiguration ['LFootToe']+1]
+q_rfeet = flexion[fullBody.rankInConfiguration ['RHip_J1']:fullBody.rankInConfiguration ['RFootToe']+1]
+q_larm = flexion[fullBody.rankInConfiguration ['LShoulder_J1']:fullBody.rankInConfiguration ['LHand']+1]
+q_rarm = flexion[fullBody.rankInConfiguration ['RShoulder_J1']:fullBody.rankInConfiguration ['RHand']+1]
 
 fullBody.addRefConfigAnalysisWeight(q_lfeet,"RefPoseLFeet",[1.,1.,1.,5.,1.,1.,1.])
 fullBody.addRefConfigAnalysisWeight(q_rfeet,"RefPoseRFeet",[1.,1.,1.,5.,1.,1.,1.])
@@ -54,26 +55,24 @@ x = 0.03 # contact surface width
 y = 0.08 # contact surface length
 # By default, all offset are set to [0,0,0], leg normals [0,0,1] and hand normals [1,0,0]
 
-#~ AFTER loading obstacles
 rLegId = 'rfoot'
-rLeg = 'RHip_J1'
-rfoot = 'RFootSphere'
-fullBody.addLimb(rLegId,rLeg,rfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
-
 lLegId = 'lfoot'
-lLeg = 'LHip_J1'
-lfoot = 'LFootSphere'
-fullBody.addLimb(lLegId,lLeg,lfoot,[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
-
-print("Legs added to fullbody")
-
 rarmId = 'rhand'
-fullBody.addLimb(rarmId,'RShoulder_J1','RHandSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
-
 larmId = 'lhand'
-fullBody.addLimb(larmId,'LShoulder_J1','LHandSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 
-print("Arms added to fullbody")
+"""
+fullBody.addLimb(rLegId,'RHip_J1','RFootSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(lLegId,'LHip_J1','LFootSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(rarmId,'RShoulder_J1','RHandSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+fullBody.addLimb(larmId,'LShoulder_J1','LHandSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
+"""
+fullBody.addLimb(rLegId,'RHip_J1','RFootSphere',[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,"_6_DOF")
+fullBody.addLimb(lLegId,'LHip_J1','LFootSphere',[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,"_6_DOF")
+fullBody.addLimb(rarmId,'RShoulder_J1','RHandSphere',[0,0,0],[1,0,0], x, y, nbSamples, "EFORT_Normal", 0.01,"_6_DOF")
+fullBody.addLimb(larmId,'LShoulder_J1','LHandSphere',[0,0,0],[1,0,0], x, y, nbSamples, "EFORT_Normal", 0.01,"_6_DOF")
+
+
+print("Limbs added to fullbody")
 
 def runallLLeg(lid, dbName):
     fullBody.runLimbSampleAnalysis(lid, "minimumSingularValue", False)
@@ -115,10 +114,16 @@ def runallRArm(lid, dbName):
     fullBody.runLimbSampleAnalysis(lid, "RefPoseRArm", True)
     fullBody.saveLimbDatabase(lid, dbName)
 
-runallLLeg(lLegId, './skeleton_lleg.db')
-runallRLeg(rLegId, './skeleton_rleg.db')
-runallLArm(larmId, './skeleton_larm.db')
-runallRArm(rarmId, './skeleton_rarm.db')
+"""
+runallLLeg(lLegId, './skeleton_lleg_3DOF.db')
+runallRLeg(rLegId, './skeleton_rleg_3DOF.db')
+runallLArm(larmId, './skeleton_larm_3DOF.db')
+runallRArm(rarmId, './skeleton_rarm_3DOF.db')
+"""
+runallLLeg(lLegId, './skeleton_lleg_EFORTN_6DOF.db')
+runallRLeg(rLegId, './skeleton_rleg_EFORTN_6DOF.db')
+runallLArm(larmId, './skeleton_larm_EFORTN_6DOF.db')
+runallRArm(rarmId, './skeleton_rarm_EFORTN_6DOF.db')
 
 
 ##plotOctreeValues(fullBody, "isotropy", lLegId)

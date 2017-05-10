@@ -16,7 +16,7 @@ from viewer_library import *
 rootJointType = 'freeflyer'
 packageName = 'hpp-rbprm-corba'
 meshPackageName = 'hpp-rbprm-corba'
-urdfName = 'skeleton_trunk'
+urdfName = 'skeleton_trunk' # configSize = 20 (4 quaternions, 4 extra-configs -> 15 true configs)
 urdfNameRoms = ['LFootSphere','RFootSphere','LHandSphere','RHandSphere']
 urdfSuffix = ""
 srdfSuffix = ""
@@ -41,10 +41,10 @@ rbprmBuilder.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.1
 
 ps = ProblemSolver (rbprmBuilder)
 r = Viewer (ps); gui = r.client.gui
-r(rbprmBuilder.getCurrentConfig ())
-q_0 = rbprmBuilder.getCurrentConfig ()
+q_0 = rbprmBuilder.getCurrentConfig (); r(q_0)
 
-rbprmBuilder.getLinkPosition("Thorax")
+
+#rbprmBuilder.getLinkPosition("Thorax")
 
 pp = PathPlayer (rbprmBuilder.client.basic, r)
 obstacleName = "parkour_walls"
@@ -91,7 +91,7 @@ qt = q11 [::];
 qt[0:7] = [-1.887, 0, 5.444, 0, -0.27564, 0, 0.96126]; r(qt) # rot 180 z and -15 y
 rbprmBuilder.isConfigValid(qt)
 
-q = qt; conesWP = rbprmBuilder.getContactCones (q); plotContactCones (conesWP, ps, r, "contactCones_test", "friction_cone06"); qAway = q11 [::]; qAway[0] = -6.5; r(qAway); conesWP
+#q = qt; conesWP = rbprmBuilder.getContactCones (q); plotContactCones (conesWP, ps, r, "contactCones_test", "friction_cone06"); qAway = q11 [::]; qAway[0] = -6.5; r(qAway); conesWP
 #q = qt; r (q); ps.robot.setCurrentConfig(q); gui.refresh (); gui.captureTransform () # BLENDER EXPORT
 
 
@@ -162,7 +162,7 @@ for i in range(1,len(pathOriWaypoints)-1):
 
 """
 
-#qAway = q11 [::]; qAway[0] = -8; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
+qAway = q11 [::]; qAway[0] = -8; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
 #r.startCapture ("problem_ROM_obst_skel1","png"); r.stopCapture()
 

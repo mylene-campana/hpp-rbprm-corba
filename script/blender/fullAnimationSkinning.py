@@ -262,7 +262,7 @@ def loadMotionArmature (filename, startFrame = 0, reOrientFrames = True, rotatio
 					jointName = st [0]
 					jointConfigStr = st [1]
 					jointConfig = float (jointConfigStr)
-					#print ("jointConfig= " + str(jointConfig))
+					print ("jointConfig= " + str(jointConfig))
 					shortJointName = jointName[0:len(jointName)-3] # remove "_rx" or "_ry" or "_rz...
 					#print ('shortJointName= ' + shortJointName)
 					jointRotationName = jointName[len(jointName)-1:len(jointName)] # "x" or "y" or "z"
@@ -466,19 +466,21 @@ def main ():
 #---------------------------------------------------------------------------#
 
 # Test armature motion import from HPP:
-def mainTest ():
+def importArmatureMotion (character, fileName):
 	# Parameters that do not change from one problem to another
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
 	#daeFilePath = 'C:/Users/Mylene/Desktop/tests_Blender/' # Windows Mylene
 	beginMotionFrame = 0
-	print ("--------  load motion armature  --------")
-	fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
-	#fileName = 'frog_jointConfigs_toe.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
 	armatureName = "Armature"
-	#fileName = 'antTestInDirect_jointConfigs.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # ANT
-	#fileName = 'frog_pond_jointConfigs_new1goal.txt'; reOrientFrames = False; rotationOrder = 'ZXY' # FROG
-	#fileName = 'spiderman_jointConfigs1.txt'; reOrientFrames = True; rotationOrder = 'ZXY' # SPIDERMAN
 	jointConfigsFileName = daeFilePath + fileName
+	if (character == "ANT"):
+		reOrientFrames = True; rotationOrder = 'ZXY' # ANT
+	if (character == "FROG"):
+		reOrientFrames = False; rotationOrder = 'ZXY' # FROG
+	if (character == "JUMPERMAN"):
+		reOrientFrames = False; rotationOrder = 'ZYX' # JUMPERMAN
+	if (character == "KANGAROO"):
+		reOrientFrames = False; rotationOrder = 'ZXY' # KANGAROO
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
 
 
@@ -502,7 +504,8 @@ def mainTestBis (): # no armature (no motion actually)
 
 def importPath ():
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
-	pathFileName = daeFilePath + 'kangaroo_desert_path.txt'
+	#pathFileName = daeFilePath + 'kangaroo_desert_path.txt'
+	pathFileName = daeFilePath + 'lampPlateforms_path.txt'
 	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
 	pathName = 'path'
 	pathPoints = parsePathPoints (pathFileName)
@@ -530,11 +533,11 @@ def displayAntContactConfig ():
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
 
-def importTrunkMotion ():
+def importYamlMotion ():
 	viewerFilePath = '/local/mcampana/devel/hpp/videos/'
-	#fileName = 'lampPlateforms_frames.yaml'
+	fileName = 'lampPlateforms_frames.yaml'
 	#fileName = 'kangarooTrunkDesert_frames.yaml'
-	fileName = 'kangarooTrunkDesert_forcedOrientation_frames.yaml'
+	#fileName = 'kangarooTrunkDesert_forcedOrientation_frames.yaml'
 	yamlFileName = viewerFilePath + fileName
 	beginMotionFrame = 0
 	endMotionFrame = loadMotionBodies (yamlFileName, beginMotionFrame)
@@ -542,9 +545,9 @@ def importTrunkMotion ():
 
 #---------------------------------------------------------------------------#
 #main  ()
-#mainTest  ()
+importArmatureMotion  ("JUMPERMAN","spiderman_testJointConfigs.txt") # CHARACTER, filename
 #mainTestBis ()
 #importPath ()
 #irosRoadmapVisibility ()
 #displayAntContactConfig ()
-importTrunkMotion ()
+#importYamlMotion ()

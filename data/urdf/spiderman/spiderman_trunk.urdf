@@ -3,15 +3,18 @@
   <material name="White"> <!-- for bones -->
     <color rgba="1 1 1 1"/>
   </material>
-  <material name="Green"> <!-- for bones -->
+  <material name="Green"> <!-- for ROMs -->
     <color rgba="0 1 0.1 0.2"/>
+  </material>
+  <material name="Red"> <!-- for boxes -->
+    <color rgba="1 0 0 1"/>
   </material>
 
   <link name="base_link"/>
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
       <child link="Pelvis"/>
-      <origin rpy="0 0 1.57079632" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
    </joint>
 
    <link name="Pelvis">
@@ -23,9 +26,9 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-pelvis_view.dae"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-pelvis_box.stl"/>
          </geometry>
-         <material name="White"/>
+         <material name="Red"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -35,7 +38,7 @@
       </collision>
    </link>
 
- <!--<joint name="pelvis_rfoot_rom_joint" type="fixed">
+  <joint name="pelvis_rfoot_rom_joint" type="fixed">
       <parent link="Pelvis"/>
       <child link="pelvis_rfoot_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -49,9 +52,9 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
-  <!--<joint name="pelvis_lfoot_rom_joint" type="fixed">
+  <joint name="pelvis_lfoot_rom_joint" type="fixed">
       <parent link="Pelvis"/>
       <child link="pelvis_lfoot_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -65,7 +68,7 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
    <link name="Thorax_rx"/>
    <link name="Thorax_ry"/>
@@ -78,9 +81,9 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-thorax_view.dae"/>
+            <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-thorax_box.stl"/>
          </geometry>
-         <material name="White"/>
+         <material name="Red"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -90,7 +93,7 @@
       </collision>
    </link>
 
-  <!--<joint name="thorax_rhand_rom_joint" type="fixed">
+  <joint name="thorax_rhand_rom_joint" type="fixed">
       <parent link="Thorax"/>
       <child link="thorax_rhand_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -104,9 +107,9 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
-  <!--<joint name="thorax_lhand_rom_joint" type="fixed">
+  <joint name="thorax_lhand_rom_joint" type="fixed">
       <parent link="Thorax"/>
       <child link="thorax_lhand_rom"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -120,7 +123,7 @@
          </geometry>
          <material name="Green"/>
       </visual>
-   </link>-->
+   </link>
 
    <link name="Skull_rx"/>
    <link name="Skull_ry"/>
@@ -135,7 +138,7 @@
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/spiderman/spiderman-skull_box.stl"/>
          </geometry>
-         <material name="White"/>
+         <material name="Red"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -148,16 +151,16 @@
   <joint name="A_Thorax_rx" type="revolute"> <!-- A_ added for order while parsing with ROS -->
       <parent link="Pelvis"/>
       <child link="Thorax_rx"/>
-      <origin rpy="0 0 0" xyz="0.0006 -0.0373 0.0788"/>
+      <origin rpy="0 0 0" xyz="0.0373 0.0006 0.0788"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
+      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
    </joint>
    <joint name="Thorax_ry" type="revolute">
       <parent link="Thorax_rx"/>
       <child link="Thorax_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1" upper="1" velocity="1.0"/>
+      <limit effort="0" lower="-0.8" upper="0.8" velocity="1.0"/>
    </joint>
    <joint name="Thorax_rz" type="revolute">
       <parent link="Thorax_ry"/>
@@ -169,16 +172,16 @@
    <joint name="A_Skull_rx" type="revolute"> <!-- A_ added for order while parsing with ROS -->
       <parent link="Thorax"/>
       <child link="Skull_rx"/>
-      <origin rpy="0 0 0" xyz="-0.0006 0.0160 0.5204"/>
+      <origin rpy="0 0 0" xyz="0.0711 -0.0005 0.6039"/>
       <axis xyz="1 0 0"/>
-      <limit effort="0" lower="-1.1" upper="0.6" velocity="1.0"/>
+      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
    </joint>
    <joint name="Skull_ry" type="revolute">
       <parent link="Skull_rx"/>
       <child link="Skull_ry"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.3" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-1.1" upper="0.6" velocity="1.0"/>
    </joint>
    <joint name="Skull_rz" type="revolute">
       <parent link="Skull_ry"/>

@@ -99,11 +99,11 @@ rbprmBuilder.setMaxTakeoffVelocity(7)
 rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 
-waypoints = [q11, [1.4682346589202155, 1.3721742911882595, -0.3177500175158776, -0.47980079307050877, -0.42470043369655597, -0.12553328442064984, 0.7574048686729129, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5228784135749911, -0.5977022514113965, 0.6077418722410429, -1.8515503036956853], [-2.2428656093342907, 3.705981508906953, -0.43171314034458386, -0.19511109369718505, -0.39497095366864815, -0.20585489417778283, 0.8738154092355094, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6099342639403275, -0.5138847866960039, 0.6032434166022648, -2.8579343885809663], [-4.980684904172251, 2.518180830037141, 0.7837057291683014, 0.9527709249186042, 0.12448725029738976, 0.27422176447773133, 0.03915243325595655, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5322890058654917, -0.21574276655074562, 0.8186106968002294, 0.16720644997193632], q22] # 7 - 8
+"""waypoints = [q11, [1.4682346589202155, 1.3721742911882595, -0.3177500175158776, -0.47980079307050877, -0.42470043369655597, -0.12553328442064984, 0.7574048686729129, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5228784135749911, -0.5977022514113965, 0.6077418722410429, -1.8515503036956853], [-2.2428656093342907, 3.705981508906953, -0.43171314034458386, -0.19511109369718505, -0.39497095366864815, -0.20585489417778283, 0.8738154092355094, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6099342639403275, -0.5138847866960039, 0.6032434166022648, -2.8579343885809663], [-4.980684904172251, 2.518180830037141, 0.7837057291683014, 0.9527709249186042, 0.12448725029738976, 0.27422176447773133, 0.03915243325595655, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5322890058654917, -0.21574276655074562, 0.8186106968002294, 0.16720644997193632], q22] # 7 - 8
 #ps.directPath (waypoints[0] , waypoints[1], False)
 for i in range(0,len(waypoints)-1):
     ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); t = ps.solve (); t; ps.resetGoalConfigs()
-
+"""
 
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 
@@ -113,14 +113,14 @@ solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 #pp(solutionPathId)
 
-#rbprmBuilder.rotateAlongPath (solutionPathId,True)
-#orientedpathId = ps.numberPaths () - 1
+rbprmBuilder.rotateAlongPath (solutionPathId,True)
+orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 
 rbprmBuilder.rotateAlongPath (solutionPathId)
 orientedpathIdBis = ps.numberPaths () - 1
 #pp(orientedpathIdBis)
-"""
+
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
 Vimplist = rbprmBuilder.getsubPathsV0Vimp("Vimp",solutionPathId)
 
@@ -144,7 +144,6 @@ for i in range(1,len(pathOriBisWaypoints)-1):
 
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[0] = -8; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
-"""
 
 
 #plotConeWaypoints (ps, solutionPathId, r, "cone_planning_wp_group", "friction_cone2") # gui.writeNodeFile('cone_planning_wp_group','conesWP_COM_kangarooDesert.dae')

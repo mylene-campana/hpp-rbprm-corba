@@ -85,7 +85,7 @@ fullBody.setStartState(q_init_test,[rLegId, lLegId])
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
 theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
-fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[0], theta_goal)
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[len(Vimplist)-1], theta_goal)
 fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
@@ -105,7 +105,7 @@ pp = PathPlayer (fullBody.client.basic, rr)
 pp.speed=0.6
 
 #fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-pp(psf.numberPaths ()-1)
+#pp(psf.numberPaths ()-1)
 
 
 #r.startCapture("skeletonDesert_pbIntersectionRomObst","png") ; r.stopCapture()

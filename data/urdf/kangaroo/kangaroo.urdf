@@ -31,7 +31,7 @@
   <link name="Pelvis">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="19"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -86,7 +86,7 @@
   <link name="Torso">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="25"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -109,7 +109,7 @@
    <link name="Head">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0"/>
+         <mass value="5"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -132,7 +132,7 @@
    <link name="Tailbase">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0"/>
+         <mass value="6"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -155,7 +155,7 @@
    <link name="Tail">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0"/>
+         <mass value="5"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -179,7 +179,7 @@
    <link name="LThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="7"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -202,7 +202,7 @@
    <link name="LShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="3"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -278,7 +278,7 @@
    <link name="RThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="7"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -301,7 +301,7 @@
    <link name="RShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="3"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -377,7 +377,7 @@
    <link name="LArm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="1.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -400,7 +400,7 @@
    <link name="LForearm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -423,7 +423,7 @@
    <link name="LHand">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -455,7 +455,7 @@
    <link name="RArm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="1.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -478,7 +478,7 @@
    <link name="RForearm">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -501,7 +501,7 @@
    <link name="RHand">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>

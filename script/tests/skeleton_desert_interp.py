@@ -19,20 +19,18 @@ rootJointType = "freeflyer"
 urdfName = "skeleton"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 
 fullBody = FullBody ()
 fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
 fullBody.setJointBounds ("base_joint_xyz", tp.base_joint_xyz_limits)
-fullBody.client.basic.robot.setDimensionExtraConfigSpace(ecsSize)
-#fullBody.client.basic.robot.setExtraConfigSpaceBounds([0,0,0,0,0,0,-3.14,3.14])
-#fullBody.setFullbodyFrictionCoef(0.5)
+fullBody.setFullbodyFrictionCoef (tp.frictionCoef)
 
 #psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
+pp = PathPlayer (fullBody.client.basic, rr); pp.speed = 0.6
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
@@ -59,50 +57,104 @@ print("Limbs added to fullbody")
 
 confsize = len(tp.q11)
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
-q_init = flexion; q_goal = q_init [::]
+q_init = flexion [::]; q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
 entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 
-#q = flexion [::]; q [0:confsize-ecsSize] = trunkPathwaypoints[1][0:confsize-ecsSize]; rr(q)
-#fullBody.setCurrentConfig (q); qt = fullBody.generateContacts(q, [0,0,1], True); rr (qt); fullBody.isConfigValid(qt)
-
-q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
-q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
+q_init[0:confsize-tp.ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
+q_goal[0:confsize-tp.ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
 
 
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
+theta_0 = math.atan2(trunkPathwaypoints[1][1] - q_init[1], trunkPathwaypoints[1][0] - q_init[0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("V0", False, V0list[0], theta_0)
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, dir_init, False); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
+fullBody.setStartState(q_init_test,[rLegId, lLegId])
+fullBody.setFullbodyV0fThetaCoefs ("V0", True, [0,0,0], 0)
 
-dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp reversed
+#fullBody.getcentroidalConeFails () # TEST
+
+dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
+theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[len(Vimplist)-1], theta_goal)
 fullBody.setCurrentConfig (q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, dir_goal, False); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
+fullBody.setEndState(q_goal_test,[rLegId, lLegId])
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
 
-
-fullBody.setStartState(q_init_test,[rLegId,lLegId])
-fullBody.setEndState(q_goal_test,[rLegId,lLegId])
-
-psf.setPlannerIterLimit (100)
+psf.setPlannerIterLimit (50)
+timeStep = 0.002
+maxIter = 100
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter) # no timed-interpolation
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True) # timed-interpolation
+print("ballistic-interpolation finished")
 
 
+fullBody.getPathPlannerFails ()
 
-pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=3
 
-#fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+pp.speed=0.6
+
 #pp(psf.numberPaths ()-1)
 
+## Save data
+
+nbWaypoints = len (trunkPathwaypoints)
+nbParabolas = nbWaypoints - 1
+nbCentroidalFails = fullBody.getcentroidalConeFails ()
+nbFailsLimbRRT = fullBody.getPathPlannerFails ()
+
+# Write important results #
+f = open('results_skeleton_runs.txt','a')
+print('nbWaypoints: '+str(nbWaypoints))
+print('nbParabolas: '+str(nbParabolas))
+print('nbCentroidalFails: '+str(nbCentroidalFails))
+print('nbFailsLimbRRT: '+str(nbFailsLimbRRT))
+f.write('-------------------------'+'\n')
+f.write('nbWaypoints: '+str(nbWaypoints)+'\n')
+f.write('nbParabolas: '+str(nbParabolas)+'\n')
+f.write('nbCentroidalFails: '+str(nbCentroidalFails)+'\n')
+f.write('nbFailsLimbRRT: '+str(nbFailsLimbRRT)+'\n')
+f.write("path length= " + str(psf.pathLength(psf.numberPaths ()-1))+'\n') # to verify that not same paths
+
+f.close()
+
+"""
+from parseRuns import main
+main("results_skeleton_runs.txt")
+"""
+
+"""
+plotCone([4.42,-0.08,0.09,],psf,rr,"cone1","friction_cone06")
+plotCone([-6.4,-5.1,-1.7,-0.230778,-0.364807,0.90203],psf,rr,"cone1","friction_cone06")
+plotCone([-6.4,-5.1,-1.7,-0.316247,-0.354415,0.879988],psf,rr,"cone2","friction_cone06")
+pos = [-6.4,-5.1,-1.7]
+plotStraightLine (Vimplist[len(Vimplist)-1], pos, rr, "vf") # dans cones
+plotStraightLine ((-np.array(Vimplist [len(Vimplist)-1])).tolist(), pos, rr, "-vf") # dans cones
+plotStraightLine ([-0.128794,0.762169,0.634437], pos, rr, "v0") # clairement hors cones
+plotStraightLine (vf, pos, rr, "vfsdf")
+
+pos = [4.42,-0.08,0.09]
+plotStraightLine ([-0.891853,5.27776,4.39326], pos, rr, "v0_initConfig")
+plotStraightLine ([-0.128794  0.762169  0.634437], pos, rr, "v0normed_initConfig")
+
+
+cones = [[-0.508069,-0.380334,0.772795],[-0.223381,-0.24573,0.943248]]
+t = rbprmBuilder.convexConePlaneIntersection (len(cones), cones, 1.7382, 0.6)
+black = [0.1,0.1,0.1,1]; red = [1,0,0,1]; blue = [0,0,1,1]; green = [0,1,0,1]; planeThetaColor = [0.7,0.2,0.2,0.2]
+CC2D_dir = t [1:4]
+plotConvexConeInters (psf, rr, pos, CC2D_dir, cones, "CC_center", black, 0.02, "CC_dir", "contactCones", "friction_cone06")
+
+
+"""
 
 #r.startCapture("skeletonDesert_pbIntersectionRomObst","png") ; r.stopCapture()
 
@@ -222,12 +274,4 @@ fullBody.isConfigValid(q); rr(q)
 
 """
 
-""" # without solving path
-q_init[0:confsize-ecsSize] = tp.q11[0:confsize-ecsSize]
-q_goal[0:confsize-ecsSize] = tp.q22[0:confsize-ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = tp.q11[confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = tp.q22[confsize-ecsSize:confsize]
-
-dir_init = [0,0,-1]; dir_goal = [0,0, 1]"""
 

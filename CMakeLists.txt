@@ -111,6 +111,7 @@ install(FILES
   data/urdf/skeleton/RFootSphere.urdf
   data/urdf/skeleton/LFootSphere.urdf
   data/urdf/spiderman/spiderman.urdf
+  data/urdf/spiderman/spiderman_FootSphere.urdf
   data/urdf/spiderman/spiderman_trunk.urdf
   data/urdf/spiderman/SpidermanRHandSphere.urdf
   data/urdf/spiderman/SpidermanLHandSphere.urdf
@@ -201,6 +202,7 @@ install(FILES
   data/srdf/skeleton/RFootSphere.srdf
   data/srdf/skeleton/LFootSphere.srdf
   data/srdf/spiderman/spiderman.srdf
+  data/srdf/spiderman/spiderman_FootSphere.srdf
   data/srdf/spiderman/spiderman_trunk.srdf
   data/srdf/spiderman/SpidermanRHandSphere.srdf
   data/srdf/spiderman/SpidermanLHandSphere.srdf

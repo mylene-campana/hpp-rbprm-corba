@@ -367,3 +367,6 @@ class Builder (object):
 
     def quaternionDifference (self, config1, config2):
         return self.client.rbprm.rbprm.quaternionDifference (config1, config2)
+
+    def isTrunkCollisionFree (self, config):
+        return self.client.rbprm.rbprm.isTrunkCollisionFree (config)

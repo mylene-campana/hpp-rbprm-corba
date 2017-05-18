@@ -894,3 +894,30 @@ class FullBody (object):
     #  setStartState and setEndState are called
     def setFillGenerateContactState (self, b):
         return self.client.rbprm.rbprm.setFillGenerateContactState (b)
+
+    ## Get the number of fails of isCentroidalConeValid
+    def getcentroidalConeFails (self):
+        return self.client.rbprm.rbprm.getcentroidalConeFails ()
+
+    ## Get the number of fails of isCentroidalConeValid
+    def getPathPlannerFails (self):
+        return self.client.rbprm.rbprm.getPathPlannerFails ()
+
+    ## Set the number of fails of isCentroidalConeValid
+    def setcentroidalConeFails (self, number):
+        return self.client.rbprm.rbprm.setcentroidalConeFails (number)
+
+    ## Set the number of fails of isCentroidalConeValid
+    def setPathPlannerFails (self, number):
+        return self.client.rbprm.rbprm.setPathPlannerFails (number)
+
+    ## Set interior point of mesh to biais the triangle normals toward it.
+    # Store it in Fullbody for contact generation.
+    def setFullbodyInteriorPoint (self, point):
+        return self.client.rbprm.rbprm.setFullbodyInteriorPoint (point)
+
+    def projectLastStatesComputedToCOM (self):
+        return self.client.rbprm.rbprm.projectLastStatesComputedToCOM ()
+
+    def interpolatePathFromLastStatesComputed (self):
+        return self.client.rbprm.rbprm.interpolatePathFromLastStatesComputed ()

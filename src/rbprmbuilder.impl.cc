@@ -628,11 +628,15 @@ namespace hpp {
             }
             State s = lastStatesComputed_[stateId];
             bool succes (false);
+	    hppDout (info, "start projectStateToCOMEigen ------------ ");
             hpp::model::Configuration_t c = rbprm::interpolation::projectOnCom(fullBody_, problemSolver_->problem(),s,com_target,succes);
             if(succes)
             {
                 lastStatesComputed_[stateId].configuration_ = c;
                 lastStatesComputedTime_[stateId].second.configuration_ = c;
+		hppDout (info, "stateId= " << stateId);
+		hppDout (info, "s config= " << displayConfig(s.configuration_));
+		hppDout (info, "new config= " << displayConfig(c));
                 return 1.;
             }
             return 0;
@@ -2718,7 +2722,9 @@ namespace hpp {
 
 	  // loop to construct new path vector with parabPath constructor
 	  ParabolaPathPtr_t pp;
-	  core::PathValidationPtr_t pathValidation = problemSolver_->problem ()->pathValidation ();
+	  const core::PathValidationPtr_t pathValidation = problemSolver_->problem ()->pathValidation ();
+	  RbPrmPathValidationPtr_t rbPathValidation = boost::dynamic_pointer_cast<RbPrmPathValidation>(pathValidation);
+	  if (!rbPathValidation) hppDout(error,"PathValidation cannot be cast");
 	  core::PathPtr_t validPart;
 	  core::PathValidationReportPtr_t pathReport;
 	  for (std::size_t i = 0; i < num_subpaths; i++) {
@@ -2740,11 +2746,13 @@ namespace hpp {
 					   pp->endROMnames_,
 					   pp->contactCones0_,
 					   pp->contactConesImp_);
-	    if (!pathValidation->validate (new_pp, false, validPart, pathReport)) {
-	      newPath->appendPath (pp);
+	    if (!rbPathValidation->validateTrunk (new_pp, false, validPart, pathReport)) {
+	      newPath->appendPath (new_pp); // DEBUG ONLY
+	      //newPath->appendPath (pp);
 	      hppDout (error, "Oriented path was NOT appended AS it is NOT valid");
 	    } else {
 	      newPath->appendPath (new_pp);
+	      hppDout (error, "Oriented path was appended");
 	    }
 	    
 	  }
@@ -3005,8 +3013,8 @@ namespace hpp {
 	    fullBody_->thetaAfter_ = theta;
 	  }
 	  else {
-	    fullBody_->V0dir_.resize (0);
-	    fullBody_->thetaAfter_ = NULL;
+	    fullBody_->V0dir_.setZero ();
+	    fullBody_->thetaAfter_ = 10; // bypass value
 	  }
 	}
 	if (Vquery_str.compare ("Vimp") == 0 || Vquery_str.compare ("before") ==0) {
@@ -3015,16 +3023,20 @@ namespace hpp {
 	    fullBody_->thetaBefore_ = theta;
 	  }
 	  else {
-	    fullBody_->Vfdir_.resize (0);
-	    fullBody_->thetaBefore_ = NULL;
+	    fullBody_->Vfdir_.setZero ();
+	    fullBody_->thetaBefore_ = 10; // bypass value
 	  }
 	}
       }
 
+      // ---------------------------------------------------------------
 
       void RbprmBuilder::setFillGenerateContactState (const CORBA::Boolean b) {
 	fillGenerateContactState_ = b;
       }
+
+      // ---------------------------------------------------------------
+
       void RbprmBuilder::setInteriorPoint (const hpp::floatSeq& point) {
 	fcl::Vec3f ip;
 	for (std::size_t i = 0; i < 3; i++)
@@ -3050,6 +3062,92 @@ namespace hpp {
 	return result;
       }
 
+      // ---------------------------------------------------------------
+
+      CORBA::UShort RbprmBuilder::getcentroidalConeFails () {
+	return (CORBA::UShort) fullBody_->centroidalConeFails_;
+      }
+
+      // ---------------------------------------------------------------
+
+      CORBA::UShort RbprmBuilder::getPathPlannerFails () {
+	return (CORBA::UShort) problemSolver_->problem ()->nbPathPlannerFails_;
+      }
+
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::setcentroidalConeFails (CORBA::UShort number) {
+	fullBody_->centroidalConeFails_ = (std::size_t) number;
+      }
+
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::setPathPlannerFails (CORBA::UShort number) {
+	problemSolver_->problem ()->nbPathPlannerFails_ = (std::size_t) number;
+      }
+
+      // ---------------------------------------------------------------
+
+      CORBA::Boolean RbprmBuilder::isTrunkCollisionFree (const hpp::floatSeq& config) {
+	const core::Configuration_t q = dofArrayToConfig (problemSolver_->robot (), config);
+	const core::PathValidationPtr_t& pathValidation = problemSolver_->problem ()->pathValidation ();
+	RbPrmPathValidationPtr_t rbPathValidation = boost::dynamic_pointer_cast<RbPrmPathValidation>(pathValidation);
+	if (!rbPathValidation) hppDout(error,"PathValidation cannot be cast");
+	RbPrmValidationPtr_t rbValidation = rbPathValidation->getValidator();
+	CORBA::Boolean res = rbValidation->validateTrunk (q);
+	hppDout (info, "res (trunkValidation)= " << res);
+	return res;
+      }
+
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::setFullbodyInteriorPoint (const hpp::floatSeq& point) {
+	fcl::Vec3f ip;
+	for (std::size_t i = 0; i < 3; i++)
+	  ip [i] = point [(CORBA::ULong) i];
+	fullBody_->interiorPoint_ = ip;
+      }
+
+      // ---------------------------------------------------------------
+      
+      void RbprmBuilder::projectLastStatesComputedToCOM () throw (hpp::Error)
+      {
+	core::Configuration_t saveConfig = fullBody_->device_->currentConfiguration ();
+	for (int i = 0; i < lastStatesComputed_.size (); i++) {
+	  core::Configuration_t configRef = lastStatesComputed_ [i].configuration_;
+	  fullBody_->device_->currentConfiguration (configRef);
+	  model::vector3_t com = fullBody_->device_->positionCenterOfMass ();
+	  core::Configuration_t com_config = com;
+	  double res = projectStateToCOMEigen (i, com_config); // update lastStatesComputed_ stack
+	  core::Configuration_t configResult = lastStatesComputed_ [i].configuration_;
+	  hppDout (info, "state id= " << i);
+	  hppDout (info, "res= " << res);
+	  hppDout (info, "com_config= " << displayConfig(com_config));
+	  hppDout (info, "configRef= " << displayConfig(configRef));
+	  hppDout (info, "configRes= " << displayConfig(configResult));
+	}
+	fullBody_->device_->currentConfiguration (saveConfig);
+      }
+
+      // ---------------------------------------------------------------
+
+      void RbprmBuilder::interpolatePathFromLastStatesComputed () throw (hpp::Error)
+      {
+
+	//core::Problem problem = problemSolver_->problem ();
+	const core::DistancePtr_t& distance = problemSolver_->problem ()->distance();
+	const core::DevicePtr_t& robot = problemSolver_->problem ()->robot ();
+	core::PathVectorPtr_t res = core::PathVector::create (robot->configSize (), robot->numberDof ());
+	for (int i = 0; i < lastStatesComputed_.size () -1; i++) {
+	  core::Configuration_t start = lastStatesComputed_ [i].configuration_;
+	  core::Configuration_t goal = lastStatesComputed_ [i+1].configuration_;
+	  const core::value_type length = (*distance) (start, goal);
+	  core::StraightPathPtr_t path = StraightPath::create (robot, goal, goal, length);
+	res->appendPath (path);
+
+	}
+	problemSolver_->addPath (res);
+      }
 
     } // namespace impl
   } // namespace rbprm

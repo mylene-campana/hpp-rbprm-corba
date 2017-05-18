@@ -650,6 +650,38 @@ module hpp
     /// the two given quaternion configurations
     floatSeq quaternionDifference (in floatSeq config1, in floatSeq config2);
 
+    /// Get the number of fails of isCentroidalConeValid (e.g. 1 by waypoint)
+    unsigned short getcentroidalConeFails ();
+
+    /// Get the number of fails of path-planner (e.g. 1 by limbRRT on a parab)
+    unsigned short getPathPlannerFails ();
+
+    /// Set the number of fails of isCentroidalConeValid (e.g. 1 by waypoint)
+    void setcentroidalConeFails (in unsigned short number);
+
+    /// Set the number of fails of path-planner (e.g. 1 by limbRRT on a parab)
+    void setPathPlannerFails (in unsigned short number);
+
+    /// Check if trunk is collision-free in given configuration
+    boolean isTrunkCollisionFree (in floatSeq config);
+
+    /// Set interior point of mesh to biais the triangle normals toward it.
+    /// Store it in Fullbody for contact generation.
+    /// This is introduced because the AFFORDANCE lost 
+    /// the notion of interior defined in the .stl or .dae files 
+    /// (points of triangle correctly ordered)
+    void setFullbodyInteriorPoint (in floatSeq point) raises (Error);
+
+    /// Replace states in lastStatesComputed stack with states whose
+    /// configurations have their COM located at the root of the reference 
+    ///configs (contained in lastStatesComputed before being replaced)
+    void projectLastStatesComputedToCOM () raises (Error);
+
+    /// Create a path resulting from the interpolation between the
+    /// configurations of lastStatesComputed stack
+    /// Path has no constraint ! Just visual
+    void interpolatePathFromLastStatesComputed () raises (Error);
+
   }; // interface Robot
   }; // module rbprm
   }; // module corbaserver

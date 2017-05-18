@@ -781,7 +781,7 @@ def jointConfigsToFile (ps, r, fileName, config):
     rootPosJointName = robot.getJointNames () [0] # xyz position
     rootRotJointName = robot.getJointNames () [1] # so3 rotation
     nbInnerJoints = len(jointNames) - 2
-    f = open(fileName,'a')
+    f = open(pathToFile + fileName,'a')
     print (str(nbInnerJoints))
     f.write(str(nbInnerJoints) + "\n")
     f.write ("Frame " + str(0) + "\n")

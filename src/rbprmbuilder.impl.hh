@@ -366,6 +366,14 @@ namespace hpp {
 	void setInteriorPoint (const hpp::floatSeq& point);
 	hpp::floatSeq* quaternionDifference (const hpp::floatSeq& quat1,
 					     const hpp::floatSeq& quat2);
+	CORBA::UShort getcentroidalConeFails ();
+	CORBA::UShort getPathPlannerFails ();
+	void setcentroidalConeFails (CORBA::UShort number);
+	void setPathPlannerFails (CORBA::UShort number);
+	CORBA::Boolean isTrunkCollisionFree (const hpp::floatSeq& config);
+	void setFullbodyInteriorPoint (const hpp::floatSeq& point);
+	void projectLastStatesComputedToCOM () throw (hpp::Error);
+	void interpolatePathFromLastStatesComputed () throw (hpp::Error);
 
       private:
         /// \brief Pointer to hppPlanner object of hpp::corbaServer::Server.

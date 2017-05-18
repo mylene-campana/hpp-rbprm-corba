@@ -98,7 +98,7 @@ fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
 
 
 ### TEST OF CONTACT CREATION FOR INTERMEDIATE CONFIG, NOT USED FOR INTERPOLATION
-q_tmp = q_contact_takeoff [::]; q_tmp[0:confsize-tp.ecsSize] = trunkPathwaypoints[1][0:confsize-tp.ecsSize]
+"""q_tmp = q_contact_takeoff [::]; q_tmp[0:confsize-tp.ecsSize] = trunkPathwaypoints[1][0:confsize-tp.ecsSize]
 theta_0 = math.atan2(q_goal[1] - q_tmp[1], q_goal[0] - q_tmp[0])
 fullBody.setFullbodyV0fThetaCoefs ("V0", False, V0list[1], theta_0)
 theta_goal = math.atan2(q_tmp[1] - q_init[1], q_tmp[0] - q_init[0])
@@ -110,9 +110,7 @@ fullBody.isConfigValid(q_tmp)
 q_tmp_test = fullBody.generateContacts(q_tmp, dir_tmp, True, False); rr (q_tmp_test) # last False parameter : do not use Flexion config to replace non-contacting limbs
 fullBody.isConfigValid(q_tmp_test)
 fullBody.setFullbodyV0fThetaCoefs ("V0", True, [0,0,0], 0)
-fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
-
-
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)"""
 
 psf.setPlannerIterLimit (50)
 timeStep = 0.002
@@ -123,8 +121,9 @@ fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter) # no timed-int
 #fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True) # timed-interpolation
 print("ballistic-interpolation finished")
 
+rr(q_init_test)
 
-"""
+
 ## Save data
 
 nbWaypoints = len (trunkPathwaypoints)
@@ -132,12 +131,8 @@ nbParabolas = nbWaypoints - 1
 nbCentroidalFails = fullBody.getcentroidalConeFails ()
 nbFailsLimbRRT = fullBody.getPathPlannerFails ()
 
-ps.clearRoadmap (); ps.resetGoalConfigs()
-fullBody.setcentroidalConeFails (0);
-fullBody.setPathPlannerFails (0);
-
 # Write important results #
-f = open('results_skeleton_runs.txt','a')
+f = open('results_jumperman_runs.txt','a')
 print('nbWaypoints: '+str(nbWaypoints))
 print('nbParabolas: '+str(nbParabolas))
 print('nbCentroidalFails: '+str(nbCentroidalFails))
@@ -150,7 +145,7 @@ f.write('nbFailsLimbRRT: '+str(nbFailsLimbRRT)+'\n')
 f.write("path length= " + str(psf.pathLength(psf.numberPaths ()-1))+'\n') # to verify that not same paths
 
 f.close()
-"""
+
 
 """
 from parseRuns import main

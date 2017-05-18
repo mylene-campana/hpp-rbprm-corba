@@ -21,7 +21,7 @@ urdfNameRoms = ['SpidermanLFootSphere','SpidermanRFootSphere','SpidermanLHandSph
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 4
-base_joint_xyz_limits = [-10, 10, -10, 15, 0, 10]
+base_joint_xyz_limits = [-4, 3.5, -9, 2, 0, 7]
 
 rbprmBuilder = Builder () # RBPRM
 rbprmBuilder.loadModel(urdfName, urdfNameRoms, rootJointType, meshPackageName, packageName, urdfSuffix, srdfSuffix)
@@ -101,9 +101,9 @@ q_cube[0:7] =  [-1.2,-2.8,3.6, orientX, 0, 0, orientX]; r(q_cube); rbprmBuilder.
 #cones = rbprmBuilder.getContactCones(q_cube)
 
 
-waypoints = [q11,q_cube,q22]
+"""waypoints = [q11,q_cube,q22]
 for i in range(0,len(waypoints)-1):
-    ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); ps.solve (); ps.resetGoalConfigs()
+    ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); ps.solve (); ps.resetGoalConfigs()"""
 
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
 

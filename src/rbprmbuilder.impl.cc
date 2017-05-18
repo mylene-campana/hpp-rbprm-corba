@@ -2747,8 +2747,8 @@ namespace hpp {
 					   pp->contactCones0_,
 					   pp->contactConesImp_);
 	    if (!rbPathValidation->validateTrunk (new_pp, false, validPart, pathReport)) {
-	      newPath->appendPath (new_pp); // DEBUG ONLY
-	      //newPath->appendPath (pp);
+	      //newPath->appendPath (new_pp); // DEBUG ONLY
+	      newPath->appendPath (pp);
 	      hppDout (error, "Oriented path was NOT appended AS it is NOT valid");
 	    } else {
 	      newPath->appendPath (new_pp);

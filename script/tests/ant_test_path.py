@@ -73,10 +73,9 @@ rbprmBuilder.isConfigValid(q22)
 ps.selectPathPlanner("BallisticPlanner")
 ps.client.problem.selectConFigurationShooter("RbprmShooter")
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
-frictionCoef = 1.2
-rbprmBuilder.setFrictionCoef(frictionCoef)
-rbprmBuilder.setMaxTakeoffVelocity(4.5) # one waypoint
-#rbprmBuilder.setMaxTakeoffVelocity(8) # direct path
+frictionCoef = 1.2; rbprmBuilder.setFrictionCoef(frictionCoef)
+#rbprmBuilder.setMaxTakeoffVelocity(4.5) # one waypoint
+rbprmBuilder.setMaxTakeoffVelocity(8) # direct path
 rbprmBuilder.setMaxLandingVelocity(8)
 ps.clearRoadmap();
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
@@ -86,8 +85,8 @@ solutionPathId = ps.numberPaths () - 1
 pp.displayPath(solutionPathId, [0.0, 0.0, 0.8, 1.0])
 #pp(solutionPathId)
 
-rbprmBuilder.rotateAlongPath (solutionPathId)
-orientedpathId = ps.numberPaths () - 1
+#rbprmBuilder.rotateAlongPath (solutionPathId)
+#orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 
 rbprmBuilder.rotateAlongPath (solutionPathId, True)
@@ -101,6 +100,12 @@ print("Verify that all RB-waypoints are valid: ")
 pathWaypoints = ps.getWaypoints(solutionPathId)
 for i in range(1,len(pathWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathWaypoints[i])[0])):
+        print('problem with waypoints number: ' + str(i))
+
+print("Verify that all RB-waypoints are valid: ")
+pathOriBisWaypoints = ps.getWaypoints(orientedpathIdBis)
+for i in range(1,len(pathOriBisWaypoints)-1):
+    if(not(rbprmBuilder.isConfigValid(pathOriBisWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
 
 

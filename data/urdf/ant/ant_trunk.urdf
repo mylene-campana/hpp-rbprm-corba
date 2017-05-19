@@ -1,11 +1,24 @@
 <?xml version="1.0"?>
 <robot name="ant_trunk">
+  <material name="Red"> <!-- for ROMs -->
+    <color rgba="1 0 0 1"/>
+  </material>
+  <material name="Green">
+    <color rgba="0 0.9 0 0.4"/>
+  </material>
 
   <link name="base_link"/>
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
-      <child link="Thorax"/>
+      <child link="base_link_comshift"/>
       <origin rpy="0 0 1.570796" xyz="0 0 0"/>
+   </joint>
+
+  <link name="base_link_comshift"/> <!-- shift root center to match COM in neutral config -->
+  <joint name="base_link_comshift_J" type="fixed">
+      <parent link="base_link_comshift"/>
+      <child link="Thorax"/>
+      <origin rpy="0 0 0" xyz="0 -0.01066 -0.003041"/>
    </joint>
 
   <link name="Thorax">
@@ -78,6 +91,7 @@
          <geometry>
             <mesh filename="package://hpp-rbprm-corba/meshes/ant/Skull_box.stl"/>
          </geometry>
+         <material name="Red"/>
       </visual>
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -87,85 +101,10 @@
       </collision>
    </link>
 
-   <link name="LAntena">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
-         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
-      </inertial>
-      <visual>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntena.stl"/>
-         </geometry>
-      </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntena.stl"/>
-         </geometry>
-      </collision>
-   </link>
-
-   <link name="LAntenaFoot">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
-         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
-      </inertial>
-      <visual>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntenaFoot.stl"/>
-         </geometry>
-      </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/LAntenaFoot.stl"/>
-         </geometry>
-      </collision>
-   </link>
-   
-   <link name="RAntena">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
-         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
-      </inertial>
-      <visual>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntena.stl"/>
-         </geometry>
-      </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntena.stl"/>
-         </geometry>
-      </collision>
-   </link>
-
-   <link name="RAntenaFoot">
-      <inertial>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1"/>
-         <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
-      </inertial>
-      <visual>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntenaFoot.stl"/>
-         </geometry>
-      </visual>
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package://hpp-rbprm-corba/meshes/ant/RAntenaFoot.stl"/>
-         </geometry>
-      </collision>
-   </link>
+   <link name="LAntena"/>
+   <link name="LAntenaFoot"/>
+   <link name="RAntena"/>
+   <link name="RAntenaFoot"/>
 
   <!-- JOINTS -->
    <joint name="Abdomen_rx" type="revolute">

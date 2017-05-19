@@ -31,11 +31,16 @@ q_0 = fullBody.getCurrentConfig()
 
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -0.4, 0.0, 1.0, -0.5, -0.3, 0.1, -0.2, 0.0, -1.1, 0.0, 0.0, 1.1, 0.0, 0.0, 0.0, 0.0, 0.6, -1.1, 0.0, -0.6, 1.1, -0.6, -0.1, 0.0, 0.0, 0.0, 1.0, 0.4, 0.0, -1.0, 0.5, -0.3, -0.1, 0.2, 0.0, 1.1, 0.0, 0.0, -1.1, 0.0, 0.0, 0.0, 0.0, 0.6, 1.1, 0.0, -0.5, -1.1, 0.6, 0.1, 0.0, 0.0]
 
+
 """
 from hpp.gepetto import Viewer
 psf = ProblemSolver( fullBody ); rr = Viewer (psf)
 rr(q_0)
+com = fullBody.getCenterOfMass (); plotSphere (com, rr, "com", [1,0,0,1], 0.03)
+plotFrame (rr, "framy", [0,0,0], 5)
+plotFrame (rr, "framyCom", com, 2)
 """
+
 
 q_LFfeet = flexion[22:31]
 q_LMfeet = flexion[31:40]

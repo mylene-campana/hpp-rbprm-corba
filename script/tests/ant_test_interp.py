@@ -8,6 +8,7 @@ from hpp.corbaserver.rbprm.problem_solver import ProblemSolver
 from hpp.gepetto import Viewer, PathPlayer
 import numpy as np
 from viewer_library import *
+import time
 
 import ant_test_path as tp
 
@@ -20,7 +21,6 @@ rootJointType = "freeflyer"
 urdfName = "ant"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = 0 #tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 base_joint_xyz_limits = tp.base_joint_xyz_limits
@@ -30,12 +30,16 @@ fullBody.loadFullBodyModel(urdfName, rootJointType, meshPackageName, packageName
 fullBody.setJointBounds ("base_joint_xyz", base_joint_xyz_limits)
 fullBody.setFullbodyFrictionCoef (tp.frictionCoef)
 
-#psf = ProblemSolver(fullBody); rr = Viewer (psf)
+#psf = ProblemSolver(fullBody); rr = Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
-pp = PathPlayer (fullBody.client.basic, rr)
+pp = PathPlayer (fullBody.client.basic, rr); pp.speed = 0.6
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, 0, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -0.4, 0.0, 1.0, -0.5, -0.3, 0.1, -0.2, 0.0, -1.1, 0.0, 0.0, 1.1, 0.0, 0.0, 0.0, 0.0, 0.6, -1.1, 0.0, -0.6, 1.1, -0.6, -0.1, 0.0, 0.0, 0.0, 1.0, 0.4, 0.0, -1.0, 0.5, -0.3, -0.1, 0.2, 0.0, 1.1, 0.0, 0.0, -1.1, 0.0, 0.0, 0.0, 0.0, 0.6, 1.1, 0.0, -0.5, -1.1, 0.6, 0.1, 0.0, 0.0]
+fullBody.setPose (extending, "extending")
+fullBody.setPose (flexion, "flexion")
 
 heuristicName = 'static'
 lfLegId = 'LFFoot'
@@ -64,21 +68,16 @@ fullBody.addLimbDatabase('./ant_RMleg_3DOF_low.db',rmLegId,heuristicName)
 fullBody.addLimbDatabase('./ant_RBleg_3DOF_low.db',rbLegId,heuristicName)"""
 print("Limbs added to fullbody")
 
-q_0 = fullBody.getCurrentConfig(); rr(q_0)
-
 
 confsize = len(tp.q11)
-fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
+fullConfSize = len(fullBody.getCurrentConfig())
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathId # tp.orientedpathId or tp.solutionPathId
+entryPathId = tp.orientedpathIdBis # tp.orientedpathIdBis or tp.solutionPathId
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 q_init[0:confsize-tp.ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
 q_goal[0:confsize-tp.ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
 
 fullBody.setFillGenerateContactState (True)
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
@@ -90,34 +89,68 @@ q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test
 fullBody.isConfigValid(q_init_test)
 fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
+sphereColor = [1,0,0,1]; sphereSize = 0.05;
+comInit = fullBody.getCenterOfMass (); sphereName = "comInit"; plotSphere (comInit, r, sphereName, sphereColor, sphereSize)
+
+#comInitRef = q_init_test[0:3]; sphereName = "comInitRef"; plotSphere (comInitRef, r, sphereName, [0,1,0,1], sphereSize)
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
 theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
-fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[0], theta_goal)
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[len(Vimplist)-1], theta_goal)
 fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
+#comGoal = fullBody.getCenterOfMass (); sphereName = "comGoal"; plotSphere (comGoal, r, sphereName, sphereColor, sphereSize)
 
-
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, 0, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0]
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -0.4, 0.0, 1.0, -0.5, -0.3, 0.1, -0.2, 0.0, -1.1, 0.0, 0.0, 1.1, 0.0, 0.0, 0.0, 0.0, 0.6, -1.1, 0.0, -0.6, 1.1, -0.6, -0.1, 0.0, 0.0, 0.0, 1.0, 0.4, 0.0, -1.0, 0.5, -0.3, -0.1, 0.2, 0.0, 1.1, 0.0, 0.0, -1.1, 0.0, 0.0, 0.0, 0.0, 0.6, 1.1, 0.0, -0.5, -1.1, 0.6, 0.1, 0.0, 0.0]
-fullBody.setPose (extending, "extending")
-fullBody.setPose (flexion, "flexion")
-
-psf.setPlannerIterLimit (2)
+psf.setPlannerIterLimit (50)
+timeStep = 0.002
+maxIter = 100
 
 print("Start ballistic-interpolation")
-#fullBody.interpolateBallisticPath(entryPathId, 0.002) # no timed-interpolation
-fullBody.interpolateBallisticPath(entryPathId, 0.002, True) # timed-interpolation
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter) # no timed-interpolation
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True) # timed-interpolation
 print("ballistic-interpolation finished")
 
+#pp(psf.numberPaths ()-1)
+
+#comGoal = fullBody.getCenterOfMass (); sphereName = "comGoal"; plotSphere (comGoal, r, sphereName, sphereColor, sphereSize)
 
 
-#fullBody.timeParametrizedPath(psf.numberPaths() -1)
-pp.speed=0.4
-pp(psf.numberPaths ()-1)
+statesTime = fullBody.getlastStatesComputedTime ()
+numberOfStatesComputed = len(statesTime)-1
+configs = statesTime [:numberOfStatesComputed]
+times = statesTime [numberOfStatesComputed]
+
+#print("Start comRRT")
+#fullBody.comRRT(0, 1, psf.numberPaths ()-1, 0) # path = COM path (parabola ?)    NOT WORKING
+
+
+#fullBody.projectStateToCOM (0, q_init_test[0:3])
+#rr(fullBody.getlastStatesComputedTime ()[0])    # compare to rr(q_init_test)
+
+#i = 6; fullBody.projectStateToCOM (i, configs[i][0:3])
+#rr(fullBody.getlastStatesComputedTime ()[i]); fullBody.setCurrentConfig (fullBody.getlastStatesComputedTime ()[i])    # compare to rr(configs[i])
+# plotSphere (fullBody.getCenterOfMass (), r, "test"+str(i), [0,0,1,1], sphereSize); rr(configs[i]); fullBody.setCurrentConfig (configs[i])
+# plotSphere (configs[i][0:3], r, "testRef"+str(i), [0,1,0,1], sphereSize)
+
+
+fullBody.projectLastStatesComputedToCOM()
+statesTimeCOM = fullBody.getlastStatesComputedTime ()
+numberOfStatesComputedCOM = len(statesTimeCOM)-1
+configsCOM = statesTimeCOM [:numberOfStatesComputedCOM]
+#fullBody.interpolatePathFromLastStatesComputed()
+
+
+"""
+for i in range (0,numberOfStatesComputedCOM):
+	rr(configsCOM[i]); time.sleep(0.5);
+
+for i in range (0,numberOfStatesComputedCOM):
+	rr(configs[i]); time.sleep(0.5);
+
+"""
 
 
 #ID = gui.createWindow("w"); gui.addSceneToWindow("0_scene_hpp_",ID)

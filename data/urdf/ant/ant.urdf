@@ -17,13 +17,20 @@
   <link name="base_link"/>
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
-      <child link="Thorax"/>
+      <child link="base_link_comshift"/>
       <origin rpy="0 0 1.570796" xyz="0 0 0"/>
+   </joint>
+   
+  <link name="base_link_comshift"/> <!-- shift root center to match COM in neutral config -->
+  <joint name="base_link_comshift_J" type="fixed">
+      <parent link="base_link_comshift"/>
+      <child link="Thorax"/>
+      <origin rpy="0 0 0" xyz="0 -0.01066 -0.003041"/>
    </joint>
 
   <link name="virtualThorax"/> <!-- for Blender Armature export -->
   <joint name="virtualThorax" type="fixed">
-      <parent link="base_link"/>
+      <parent link="Thorax"/>
       <child link="virtualThorax"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
   </joint>
@@ -31,7 +38,7 @@
   <link name="Thorax">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="2"/>
+         <mass value="6"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -70,7 +77,7 @@
    <link name="Abdomen">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1.5"/>
+         <mass value="5"/>
          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
       </inertial>
       <visual>
@@ -92,7 +99,7 @@
    <link name="Head">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="1.3"/>
+         <mass value="5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -113,7 +120,7 @@
    <link name="LAntena">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.05"/>
+         <mass value="0"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -134,7 +141,7 @@
    <link name="LAntenaFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.05"/>
+         <mass value="0"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -155,7 +162,7 @@
    <link name="RAntena">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.05"/>
+         <mass value="0"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -176,7 +183,7 @@
    <link name="RAntenaFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.05"/>
+         <mass value="0"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -200,7 +207,7 @@
    <link name="LFThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -223,7 +230,7 @@
    <link name="LFShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.2"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -246,7 +253,7 @@
    <link name="LFFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="0.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -269,7 +276,7 @@
    <link name="LMThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -292,7 +299,7 @@
    <link name="LMShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.2"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -315,7 +322,7 @@
    <link name="LMFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="0.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -338,7 +345,7 @@
    <link name="LBThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -361,7 +368,7 @@
    <link name="LBShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.2"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -384,7 +391,7 @@
    <link name="LBFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="0.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -407,7 +414,7 @@
    <link name="RFThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -430,7 +437,7 @@
    <link name="RFShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.2"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -453,7 +460,7 @@
    <link name="RFFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="0.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -476,7 +483,7 @@
    <link name="RMThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -499,7 +506,7 @@
    <link name="RMShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.2"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -522,7 +529,7 @@
    <link name="RMFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="0.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -545,7 +552,7 @@
    <link name="RBThigh">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.3"/>
+         <mass value="0.6"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -568,7 +575,7 @@
    <link name="RBShank">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.2"/>
+         <mass value="0.5"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>
@@ -591,7 +598,7 @@
    <link name="RBFoot">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
-         <mass value="0.1"/>
+         <mass value="0.4"/>
          <inertia ixx="0.0071027" ixy="-0.00059867" ixz="-2.9564e-05" iyy="0.0046194" iyz="6.6519e-05" izz="0.0080488"/>
       </inertial>
       <visual>

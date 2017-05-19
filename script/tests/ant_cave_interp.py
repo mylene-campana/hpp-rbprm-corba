@@ -20,7 +20,6 @@ rootJointType = "freeflyer"
 urdfName = "ant"
 urdfSuffix = ""
 srdfSuffix = ""
-ecsSize = 0 #tp.ecsSize
 V0list = tp.V0list
 Vimplist = tp.Vimplist
 base_joint_xyz_limits = tp.base_joint_xyz_limits
@@ -32,95 +31,105 @@ fullBody.setFullbodyFrictionCoef (tp.frictionCoef)
 
 #psf = ProblemSolver(fullBody); rr = tp.Viewer (psf); gui = rr.client.gui
 r = tp.r; ps = tp.ps
-
 psf = tp.ProblemSolver( fullBody ); rr = tp.Viewer (psf); gui = rr.client.gui
-
-#~ AFTER loading obstacles
-nbSamples = 50000
-cType = "_3_DOF"
-x = 0.03 # contact surface width
-y = 0.03 # contact surface length
-# By default, all offset are set to [0,0,0] and all normals to [0,0,-1]
-
-lfLegId = 'LFFoot'
-lfLeg = 'LFThigh_rx'
-lffoot = 'LFFootSphere'
-fullBody.addLimb(lfLegId,lfLeg,lffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
-
-lmLegId = 'LMFoot'
-lmLeg = 'LMThigh_rx'
-lmfoot = 'LMFootSphere'
-fullBody.addLimb(lmLegId,lmLeg,lmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
-
-lbLegId = 'LBFoot'
-lbLeg = 'LBThigh_rx'
-lbfoot = 'LBFootSphere'
-fullBody.addLimb(lbLegId,lbLeg,lbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
-
-rfLegId = 'RFFoot'
-rfLeg = 'RFThigh_rx'
-rffoot = 'RFFootSphere'
-fullBody.addLimb(rfLegId,rfLeg,rffoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
-
-
-rmLegId = 'RMFoot'
-rmLeg = 'RMThigh_rx'
-rmfoot = 'RMFootSphere'
-fullBody.addLimb(rmLegId,rmLeg,rmfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
-
-rbLegId = 'RBFoot'
-rbLeg = 'RBThigh_rx'
-rbfoot = 'RBFootSphere'
-fullBody.addLimb(rbLegId,rbLeg,rbfoot,[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,cType)
-print("Limbs added to fullbody")
-
+pp = PathPlayer (fullBody.client.basic, rr); pp.speed = 0.6
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
+
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0, 0.0, 0.0, 1.1, 0.0, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, 0, 0.0, 0.0, -1.1, 0.0, 0.0, 0.5, 0.0, 0.0, -0.2, 0.0]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -0.4, 0.0, 1.0, -0.5, -0.3, 0.1, -0.2, 0.0, -1.1, 0.0, 0.0, 1.1, 0.0, 0.0, 0.0, 0.0, 0.6, -1.1, 0.0, -0.6, 1.1, -0.6, -0.1, 0.0, 0.0, 0.0, 1.0, 0.4, 0.0, -1.0, 0.5, -0.3, -0.1, 0.2, 0.0, 1.1, 0.0, 0.0, -1.1, 0.0, 0.0, 0.0, 0.0, 0.6, 1.1, 0.0, -0.5, -1.1, 0.6, 0.1, 0.0, 0.0]
+fullBody.setPose (extending, "extending")
+fullBody.setPose (flexion, "flexion")
+
+heuristicName = 'static'
+lfLegId = 'LFFoot'
+lmLegId = 'LMFoot'
+lbLegId = 'LBFoot'
+rfLegId = 'RFFoot'
+rmLegId = 'RMFoot'
+rbLegId = 'RBFoot'
+fullBody.addLimbDatabase('./ant_LFleg_6DOF.db',lfLegId,heuristicName) #50k samples
+fullBody.addLimbDatabase('./ant_LMleg_6DOF.db',lmLegId,heuristicName)
+fullBody.addLimbDatabase('./ant_LBleg_6DOF.db',lbLegId,heuristicName)
+fullBody.addLimbDatabase('./ant_RFleg_6DOF.db',rfLegId,heuristicName)
+fullBody.addLimbDatabase('./ant_RMleg_6DOF.db',rmLegId,heuristicName)
+fullBody.addLimbDatabase('./ant_RBleg_6DOF.db',rbLegId,heuristicName)
+
+print("Limbs added to fullbody")
 
 
 confsize = len(tp.q11)
-fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
+fullConfSize = len(fullBody.getCurrentConfig())
 q_init = fullBody.getCurrentConfig(); q_goal = q_init [::]
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
+entryPathId = tp.orientedpathIdBis # or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
-q_init[0:confsize-ecsSize] = trunkPathwaypoints[0][0:confsize-ecsSize]
-q_goal[0:confsize-ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-ecsSize]
-if (ecsSize > 0):
-    q_init[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[0][confsize-ecsSize:confsize]
-    q_goal[fullConfSize-ecsSize:fullConfSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][confsize-ecsSize:confsize]
+q_init[0:confsize-tp.ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
+q_goal[0:confsize-tp.ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
 
 
+fullBody.setFillGenerateContactState (True)
 dir_init = [-V0list [0][0],-V0list [0][1],-V0list [0][2]] # first V0
+theta_0 = math.atan2(trunkPathwaypoints[1][1] - q_init[1], trunkPathwaypoints[1][0] - q_init[0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("V0", False, V0list[0], theta_0)
 fullBody.setCurrentConfig (q_init)
 fullBody.isConfigValid(q_init)
 q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
+fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
+
+fullBody.getcentroidalConeFails ()
 
 dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
+theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
+fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[len(Vimplist)-1], theta_goal)
 fullBody.setCurrentConfig (q_goal)
 q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
-
-fullBody.setStartState(q_init_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 fullBody.setEndState(q_goal_test,[lfLegId,lmLegId,lbLegId,rfLegId,rmLegId,rbLegId])
 
-extending = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, 1.1, 0.0, -0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0, 0.0, -1.1, 0.0, 0.5, 0.0, 0.0, 0.2, 0.0,0,0,0,0]
-flexion = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, -0.6, 0.0, 0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0, 0.0, 0.6, 0.0, -0.6, 0.0, 0.0, 0.2, 0.0,0,0,0,0]
-fullBody.setPose (extending, "extending")
-fullBody.setPose (flexion, "flexion")
 
-psf.setPlannerIterLimit (1000)
+
+psf.setPlannerIterLimit (50)
+timeStep = 0.002
+maxIter = 100
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, 0.005)
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter) # no timed-interpolation
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True) # timed-interpolation
+print("ballistic-interpolation finished")
 
 
-pp = PathPlayer (fullBody.client.basic, rr)
-pp.speed=1.5
+fullBody.getPathPlannerFails ()
 
-#fullBody.timeParametrizedPath(psf.numberPaths() -1 )
+
+
 #pp(psf.numberPaths ()-1)
+
+## Save data
+
+nbWaypoints = len (trunkPathwaypoints)
+nbParabolas = nbWaypoints - 1
+nbCentroidalFails = fullBody.getcentroidalConeFails ()
+nbFailsLimbRRT = fullBody.getPathPlannerFails ()
+
+print('nbFailsLimbRRT: '+str(nbFailsLimbRRT))
+
+# Write important results #
+f = open('results_ant_runs.txt','a')
+f.write('-------------------------'+'\n')
+f.write('nbWaypoints: '+str(nbWaypoints)+'\n')
+f.write('nbParabolas: '+str(nbParabolas)+'\n')
+f.write('nbCentroidalFails: '+str(nbCentroidalFails)+'\n')
+f.write('nbFailsLimbRRT: '+str(nbFailsLimbRRT)+'\n')
+f.write("path length= " + str(psf.pathLength(psf.numberPaths ()-1))+'\n') # to verify that not same paths
+
+f.close()
+
+"""
+from parseRuns import main
+main("results_ant_runs.txt")
+"""
 
 
 
@@ -164,3 +173,5 @@ ffmpeg -i untitled.mp4 -vcodec libx264 -crf 24 video.mp4
 
 #pathSamples = plotSampleSubPath (ps.client.problem, r, solutionPathId, 70, "sampledPath", [1,0,0,1])
 #writePathSamples (pathSamples, 'antCave_path.txt')
+
+#plotFrame (rr, "frame", [0,0,0], 0.4)

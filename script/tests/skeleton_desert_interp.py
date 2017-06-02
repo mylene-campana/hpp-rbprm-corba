@@ -34,10 +34,16 @@ pp = PathPlayer (fullBody.client.basic, rr); pp.speed = 0.6
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -0.2, -1, -2.5, 0.0, 0.0, -0.2, -0.1, -0.2, -1, 2.5, 0.0, 0.0, 0, 0.1, -2, 2.5, -0.7, 0, -0.2, 0, -0.1, -2, 2.5, -0.7, 0, -0.2]
-extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.6, -1, -1.5, 0.0, 0.0, -0.2, -0.1, -1.7, -1.1, 1.5, 0.0, 0.0, 0, 0.0, -1.2, 1.5, 0.0, 0, -0.0, 0, -0.0, -1.4, 1.7, 0.1, 0, -0.0]
-q_contact_takeoff =[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.4, -1.3, -1.5, 0.0, 0.0, -0.2, -0.1, -1.5, -1.2, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
-q_contact_landing = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 1.4, -1, -1.2, 0.0, 0.0, -0.0, 0.2, 1.5, -1.1, 1.2, 0.0, 0.0, 0, 0.1, -1.1, 0.9, 0, 0, -0.2, 0, -0.1, -1.1, 0.9, 0, 0, -0.2]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.2, 0.1, -0.2, -1, -2.5, 0.0, 0.0, -0.2, -0.1, -0.2, -1, 2.5, 0.0, 0.0, 0, 0.1, -1.7, 2.5, -0.8, 0, -0.2, 0, -0.1, -1.7, 2.5, -0.8, 0, -0.2]
+extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.6, -1, -1.5, 0.0, 0.0, -0.2, -0.1, -1.7, -1.1, 1.5, 0.0, 0.0, 0, 0.0, -1.2, 1.5, 0.0, 0, -0.0, 0, -0.0, -1.4, 1.7, 0.1, 0, -0.0]
+q_contact_takeoff =[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.4, -1.3, -1.5, 0.0, 0.0, -0.2, -0.1, -1.5, -1.2, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
+q_contact_landing = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 1.4, -1, -1.2, 0.0, 0.0, -0.0, 0.2, 1.5, -1.1, 1.2, 0.0, 0.0, 0, 0.1, -1.1, 0.9, 0, 0, -0.2, 0, -0.1, -1.1, 0.9, 0, 0, -0.2]
+
+"""
+q = q_contact_takeoff [::]
+q [fullBody.rankInConfiguration ['Sacrum']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['Head']] = 0; rr(q)
+"""
 
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
@@ -49,11 +55,12 @@ rLegId = 'RFoot'
 lLegId = 'LFoot'
 rarmId = 'RHand'
 larmId = 'LHand'
-fullBody.addLimbDatabase('./skeleton_rleg.db',rLegId,'static')
-fullBody.addLimbDatabase('./skeleton_lleg.db',lLegId,'static')
-fullBody.addLimbDatabase('./skeleton_rarm.db',rarmId,'static')
-fullBody.addLimbDatabase('./skeleton_larm.db',larmId,'static')
+fullBody.addLimbDatabase('./skeleton_rleg_3DOF.db',rLegId,'static')
+fullBody.addLimbDatabase('./skeleton_lleg_3DOF.db',lLegId,'static')
+fullBody.addLimbDatabase('./skeleton_rarm_3DOF.db',rarmId,'static')
+fullBody.addLimbDatabase('./skeleton_larm_3DOF.db',larmId,'static')
 print("Limbs added to fullbody")
+
 
 confsize = len(tp.q11)
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
@@ -62,6 +69,7 @@ q_init = flexion [::]; q_goal = q_init [::]
 # WARNING: q_init and q_goal may have changed in orientedPath
 entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
+
 
 q_init[0:confsize-tp.ecsSize] = trunkPathwaypoints[0][0:confsize-tp.ecsSize]
 q_goal[0:confsize-tp.ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
@@ -88,7 +96,7 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setEndState(q_goal_test,[rLegId, lLegId])
 fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
 
-psf.setPlannerIterLimit (50)
+psf.setPlannerIterLimit (100)
 timeStep = 0.002
 maxIter = 100
 
@@ -127,10 +135,18 @@ f.write("path length= " + str(psf.pathLength(psf.numberPaths ()-1))+'\n') # to v
 
 f.close()
 
+
 """
 from parseRuns import main
 main("results_skeleton_runs.txt")
 """
+
+
+## TODO try to connect directly those two configs with limb-RRT
+#qt1 = [-4.98514,-6.36751,-0.808568,-0.37693,0.0910363,-0.106665,-0.915565,0,0,0.0712573,0,0,0,0,0,-0.0712573,0.0712573,-0.0931141,0.829942,-1,-1.66317,0,0,-0.0712573,0.0931141,0.894313,-1.06437,1.66317,0,0,0.189043,-0.517203,-1.14991,0.738904,0.296294,-0.0905964,-0.251554,0.0597942,-0.20037,-0.993151,1.23629,0.272293,-0.1332,-0.361487]
+#qt2 = [-5.16011,-6.75111,-1.58784,-0.451129,0.078433,-0.11958,-0.880926,0,0,0,0,0,0,0,0,0,0,-0.2,1.4,-1,-1.2,0,0,-0,0.2,1.5,-1.1,1.2,0,0,0.211114,-0.576363,-1.11084,0.613016,0.376712,-0.0822658,-0.243191,-0.0687832,-0.649155,-1.01131,0.986387,0.0831689,-0.0524914,-0.299198]
+
+
 
 """
 plotCone([4.42,-0.08,0.09,],psf,rr,"cone1","friction_cone06")

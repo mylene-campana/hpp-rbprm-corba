@@ -13,11 +13,36 @@
   <link name="base_link"/>
   <joint name="base_link_J" type="fixed">
       <parent link="base_link"/>
-      <child link="Pelvis"/>
+      <child link="base_link_comshift"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
    </joint>
+   
+   
+  <joint name="base_link_visual_J" type="fixed">
+      <parent link="base_link"/>
+      <child link="base_link_visual"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+   </joint>
+   <link name="base_link_visual">
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <sphere radius="0.02"/>
+         </geometry>
+         <material name="Black">
+			<color rgba="0 0 0 1"/>
+		</material>
+      </visual>
+   </link>
 
-   <link name="Pelvis">
+<link name="base_link_comshift"/>
+  <joint name="base_link_comshift_J" type="fixed">
+      <parent link="base_link_comshift"/>
+      <child link="Pelvis"/>
+      <origin rpy="0 0 0" xyz="-0.1 0 -0.04"/>
+   </joint>
+
+  <link name="Pelvis">
       <inertial>
          <origin rpy="0 0 0" xyz="0 0 0"/>
          <mass value="8.4552"/>

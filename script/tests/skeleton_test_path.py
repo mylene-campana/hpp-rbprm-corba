@@ -57,12 +57,13 @@ rbprmBuilder.setNumberFilterMatch(2)
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-3.0, 0, 0.9, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [-3.0, 0, 0.55, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
-q22[0:7] = [4, -1, 0.9, 1, 0, 0, 0]; r(q22)
+#q22[0:7] = [4, -1, 0.9, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-1.1, 0, 0.55, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 

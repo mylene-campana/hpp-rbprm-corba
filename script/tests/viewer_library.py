@@ -636,12 +636,27 @@ def plotContactCones (contactCones, ps, r, coneName, coneURDFname):
         plotCone (q, ps, r, coneName + "_contactCones_" + str(i), coneURDFname)
 
 # --------------------------------------------------------------------#
+
+## Plot contact-cones obtained from rbprmBuilder function ##
+## Parameters:
+# ps: problem solver
+# trajName : prefix for the visual lines building the trajectory
+# dt: time step
+def plotComTrajectory (ps, r, nPath, NbPointsPerSubPath, trajName, color):
+    plotSampleConfigs = ps.sampleSubPathCom(nPath, NbPointsPerSubPath)
+    pointsCurv = []
+    r.client.gui.addCurve (trajName, plotSampleConfigs, color)
+    r.client.gui.addToGroup (trajName, r.sceneName)
+
+
+# --------------------------------------------------------------------#
 # ----------------------------## BLENDER ##------------------------------------#
 
 ## Write Path-motion in Yaml file ##
 ## Parameters:
-# cl: corbaserver client
+# ps: problem solver
 # fileName: name (string) of the file where samples will be written
+# dt: time step
 def pathToYamlFile (ps, r, fileName, robotName, pathId, goalConfig, dt):
     gui = r.client.gui
     FrameRange = np.arange(0, ps.pathLength(pathId), dt)
@@ -655,6 +670,37 @@ def pathToYamlFile (ps, r, fileName, robotName, pathId, goalConfig, dt):
     r (goalConfig); ps.robot.setCurrentConfig(goalConfig)
     gui.refresh ()
     gui.captureTransform ()
+
+# --------------------------------------------------------------------#
+
+## Write Path-motion including COM trajectory in Yaml file ##
+## Parameters:
+# cl: corbaserver client
+# fileName: name (string) of the file where samples will be written
+# dt: time step
+def pathAndCOMToYamlFile (ps, r, fileName, robotName, pathId, goalConfig, dt):
+    gui = r.client.gui
+    FrameRange = np.arange(0, ps.pathLength(pathId), dt)
+    gui.setCaptureTransform (fileName, [robotName])
+    pathToFile = '/local/mcampana/devel/hpp/videos/' # WARNING!
+    comQ = [0,0,0,1,0,0,0]
+    for t in FrameRange:
+        q = ps.configAtParam (pathId, t) # update robot configuration
+        r (q); ps.robot.setCurrentConfig(q)
+        gui.refresh ()
+        gui.captureTransform ()
+        comQ [0:3] = ps.robot.getCenterOfMass () # no need to plot the COM in the viewer
+        f = open(pathToFile+fileName,'a')
+        f.write("  COM: " + str(comQ) + "\n")
+        f.close()
+    
+    r (goalConfig); ps.robot.setCurrentConfig(goalConfig)
+    gui.refresh ()
+    gui.captureTransform ()
+    comQ [0:3] = ps.robot.getCenterOfMass ()
+    f = open(pathToFile+fileName,'a')
+    f.write("  COM: " + str(comQ) + "\n")
+    f.close()
 
 # --------------------------------------------------------------------#
 

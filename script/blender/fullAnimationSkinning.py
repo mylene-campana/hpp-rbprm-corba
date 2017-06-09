@@ -1,6 +1,6 @@
 import bpy
 from math import *
-#import yaml #Windaube
+import yaml #Windaube
 """
 Contains all Blender actions to:
   - import initial and final cones, (and create associated spheres ?)
@@ -534,9 +534,9 @@ def displayAntContactConfig ():
 	jointConfigsFileName = daeFilePath + fileName
 	endMotionFrame = loadMotionArmature (jointConfigsFileName, beginMotionFrame, reOrientFrames, rotationOrder, armatureName) # for inner joints
 
-def importYamlMotion ():
+def importYamlMotion (fileName):
 	viewerFilePath = '/local/mcampana/devel/hpp/videos/'
-	fileName = 'lampPlateforms_frames.yaml'
+	#fileName = 'lampPlateforms_frames.yaml'
 	#fileName = 'kangarooTrunkDesert_frames.yaml'
 	#fileName = 'kangarooTrunkDesert_forcedOrientation_frames.yaml'
 	yamlFileName = viewerFilePath + fileName
@@ -548,7 +548,7 @@ def importYamlMotion ():
 #main  ()
 #importArmatureMotion  ("JUMPERMAN","spiderman_testJointConfigs.txt") # CHARACTER, filename
 #mainTestBis ()
-importPath ('jumperman_backJumpCubes_path.txt')
+#importPath ('skeleton_test_ComProj_path.txt')
 #irosRoadmapVisibility ()
 #displayAntContactConfig ()
-#importYamlMotion ()
+importYamlMotion ("skeleton_test_testCOMinYaml_frames.yaml")

@@ -76,8 +76,8 @@ fullBody.isConfigValid(q_init_test)
 fullBody.setStartState(q_init_test,[rLegId, lLegId])
 fullBody.setFullbodyV0fThetaCoefs ("V0", True, [0,0,0], 0)
 
-comInit = fullBody.getCenterOfMass (); plotSphere (comInit, rr, "comInit", [1,0,0,1], 0.02) # red = where the COM is at q_init_test
-plotSphere (q_init_test[0:3], rr, "comInitRef", [0,1,0,1], 0.02) # green = where we want the COM to be
+#comInit = fullBody.getCenterOfMass (); plotSphere (comInit, rr, "comInit", [1,0,0,1], 0.02) # red = where the COM is at q_init_test
+#plotSphere (q_init_test[0:3], rr, "comInitRef", [0,1,0,1], 0.02) # green = where we want the COM to be
 
 q_goal = flexion [::]
 q_goal[0:confsize-tp.ecsSize] = trunkPathwaypoints[len(trunkPathwaypoints)-1][0:confsize-tp.ecsSize]
@@ -90,22 +90,32 @@ fullBody.isConfigValid(q_goal_test)
 fullBody.setEndState(q_goal_test,[rLegId, lLegId])
 fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
 
-comGoal = fullBody.getCenterOfMass (); plotSphere (comGoal, rr, "comGoal", [1,0,0,1], 0.02)
-plotSphere (q_goal_test[0:3], rr, "comGoalRef", [0,1,0,1], 0.02) # green = where we want the COM to be
+#comGoal = fullBody.getCenterOfMass (); plotSphere (comGoal, rr, "comGoal", [1,0,0,1], 0.02)
+#plotSphere (q_goal_test[0:3], rr, "comGoalRef", [0,1,0,1], 0.02) # green = where we want the COM to be
 
 psf.setPlannerIterLimit (100)
 timeStep = 0.003
 maxIter = 100
-
+gui.addSphere ("COM",0.02,[0,0,1,1]) # for the robot animation (pathPlayer)
 
 print("Start ballistic-interpolation")
-#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter); pathIdBall = psf.numberPaths ()-1 # no timed-interpolation
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter); pathIdBall = psf.numberPaths ()-1 # no timed-interpolation
 #fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True); pathIdBallTimed = psf.numberPaths ()-1 # timed-interpolation
-fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, False, True); pathIdCom = psf.numberPaths ()-1 # COM projection
-fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True, True); pathIdCom = psf.numberPaths ()-1 # COM projection + timed   PROBLEM !!!!!!!!!!!!!!!!!   COM NOT FOLLOWING ANYMORE !!!!!
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, False, True); pathIdCom = psf.numberPaths ()-1 # COM projection
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True, True); pathIdComTimed = psf.numberPaths ()-1 # COM projection + timed   PROBLEM !!!!!!!!!!!!!!!!!   COM NOT FOLLOWING ANYMORE !!!!!
 print("ballistic-interpolation finished")
 
 rr(q_init_test)
+
+
+plotComTrajectory (psf, rr, pathIdCom, 70, "test_COM", [0.3,0.3,0.3,1])
+pp.plotRobotTrajectoryWithCOM (pathIdCom, "COM") # animation with COM
+
+
+#pathToYamlFile (psf, rr, "skeleton_test_frames.yaml", "skeleton", pathIdBall, q_goal_test, 0.03) # BLENDER
+#pathToYamlFile (psf, rr, "skeleton_test_timedFrames.yaml", "skeleton", pathIdBallTimed, q_goal_test, 0.02) # BLENDER
+#pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_frames.yaml", "skeleton", pathIdCom, q_goal_test, 0.02) # BLENDER
+#pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_timedFrames.yaml", "skeleton", pathIdComTimed, q_goal_test, 0.02) # BLENDER
 
 """
 fullBody.getPathPlannerFails ()
@@ -169,6 +179,16 @@ plotFrame (rr, 'projected_root', q[0:3], 0.3)  # ROOT HAS MOVED, IT SHOULD NOT !
 ## Export for Blender ##
 # First display in Viewer, then export
 # Don't change exported names, because harcoded in fullAnimationSkinning.py
+
+
+"""
+pathToYamlFile (psf, rr, "skeleton_test_ComProj_frames.yaml", "skeleton", pathId, q_goal_test, 0.02)
+
+pathSamples = plotSampleSubPath (psf.client.problem, rr, tp.solutionPathId, 70, "sampledPath", [1,0,0,1])
+writePathSamples (pathSamples, 'skeleton_test_ComProj_path.txt')
+"""
+
+
 """
 pathId = psf.numberPaths()-1 # path to export
 plotCone (q_init_test, psf, rr, "cone_start", "friction_cone_blue")

@@ -409,3 +409,6 @@ class ProblemSolver (object):
     #      core::ProblemSolver::addDistanceType
     def selectDistance (self, distanceType):
         return self.client.problem.selectDistance (distanceType)
+
+    def sampleSubPathCom (self, pathId, NbPointsPerSubPath):
+        return self.client.problem.sampleSubPathCom (pathId, NbPointsPerSubPath)

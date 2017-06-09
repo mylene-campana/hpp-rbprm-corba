@@ -1,6 +1,6 @@
 import bpy
 from math import *
-import yaml #Windaube
+#import yaml #Windaube
 """
 Contains all Blender actions to:
   - import initial and final cones, (and create associated spheres ?)
@@ -502,10 +502,11 @@ def mainTestBis (): # no armature (no motion actually)
 	importDaeObjects (daeGoalConeFileName, 'Cone', matConeSG)
 	importDaeObjects (daePathConeFileName, 'Cone', matConePath)
 
-def importPath ():
+def importPath (fileName):
 	daeFilePath = '/local/mcampana/devel/hpp/videos/'
 	#pathFileName = daeFilePath + 'kangaroo_desert_path.txt'
-	pathFileName = daeFilePath + 'lampPlateforms_path.txt'
+	#pathFileName = daeFilePath + 'lampPlateforms_path.txt'
+	pathFileName = daeFilePath + fileName
 	matPath = getOrCreateMaterial ("path", 'WIRE', [0,0,1], 1, True, False, False)
 	pathName = 'path'
 	pathPoints = parsePathPoints (pathFileName)
@@ -545,9 +546,9 @@ def importYamlMotion ():
 
 #---------------------------------------------------------------------------#
 #main  ()
-importArmatureMotion  ("JUMPERMAN","spiderman_testJointConfigs.txt") # CHARACTER, filename
+#importArmatureMotion  ("JUMPERMAN","spiderman_testJointConfigs.txt") # CHARACTER, filename
 #mainTestBis ()
-#importPath ()
+importPath ('jumperman_backJumpCubes_path.txt')
 #irosRoadmapVisibility ()
 #displayAntContactConfig ()
 #importYamlMotion ()

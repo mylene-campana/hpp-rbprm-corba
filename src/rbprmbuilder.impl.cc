@@ -2326,17 +2326,18 @@ namespace hpp {
       void RbprmBuilder::interpolateBallisticPath (const CORBA::UShort pathId,
 						   const double u_offset,
 						   const CORBA::UShort maxIter,
-						   const CORBA::Boolean timed)
+						   const CORBA::Boolean timed,
+						   const CORBA::Boolean comProj)
 	throw (hpp::Error){
         try {
 	  std::size_t pid = (std::size_t) pathId;
 	  if(startState_.configuration_.rows() == 0)
-	      throw std::runtime_error ("Start state not initialized, can not interpolate ");
+	    throw std::runtime_error ("Start state not initialized, can not interpolate ");
 	  if(endState_.configuration_.rows() == 0)
-	      throw std::runtime_error ("End state not initialized, can not interpolate ");
+	    throw std::runtime_error ("End state not initialized, can not interpolate ");
 
 	  if(problemSolver_->paths().size() <= pid)
-	      throw std::runtime_error ("No path computed, cannot interpolate ");
+	    throw std::runtime_error ("No path computed, cannot interpolate ");
 
 	  const core::PathVectorConstPtr_t path = problemSolver_->paths()[pid];
 
@@ -2380,6 +2381,7 @@ namespace hpp {
 	  else
 	    hppDout (error, "No affordances can be given to interpolator");
 
+	  fullBody_->comProj_ = comProj;
 	  core::PathVectorPtr_t result = core::PathVector::create (fullBody_->device_->configSize (), fullBody_->device_->numberDof ());
 	  rbprm::T_PathVectorBP interpResult;
 	  // each path-vector corresponds to an interpolated parabola
@@ -3116,7 +3118,9 @@ namespace hpp {
 	for (int i = 0; i < lastStatesComputed_.size (); i++) {
 	  core::Configuration_t configRef = lastStatesComputed_ [i].configuration_;
 	  fullBody_->device_->currentConfiguration (configRef);
-	  model::vector3_t com = fullBody_->device_->positionCenterOfMass ();
+	  //model::vector3_t com = fullBody_->device_->positionCenterOfMass ();
+	  model::vector3_t com;
+	  for (int i = 0; i < 3; i++) com [i] = configRef [i];
 	  core::Configuration_t com_config = com;
 	  double res = projectStateToCOMEigen (i, com_config); // update lastStatesComputed_ stack
 	  core::Configuration_t configResult = lastStatesComputed_ [i].configuration_;
@@ -3141,9 +3145,12 @@ namespace hpp {
 	for (int i = 0; i < lastStatesComputed_.size () -1; i++) {
 	  core::Configuration_t start = lastStatesComputed_ [i].configuration_;
 	  core::Configuration_t goal = lastStatesComputed_ [i+1].configuration_;
-	  const core::value_type length = (*distance) (start, goal);
-	  core::StraightPathPtr_t path = StraightPath::create (robot, goal, goal, length);
-	res->appendPath (path);
+	  //const core::value_type length = (*distance) (start, goal);
+	  //core::StraightPathPtr_t path = StraightPath::create (robot, goal, goal, length);
+	  SteeringMethodPtr_t sm = problemSolver_->problem ()->steeringMethod (); // no we need a limbRRT steering method
+	  //SteeringMethodPtr_t sm = LimbRRTSteering::create(problemSolver_->problem (), fullBody_->device_->configSize()-1,bp); // how to get each bp ?
+	  PathPtr_t path = (*sm) (start, goal);
+	  res->appendPath (path);
 
 	}
 	problemSolver_->addPath (res);

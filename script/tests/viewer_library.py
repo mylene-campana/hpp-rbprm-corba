@@ -70,15 +70,13 @@ def plotPath (ps, nPath, r, lineNamePrefix, dt):
 # framePosition: the [x, y, z] absolute position of the frame
 # ampl: amplitude of the frame axis
 def plotFrame (r, frameGroupName, framePosition, ampl):
-    r.client.gui.createGroup (frameGroupName)
     x = framePosition [0]; y = framePosition [1]; z = framePosition [2];
-    r.client.gui.addLine('frame1',[x,y,z], [x+ampl,y,z],[1,0,0,1])
-    r.client.gui.addToGroup ('frame1', frameGroupName)
-    r.client.gui.addLine('frame2',[x,y,z], [x,y+ampl,z],[0,1,0,1])
-    r.client.gui.addToGroup ("frame2", frameGroupName)
-    r.client.gui.addLine('frame3',[x,y,z], [x,y,z+ampl],[0,0,1,1])
-    r.client.gui.addToGroup ('frame3', frameGroupName)
-    r.client.gui.addSceneToWindow(frameGroupName,r.windowId)
+    r.client.gui.addLine(frameGroupName+'frame1',[x,y,z], [x+ampl,y,z],[1,0,0,1])
+    r.client.gui.addToGroup (frameGroupName+'frame1', r.sceneName)
+    r.client.gui.addLine(frameGroupName+'frame2',[x,y,z], [x,y+ampl,z],[0,1,0,1])
+    r.client.gui.addToGroup (frameGroupName+"frame2", r.sceneName)
+    r.client.gui.addLine(frameGroupName+'frame3',[x,y,z], [x,y,z+ampl],[0,0,1,1])
+    r.client.gui.addToGroup (frameGroupName+'frame3', r.sceneName)
     #r.client.gui.removeFromGroup('frame1',r.sceneName) # remove duplicata in sceneName NOT WORKING
     #r.client.gui.removeFromGroup('frame2',r.sceneName)
     #r.client.gui.removeFromGroup('frame3',r.sceneName)

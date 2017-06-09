@@ -314,7 +314,8 @@ namespace hpp {
 	void interpolateBallisticPath (const CORBA::UShort pathId,
 				       const double u_offset,
 				       const CORBA::UShort maxIter,
-				       const CORBA::Boolean timed = false)
+				       const CORBA::Boolean timed = false,
+				       const CORBA::Boolean comProj = false)
 	  throw (hpp::Error);
 	hpp::floatSeqSeq* generateWaypointContacts (CORBA::UShort pathId)
 	  throw (hpp::Error);

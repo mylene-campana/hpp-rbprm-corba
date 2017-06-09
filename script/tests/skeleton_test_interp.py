@@ -99,10 +99,15 @@ maxIter = 100
 
 
 print("Start ballistic-interpolation")
-fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter) # no timed-interpolation
-#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True) # timed-interpolation
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter); pathIdBall = psf.numberPaths ()-1 # no timed-interpolation
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True); pathIdBallTimed = psf.numberPaths ()-1 # timed-interpolation
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, False, True); pathIdCom = psf.numberPaths ()-1 # COM projection
+fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True, True); pathIdCom = psf.numberPaths ()-1 # COM projection + timed   PROBLEM !!!!!!!!!!!!!!!!!   COM NOT FOLLOWING ANYMORE !!!!!
 print("ballistic-interpolation finished")
 
+rr(q_init_test)
+
+"""
 fullBody.getPathPlannerFails ()
 
 
@@ -135,7 +140,7 @@ configsCOM = statesTimeCOM [:numberOfStatesComputedCOM]
 
 #print("Start comRRT")
 #fullBody.comRRT(0, 1, psf.numberPaths ()-1, 0) # path = COM path (parabola ?)    NOT WORKING
-
+"""
 
 """
 for i in range (0,numberOfStatesComputedCOM):

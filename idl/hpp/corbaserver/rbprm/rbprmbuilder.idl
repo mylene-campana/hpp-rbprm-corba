@@ -511,7 +511,8 @@ module hpp
     void interpolateBallisticPath (in unsigned short pathId,
 				   in double u_offset,
 				   in unsigned short maxIter,
-				   in boolean timed) raises (Error);
+				   in boolean timed,
+				   in boolean comProj) raises (Error);
 
     /// Generate contact on the waypoint-configurations of the given path
     floatSeqSeq generateWaypointContacts (in unsigned short pathId)

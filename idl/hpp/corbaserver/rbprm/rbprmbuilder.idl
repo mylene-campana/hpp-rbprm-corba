@@ -179,8 +179,9 @@ module hpp
     /// Generate all possible contact in a given configuration
     /// \param dofArray initial configuration of the robot
     /// \param direction desired direction of motion for the robot
-    /// \return transformed configuration for which all possible contacts have been created
-    floatSeq generateContacts(in floatSeq dofArray, in floatSeq direction, in boolean noStability, in boolean useFlexionPose) raises (Error);
+    /// \param useFlexionPose if use flexion pose (1) (default) or final flexion pose (2) for non-contacting limbs, else (0)
+   /// \return transformed configuration for which all possible contacts have been created
+    floatSeq generateContacts(in floatSeq dofArray, in floatSeq direction, in boolean noStability, in unsigned short useFlexionPose) raises (Error);
 
     /// Generate an autocollision free configuration with limbs in contact with the ground
     /// \param contactLimbs name of the limbs to project in contact

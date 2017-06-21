@@ -57,13 +57,13 @@ rbprmBuilder.setNumberFilterMatch(2)
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-q11[0:7] = [-3.0, 0, 0.55, 1, 0, 0, 0]; r(q11)
+q11[0:7] = [-3.0, 0, 0.54, 1, 0, 0, 0]; r(q11)
 
 rbprmBuilder.isConfigValid(q11)
 
 q22 = q11[::]
 #q22[0:7] = [4, -1, 0.9, 1, 0, 0, 0]; r(q22)
-q22[0:7] = [-1.1, 0, 0.55, 1, 0, 0, 0]; r(q22)
+q22[0:7] = [-1.1, 0, 0.52, 1, 0, 0, 0]; r(q22)
 
 rbprmBuilder.isConfigValid(q22)
 
@@ -100,8 +100,8 @@ rbprmBuilder.rotateAlongPath (solutionPathId,False)
 orientedpathId = ps.numberPaths () - 1
 #pp(orientedpathId)
 
-rbprmBuilder.rotateAlongPath (solutionPathId,False, False, True) # use alpha dir for SO3
-orientedpathIdBis = ps.numberPaths () - 1
+#rbprmBuilder.rotateAlongPath (solutionPathId,False, False, True) # use alpha dir for SO3
+#orientedpathIdBis = ps.numberPaths () - 1
 #pp(orientedpathIdBis)
 
 V0list = rbprmBuilder.getsubPathsV0Vimp("V0",solutionPathId)
@@ -119,11 +119,11 @@ for i in range(1,len(pathOriWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathOriWaypoints[i])[0])):
         print('problem with waypoints number: ' + str(i))
 
-print("-- Verify that all RB-waypoints are valid (oriented path): ")
+"""print("-- Verify that all RB-waypoints are valid (oriented path): ")
 pathOriBisWaypoints = ps.getWaypoints(orientedpathIdBis)
 for i in range(1,len(pathOriBisWaypoints)-1):
     if(not(rbprmBuilder.isConfigValid(pathOriBisWaypoints[i])[0])):
-        print('problem with waypoints number: ' + str(i))
+        print('problem with waypoints number: ' + str(i))"""
 
 
 
@@ -145,6 +145,7 @@ r(q11)
 qAway = q11 [::]; qAway[0] = -6
 rbprmBuilder.setCurrentConfig (qAway); r(qAway)
 
+plotFrame(r, "framy", [0,0,0], 0.4)
 
 ## DEBUG tools ##
 """

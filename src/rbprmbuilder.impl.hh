@@ -211,7 +211,7 @@ namespace hpp {
         virtual hpp::floatSeq* generateContacts(const hpp::floatSeq& configuration,
                                                 const hpp::floatSeq& direction,
 						const bool noStability = false,
-						const bool useFlexionPose =true)
+						const unsigned short useFlexionPose = 1)
 	  throw (hpp::Error);
 
         virtual hpp::floatSeq* generateGroundContact(const hpp::Names_t& contactLimbs) throw (hpp::Error);
@@ -397,6 +397,7 @@ namespace hpp {
 	core::Configuration_t flexionPose_; // parabola extremity
 	core::Configuration_t takeoffContactPose_; // when releasing contact
 	core::Configuration_t landingContactPose_; // when starting contact
+	core::Configuration_t flexionFinalPose_; // last flexion pose
 	CORBA::Boolean fillGenerateContactState_;
       }; // class RobotBuilder
     } // namespace impl

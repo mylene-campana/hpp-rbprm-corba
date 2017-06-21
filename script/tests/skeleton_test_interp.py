@@ -18,7 +18,7 @@ meshPackageName = 'hpp-rbprm-corba'
 rootJointType = "freeflyer"
 ##
 #  Information to retrieve urdf and srdf files.
-urdfName = "skeleton"
+urdfName = "skeleton" # black sphere for the root
 urdfSuffix = ""
 srdfSuffix = ""
 ecsSize = 0
@@ -37,21 +37,29 @@ q_0 = fullBody.getCurrentConfig(); rr(q_0)
 #plotSphere (fullBody.getCenterOfMass (), rr, "test_com_q_0", [1,0,0,1], 0.02); plotFrame (rr, 'frame_group', [0,0,0], 0.6)
 
 
-flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3, 0.2, 0.1, -0.2, -1, -2.5, 0.0, 0.0, -0.2, -0.1, -0.2, -1, 2.5, 0.0, 0.0, 0, 0.1, -1.7, 2.5, -0.8, 0, -0.2, 0, -0.1, -1.7, 2.5, -0.8, 0, -0.2]
+flexion_final = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3, 0.2, 0.1, -0.2, -1, -2.5, 0.0, 0.0, -0.2, -0.1, -0.2, -1, 2.5, 0.0, 0.0, 0, 0.1, -1.7, 2.5, -0.8, 0, -0.2, 0, -0.1, -1.7, 2.5, -0.8, 0, -0.2]
+flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, 0.0, 0.0, -0.4, 0.2, 0.1, 0.4, -0.1, -2, 0.0, 0.0, -0.2, -0.1, 0.4, -0.1, 2, 0.0, 0.0, 0, 0.1, -1.7, 2.5, -0.8, 0, -0.2, 0, -0.1, -1.7, 2.5, -0.8, 0, -0.2]
 extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.6, -1, -1.5, 0.0, 0.0, -0.2, -0.1, -1.7, -1.1, 1.5, 0.0, 0.0, 0, 0.0, -1.2, 1.5, 0.0, 0, -0.0, 0, -0.0, -1.4, 1.7, 0.1, 0, -0.0]
-q_contact_takeoff =[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.4, -1.3, -1.5, 0.0, 0.0, -0.2, -0.1, -1.5, -1.2, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
-q_contact_landing = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 1.4, -1, -1.2, 0.0, 0.0, -0.0, 0.2, 1.5, -1.1, 1.2, 0.0, 0.0, 0, 0.1, -1.1, 0.9, 0, 0, -0.2, 0, -0.1, -1.1, 0.9, 0, 0, -0.2]
+#q_contact_takeoff =[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.4, -1.3, -1.5, 0.0, 0.0, -0.2, -0.1, -1.5, -1.2, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
+q_contact_takeoff = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, 0.2, 0.1, -1.8, -0.7, -1.5, 0.0, 0.0, -0.2, -0.1, -1.8, -0.7, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
+q_contact_landing = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, 0.0, -0.2, 1.4, -1, -1.2, 0.0, 0.0, -0.0, 0.2, 1.5, -1.1, 1.2, 0.0, 0.0, 0, 0.1, -1.1, 0.9, 0, 0, -0.2, 0, -0.1, -1.1, 0.9, 0, 0, -0.2]
 
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
 fullBody.setPose (q_contact_takeoff, "takeoffContact")
 fullBody.setPose (q_contact_landing, "landingContact")
+fullBody.setPose (flexion_final, "flexionFinal")
+
 
 
 rLegId = 'RFoot'
 lLegId = 'LFoot'
+rarmId = 'RHand'
+larmId = 'LHand'
 fullBody.addLimbDatabase('./skeleton_rleg_3DOF.db',rLegId,'static')
 fullBody.addLimbDatabase('./skeleton_lleg_3DOF.db',lLegId,'static')
+fullBody.addLimbDatabase('./skeleton_rarm_3DOF_light.db',rarmId,'static')
+fullBody.addLimbDatabase('./skeleton_larm_3DOF_light.db',larmId,'static')
 print("Limbs added to fullbody")
 
 
@@ -60,7 +68,7 @@ confsize = len(tp.q11)
 fullConfSize = len(fullBody.getCurrentConfig()) # with or without ECS in fullbody
 
 # WARNING: q_init and q_goal may have changed in orientedPath
-entryPathId = tp.orientedpathIdBis # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
+entryPathId = tp.solutionPathId # tp.orientedpathId or tp.solutionPathId or tp.orientedpathIdBis
 trunkPathwaypoints = ps.getWaypoints (entryPathId)
 
 
@@ -71,7 +79,7 @@ theta_0 = math.atan2(trunkPathwaypoints[1][1] - q_init[1], trunkPathwaypoints[1]
 fullBody.setFullbodyV0fThetaCoefs ("V0", False, V0list[0], theta_0)
 fullBody.setCurrentConfig (q_init); rr(q_init)
 fullBody.isConfigValid(q_init)
-q_init_test = fullBody.generateContacts(q_init, dir_init, True); rr (q_init_test)
+q_init_test = fullBody.generateContacts(q_init, dir_init, True, 1); rr (q_init_test)
 fullBody.isConfigValid(q_init_test)
 fullBody.setStartState(q_init_test,[rLegId, lLegId])
 fullBody.setFullbodyV0fThetaCoefs ("V0", True, [0,0,0], 0)
@@ -85,7 +93,7 @@ dir_goal = (np.array(Vimplist [len(Vimplist)-1])).tolist() # last Vimp
 theta_goal = math.atan2(q_goal[1] - trunkPathwaypoints[len(trunkPathwaypoints)-2][1], q_goal[0] - trunkPathwaypoints[len(trunkPathwaypoints)-2][0]) # first theta (of first path)
 fullBody.setFullbodyV0fThetaCoefs ("Vimp", False, Vimplist[len(Vimplist)-1], theta_goal)
 fullBody.setCurrentConfig (q_goal); rr(q_goal)
-q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True); rr (q_goal_test)
+q_goal_test = fullBody.generateContacts(q_goal, dir_goal, True, 2); rr (q_goal_test)
 fullBody.isConfigValid(q_goal_test)
 fullBody.setEndState(q_goal_test,[rLegId, lLegId])
 fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
@@ -94,57 +102,34 @@ fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
 #plotSphere (q_goal_test[0:3], rr, "comGoalRef", [0,1,0,1], 0.02) # green = where we want the COM to be
 
 psf.setPlannerIterLimit (100)
-timeStep = 0.003
+timeStep = 0.002 # 0.003 pas mal
 maxIter = 100
-gui.addSphere ("COM",0.02,[0,0,1,1]) # for the robot animation (pathPlayer)
+gui.addSphere ("COM",0.02,[0,0,1,1]) # COM blue sphere for the robot animation (pathPlayer)
 
 print("Start ballistic-interpolation")
 fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter); pathIdBall = psf.numberPaths ()-1 # no timed-interpolation
 #fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True); pathIdBallTimed = psf.numberPaths ()-1 # timed-interpolation
 #fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, False, True); pathIdCom = psf.numberPaths ()-1 # COM projection
-#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True, True); pathIdComTimed = psf.numberPaths ()-1 # COM projection + timed   PROBLEM !!!!!!!!!!!!!!!!!   COM NOT FOLLOWING ANYMORE !!!!!
+#fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter, True, True); pathIdComTimed = psf.numberPaths ()-1 # COM projection + timed
 print("ballistic-interpolation finished")
 
 rr(q_init_test)
 
 
-plotComTrajectory (psf, rr, pathIdCom, 70, "test_COM", [0.3,0.3,0.3,1])
-pp.plotRobotTrajectoryWithCOM (pathIdCom, "COM") # animation with COM
+#plotComTrajectory (psf, rr, pathIdCom, 70, "test_COM", [0.3,0.3,0.3,1]) # display COM path
+#pp.plotRobotTrajectoryWithCOM (pathIdCom, "COM") # animation with COM
+
+pp(2)
+rr(psf.configAtParam (2, 0.21))
+rr(psf.configAtParam (2, 0.22))
+
+#samplesTrajCOM = plotSampleConfigs = ps.sampleSubPathCom(pathIdCom, 70)
+#writePathSamples (samplesTrajCOM, 'skeleton_test_ComProj_wrongCOM_path.txt')
 
 
-#pathToYamlFile (psf, rr, "skeleton_test_frames.yaml", "skeleton", pathIdBall, q_goal_test, 0.03) # BLENDER
-#pathToYamlFile (psf, rr, "skeleton_test_timedFrames.yaml", "skeleton", pathIdBallTimed, q_goal_test, 0.02) # BLENDER
-#pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_frames.yaml", "skeleton", pathIdCom, q_goal_test, 0.02) # BLENDER
-#pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_timedFrames.yaml", "skeleton", pathIdComTimed, q_goal_test, 0.02) # BLENDER
 
 """
-fullBody.getPathPlannerFails ()
 
-
-#pp(psf.numberPaths ()-1)
-PathIdWithoutCOM = psf.numberPaths ()-1
-
-
-
-statesTime = fullBody.getlastStatesComputedTime ()
-numberOfStatesComputed = len(statesTime)-1
-configs = statesTime [:numberOfStatesComputed]
-times = statesTime [numberOfStatesComputed]
-
-
-#fullBody.projectStateToCOM (0, q_init_test[0:3])
-#rr(fullBody.getlastStatesComputedTime ()[0])    # compare to rr(q_init_test)
-
-#i = 6; fullBody.projectStateToCOM (i, configs[i][0:3])
-#rr(fullBody.getlastStatesComputedTime ()[i]); fullBody.setCurrentConfig (fullBody.getlastStatesComputedTime ()[i])    # compare to rr(configs[i])
-# plotSphere (fullBody.getCenterOfMass (), r, "test"+str(i), [0,0,1,1], sphereSize); rr(configs[i]); fullBody.setCurrentConfig (configs[i])
-# plotSphere (configs[i][0:3], r, "testRef"+str(i), [0,1,0,1], sphereSize)
-
-
-fullBody.projectLastStatesComputedToCOM()
-statesTimeCOM = fullBody.getlastStatesComputedTime () # project states COM to their parabola positions
-numberOfStatesComputedCOM = len(statesTimeCOM)-1
-configsCOM = statesTimeCOM [:numberOfStatesComputedCOM]
 #fullBody.interpolatePathFromLastStatesComputed() # interpolate between states       FOIRE COMPLET !!
 #PathIdWithCOM = psf.numberPaths ()-1
 
@@ -153,6 +138,17 @@ configsCOM = statesTimeCOM [:numberOfStatesComputedCOM]
 """
 
 """
+statesTime = fullBody.getlastStatesComputedTime ()
+numberOfStatesComputed = len(statesTime)-1
+configs = statesTime [:numberOfStatesComputed]
+times = statesTime [numberOfStatesComputed]
+
+fullBody.projectLastStatesComputedToCOM()
+statesTimeCOM = fullBody.getlastStatesComputedTime () # project states COM to their parabola positions
+numberOfStatesComputedCOM = len(statesTimeCOM)-1
+configsCOM = statesTimeCOM [:numberOfStatesComputedCOM]
+
+
 for i in range (0,numberOfStatesComputedCOM):
     rr(configsCOM[i]); time.sleep(0.2);
 
@@ -160,18 +156,25 @@ for i in range (0,numberOfStatesComputedCOM):
 for i in range (0,numberOfStatesComputed):
     rr(configs[i]); time.sleep(0.2);
 
-"""
+
+### simple config projection to COM IS REALLY WORKING
+comQ = [0,0,0,1,0,0,0]
+for i in range (0,numberOfStatesComputedCOM):
+	q = configsCOM[i]
+	rr(q); time.sleep(0.2);
+	fullBody.setCurrentConfig (q)
+	comQ [0:3] = fullBody.getCenterOfMass ()
+	gui.applyConfiguration ("COM", comQ)
+	gui.addToGroup ("COM", rr.sceneName)
 
 """
-# final projected to COM config
-q=[-1.0875263725551425, 0.006735958106127448, 0.43805075939387766, 0.9994402080017847, -0.01325109463273018, -0.030493413227879438, -0.003718987778615565, -0.04200312077403028, 0.005603076566437497, 0.06155555370078577, -0.021458228341347477, 0.005439701388680359, 0.05173704899515491, -5.8541879700212505e-21, -7.572449228762932e-19, -5.529072595949309e-18, 0.19536717500739434, 0.09929665677123363, -0.19623136919088727, -0.9980989747445629, -2.4973934135182803, -0.00040420793355929645, -0.0002575470182509455, -0.19179625014979873, -0.09656347209848644, -0.19219617464300157, -0.9943451371504796, 2.4999999966589788, -0.0004740688291361102, 0.00012578111711163907, 0.3108690772554518, -0.32611153558044276, -1.5691897819034257, 2.5384004387680768, -0.7494690785414246, 0.24689193519547561, -0.17048447103387537, 0.055823465687198155, -0.33222383364673896, -1.3986998611185315, 2.648746814159253, -0.8920223503566381, -0.03247709720951528, -0.18544262656723548]
-plotSphere (fullBody.getCenterOfMass (), rr, "projected_com1", [1,0,0,1], 0.05)
-plotFrame (rr, 'projected_root', q[0:3], 0.3)  # ROOT HAS MOVED, IT SHOULD NOT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  idee: creer moi meme les contraintes du COM pour lockdof le root !
-#plotSphere (q[0:3], rr, "projected_root", [0,0,1,1], 0.041)
-"""
 
-#fullBody.timeParametrizedPath(psf.numberPaths() -1 )
-#pp(psf.numberPaths ()-1)
+
+
+#pathToYamlFile (psf, rr, "skeleton_test_frames.yaml", "skeleton", pathIdBall, q_goal_test, 0.03) # BLENDER
+#pathToYamlFile (psf, rr, "skeleton_test_timedFrames.yaml", "skeleton", pathIdBallTimed, q_goal_test, 0.02) # BLENDER
+#pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_frames.yaml", "skeleton", pathIdCom, q_goal_test, 0.02) # BLENDER
+#pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_timedFrames.yaml", "skeleton", pathIdComTimed, q_goal_test, 0.02) # BLENDER
 
 
 #r.startCapture("skeletonDesert","png") ; r.stopCapture()
@@ -232,4 +235,23 @@ q = flexion; rr (q); psf.robot.setCurrentConfig(q); gui.refresh (); gui.captureT
 
 gui = rr.client.gui; gui.setCaptureTransform ("skeleton_apex_config.yaml ", ["armlessSkeleton"])
 q = extending; rr (q); psf.robot.setCurrentConfig(q); gui.refresh (); gui.captureTransform ()
+
+fullBody.getPathPlannerFails ()
+
+
+#fullBody.projectStateToCOM (0, q_init_test[0:3])
+#rr(fullBody.getlastStatesComputedTime ()[0])    # compare to rr(q_init_test)
+
+#i = 6; fullBody.projectStateToCOM (i, configs[i][0:3])
+#rr(fullBody.getlastStatesComputedTime ()[i]); fullBody.setCurrentConfig (fullBody.getlastStatesComputedTime ()[i])    # compare to rr(configs[i])
+# plotSphere (fullBody.getCenterOfMass (), r, "test"+str(i), [0,0,1,1], sphereSize); rr(configs[i]); fullBody.setCurrentConfig (configs[i])
+# plotSphere (configs[i][0:3], r, "testRef"+str(i), [0,1,0,1], sphereSize)
+"""
+
+"""
+# final projected to COM config
+q=[-1.0875263725551425, 0.006735958106127448, 0.43805075939387766, 0.9994402080017847, -0.01325109463273018, -0.030493413227879438, -0.003718987778615565, -0.04200312077403028, 0.005603076566437497, 0.06155555370078577, -0.021458228341347477, 0.005439701388680359, 0.05173704899515491, -5.8541879700212505e-21, -7.572449228762932e-19, -5.529072595949309e-18, 0.19536717500739434, 0.09929665677123363, -0.19623136919088727, -0.9980989747445629, -2.4973934135182803, -0.00040420793355929645, -0.0002575470182509455, -0.19179625014979873, -0.09656347209848644, -0.19219617464300157, -0.9943451371504796, 2.4999999966589788, -0.0004740688291361102, 0.00012578111711163907, 0.3108690772554518, -0.32611153558044276, -1.5691897819034257, 2.5384004387680768, -0.7494690785414246, 0.24689193519547561, -0.17048447103387537, 0.055823465687198155, -0.33222383364673896, -1.3986998611185315, 2.648746814159253, -0.8920223503566381, -0.03247709720951528, -0.18544262656723548]
+plotSphere (fullBody.getCenterOfMass (), rr, "projected_com1", [1,0,0,1], 0.05)
+plotFrame (rr, 'projected_root', q[0:3], 0.3)  # ROOT HAS MOVED, IT SHOULD NOT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  idee: creer moi meme les contraintes du COM pour lockdof le root !
+#plotSphere (q[0:3], rr, "projected_root", [0,0,1,1], 0.041)
 """

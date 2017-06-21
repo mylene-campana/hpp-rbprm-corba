@@ -682,7 +682,7 @@ namespace hpp {
         return projectStateToCOMEigen(stateId, com_target);
     }
 
-      hpp::floatSeq* RbprmBuilder::generateContacts(const hpp::floatSeq& configuration, const hpp::floatSeq& direction, const bool noStability, const bool useFlexionPose) throw (hpp::Error)
+      hpp::floatSeq* RbprmBuilder::generateContacts(const hpp::floatSeq& configuration, const hpp::floatSeq& direction, const bool noStability, const unsigned short useFlexionPose) throw (hpp::Error)
     {
         if(!fullBodyLoaded_)
             throw Error ("No full body robot was loaded");
@@ -698,20 +698,24 @@ namespace hpp {
 	      <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
 	    if (affMap.empty ()) {
 	      throw hpp::Error ("No affordances found. Unable to generate Contacts.");
-			}
+	    }
             model::Configuration_t config = dofArrayToConfig (fullBody_->device_, configuration);
 	    rbprm::State state = rbprm::ComputeContacts(fullBody_,config,
 							affMap,
 							bindShooter_.affFilter_,
 							dir);
 
-           core::Configuration_t q;
-           if(useFlexionPose && flexionPose_.size() > 0) {
-	     hppDout (info, "generate contacts using flexionPose");
-             q = rbprm::computeContactPose(state,flexionPose_,fullBody_);
-	   }
-           else 
-             q = state.configuration_;
+	    core::Configuration_t q;
+	    if(useFlexionPose == 1 && flexionPose_.size() > 0) {
+	      hppDout (info, "generate contacts using flexionPose");
+	      q = rbprm::computeContactPose(state,flexionPose_,fullBody_);
+	    }
+	    else if (useFlexionPose == 2) {
+	      hppDout (info, "generate contacts using flexionFinalPose");
+	      q = rbprm::computeContactPose(state,flexionFinalPose_,fullBody_);
+	    }
+	    else
+	      q = state.configuration_;
 	    std::queue<std::string> contactStack = state.contactOrder_;
 	    const std::size_t contactNumber = contactStack.size ();
 	    fcl::Vec3f normalAv = (0,0,0);
@@ -2372,6 +2376,10 @@ namespace hpp {
 	    interpolator->landingContactPose (landingContactPose_);
 	  else
 	    hppDout (info, "no landing-contact pose was provided to interpolator");
+	  if (flexionFinalPose_.rows() > 0)
+	    interpolator->flexionFinalPose (flexionFinalPose_);
+	  else
+	    hppDout (info,"no flexion final pose was provided to interpolator");
 	  const affMap_t &affMap = problemSolver_->map
 	    <std::vector<boost::shared_ptr<model::CollisionObject> > > ();
 	  if (!affMap.empty ()) {
@@ -2785,13 +2793,14 @@ namespace hpp {
       // --------------------------------------------------------------------
 
       void RbprmBuilder::setPose (const hpp::floatSeq& dofArray,
-				  const char* poseQuery) throw (hpp::Error){
+				  const char* poseQuery) throw (hpp::Error) {
 	std::string query_str = std::string(poseQuery);
 	if(query_str.compare ("extending") != 0 && 
 	   query_str.compare ("flexion") != 0 && 
 	   query_str.compare ("takeoffContact") != 0 &&
-	   query_str.compare ("landingContact") != 0)
-	  throw std::runtime_error ("Query problem, ask for extending, flexion, takeoffContact or landingContact");
+	   query_str.compare ("landingContact") != 0 &&
+	   query_str.compare ("flexionFinal") != 0)
+	  throw std::runtime_error ("Query problem, ask for extending, flexion, takeoffContact, landingContact or flexionFinal");
 	core::DevicePtr_t robot = problemSolver_->robot ();
 	core::Configuration_t q = dofArrayToConfig (robot, dofArray);
 	if (query_str.compare ("extending") == 0) {
@@ -2807,6 +2816,9 @@ namespace hpp {
 	}else if (query_str.compare ("landingContact") == 0){
 	  landingContactPose_ = q;
 	  hppDout (info, "landingContactPose= " << displayConfig(landingContactPose_));
+	}else if (query_str.compare ("flexionFinal") == 0){
+	  flexionFinalPose_ = q;
+	  hppDout (info, "flexionFinal= " << displayConfig(flexionFinalPose_));
 	}
       }
 

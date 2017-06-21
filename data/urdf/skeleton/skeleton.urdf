@@ -660,7 +660,7 @@
       <child link="Sacrum"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-0.1" upper="0.3" velocity="1.0"/>
+      <limit effort="0" lower="-0.1" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="SacrumL5_J1" type="fixed">
       <parent link="Sacrum"/>
@@ -777,7 +777,7 @@
       <child link="Skull"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <limit effort="0" lower="-1.1" upper="0.4" velocity="1.0"/>
+      <limit effort="0" lower="-1.1" upper="0.5" velocity="1.0"/>
    </joint>
    <joint name="RHip_J1" type="revolute">
       <parent link="Pelvis"/>

@@ -202,7 +202,7 @@ class FullBody (object):
     # \param configuration the initial robot configuration
     # \param direction a 3d vector specifying the desired direction of motion
     # \param noStability enable or disable stable contact computation
-    def generateContacts(self, configuration, direction, noStability = False, useFlexionPose = True):
+    def generateContacts(self, configuration, direction, noStability = False, useFlexionPose = 1):
 		return self.client.rbprm.rbprm.generateContacts(configuration, direction, noStability, useFlexionPose)
 		
 	## Generate an autocollision free configuration with limbs in contact with the ground

@@ -185,6 +185,7 @@ ps.numberNodes()
 pathSamples = plotSampleSubPath (cl, r, pathId, 70, "path0", [0,0,1,1])
 plotCone (q1, cl, r, "cone_first", "friction_cone_SG2"); plotCone (q2, cl, r, "cone_second", "friction_cone_SG2")
 plotConeWaypoints (cl, pathId, r, "cone_wp_group", "friction_cone_WP2")
+writePathSamples (pathSamples, 'skeleton_parabola_path.txt')
 
 # Plot cones and edges in viewer
 plotConesRoadmap (cl, r, 'cone_rm_group', "friction_cone2")

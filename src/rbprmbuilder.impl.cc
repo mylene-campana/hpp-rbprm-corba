@@ -52,6 +52,7 @@
 #include <hpp/rbprm/fullbodyBallistic/ballistic-planner.hh>
 #include "hpp/rbprm/planner/parabola-path.hh"
 #include <hpp/rbprm/fullbodyBallistic/timed-ballistic-path.hh>
+#include <hpp/rbprm/interpolation/limb-rrt-steering.hh>
 //#include <polytope/stability_margin.h>
 
 namespace hpp {
@@ -629,7 +630,8 @@ namespace hpp {
             State s = lastStatesComputed_[stateId];
             bool succes (false);
 	    hppDout (info, "start projectStateToCOMEigen ------------ ");
-            hpp::model::Configuration_t c = rbprm::interpolation::projectOnCom(fullBody_, problemSolver_->problem(),s,com_target,succes);
+            model::Configuration_t c = rbprm::interpolation::projectOnCom(fullBody_, problemSolver_->problem(),s,com_target,succes);
+	    //model::Configuration_t c = result.configuration_;
             if(succes)
             {
                 lastStatesComputed_[stateId].configuration_ = c;
@@ -1620,6 +1622,7 @@ namespace hpp {
     {
         bool success(false);
         core::Configuration_t res = rbprm::interpolation::projectOnCom(fulllBody, problem,state,targetCom, success);
+	//core::Configuration_t res = res_state.configuration_;
         if(!success)
         {
             throw std::runtime_error("could not project state on COM constraint");
@@ -2344,19 +2347,14 @@ namespace hpp {
 	    throw std::runtime_error ("No path computed, cannot interpolate ");
 
 	  const core::PathVectorConstPtr_t path = problemSolver_->paths()[pid];
-
-	  const core::PathPtr_t subpath1 = (*path).pathAtRank (0);
-	  const ParabolaPathPtr_t pp1 = 
-	    boost::dynamic_pointer_cast<ParabolaPath>(subpath1);
+	  const core::PathPtr_t subpath = (*path).pathAtRank (0);
+	  parabolaPath_ = boost::dynamic_pointer_cast<ParabolaPath>(subpath);
 
 	  const std::size_t subPathNumber = path->numberPaths ();
 	  hpp::rbprm::BallisticInterpolationPtr_t interpolator = 
 	    rbprm::BallisticInterpolation::create((problemSolver_->problem ()),
 						  fullBody_, startState_,
 						  endState_, path);
-	  const core::PathPtr_t subpath = (*path).pathAtRank (0);
-	  const ParabolaPathPtr_t pp = 
-	    boost::dynamic_pointer_cast<ParabolaPath>(subpath);
 	  rbprm::T_StateFrame stateFrames;
 	  interpolator->setMaxIterMaintainContacts ((size_t) maxIter);
 
@@ -3127,7 +3125,12 @@ namespace hpp {
       void RbprmBuilder::projectLastStatesComputedToCOM () throw (hpp::Error)
       {
 	core::Configuration_t saveConfig = fullBody_->device_->currentConfiguration ();
+	hppDout (info, "-- start projectLastStatesComputedToCOM");
+	std::vector<rbprm::State> lastStatesComputed_result;
+	rbprm::T_StateFrame lastStatesComputedTime_result;
+	ValidationReportPtr_t report;
 	for (int i = 0; i < lastStatesComputed_.size (); i++) {
+	  hppDout (info, "i = " << i);
 	  core::Configuration_t configRef = lastStatesComputed_ [i].configuration_;
 	  fullBody_->device_->currentConfiguration (configRef);
 	  //model::vector3_t com = fullBody_->device_->positionCenterOfMass ();
@@ -3135,6 +3138,11 @@ namespace hpp {
 	  for (int i = 0; i < 3; i++) com [i] = configRef [i];
 	  core::Configuration_t com_config = com;
 	  double res = projectStateToCOMEigen (i, com_config); // update lastStatesComputed_ stack
+	  hppDout (info, "res = " << res);
+	  if (res && problemSolver_->problem()->configValidations()->validate(lastStatesComputed_[i].configuration_,report)) { // if projection succeeded
+	    lastStatesComputed_result.push_back(lastStatesComputed_[i]);
+	    lastStatesComputedTime_result.push_back(lastStatesComputedTime_[i]);
+	  }
 	  core::Configuration_t configResult = lastStatesComputed_ [i].configuration_;
 	  hppDout (info, "state id= " << i);
 	  hppDout (info, "res= " << res);
@@ -3143,6 +3151,10 @@ namespace hpp {
 	  hppDout (info, "configRes= " << displayConfig(configResult));
 	}
 	fullBody_->device_->currentConfiguration (saveConfig);
+	lastStatesComputed_.clear();
+	lastStatesComputedTime_.clear ();
+        lastStatesComputed_ = lastStatesComputed_result;
+	lastStatesComputedTime_ = lastStatesComputedTime_result;
       }
 
       // ---------------------------------------------------------------
@@ -3150,20 +3162,22 @@ namespace hpp {
       void RbprmBuilder::interpolatePathFromLastStatesComputed () throw (hpp::Error)
       {
 
-	//core::Problem problem = problemSolver_->problem ();
+	//	lastStatesComputedTime_   lastStatesComputed_= 
+	hppDout (info, "WARNING this works only for one parabola");
+	hppDout (info, "Assuming that projectLastStatesComputedToCOM was previously called");
 	const core::DistancePtr_t& distance = problemSolver_->problem ()->distance();
 	const core::DevicePtr_t& robot = problemSolver_->problem ()->robot ();
 	core::PathVectorPtr_t res = core::PathVector::create (robot->configSize (), robot->numberDof ());
+
 	for (int i = 0; i < lastStatesComputed_.size () -1; i++) {
 	  core::Configuration_t start = lastStatesComputed_ [i].configuration_;
 	  core::Configuration_t goal = lastStatesComputed_ [i+1].configuration_;
-	  //const core::value_type length = (*distance) (start, goal);
-	  //core::StraightPathPtr_t path = StraightPath::create (robot, goal, goal, length);
-	  SteeringMethodPtr_t sm = problemSolver_->problem ()->steeringMethod (); // no we need a limbRRT steering method
-	  //SteeringMethodPtr_t sm = LimbRRTSteering::create(problemSolver_->problem (), fullBody_->device_->configSize()-1,bp); // how to get each bp ?
+	  //BallisticPathPtr_t bp = BallisticPath::create (robot, start, goal, parabolaPath_->computeLength(start, goal), parabolaPath_->coefficients (), fullBody_->lastRootIndex());
+	  //SteeringMethodPtr_t sm = interpolation::LimbRRTSteering::create(problemSolver_->problem (), fullBody_->device_->configSize()-1);
+	  core::SteeringMethodStraightPtr_t sm = core::SteeringMethodStraight::create (problemSolver_->problem ());
 	  PathPtr_t path = (*sm) (start, goal);
 	  res->appendPath (path);
-
+	  //res->appendPath (bp);
 	}
 	problemSolver_->addPath (res);
       }

@@ -548,7 +548,8 @@ def importYamlMotion (fileName):
 #main  ()
 #importArmatureMotion  ("JUMPERMAN","spiderman_testJointConfigs.txt") # CHARACTER, filename
 #mainTestBis ()
-#importPath ('skeleton_test_ComProj_path.txt')
+#importPath ('skeleton_test_ComProj_wrongCOM_path.txt')
 #irosRoadmapVisibility ()
 #displayAntContactConfig ()
+
 importYamlMotion ("skeleton_test_testCOMinYaml_frames.yaml")

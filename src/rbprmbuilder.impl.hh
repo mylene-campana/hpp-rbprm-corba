@@ -36,7 +36,8 @@
 # include <hpp/model/configuration.hh>
 # include <hpp/core/distance.hh>
 # include "hpp/rbprm/fullbodyBallistic/convex-cone-intersection.hh"
-#include "hpp/rbprm/interpolation/limb-rrt.hh"
+# include "hpp/rbprm/interpolation/limb-rrt.hh"
+# include "hpp/rbprm/planner/parabola-path.hh"
 
 namespace hpp {
   namespace rbprm {
@@ -399,6 +400,7 @@ namespace hpp {
 	core::Configuration_t landingContactPose_; // when starting contact
 	core::Configuration_t flexionFinalPose_; // last flexion pose
 	CORBA::Boolean fillGenerateContactState_;
+	ParabolaPathPtr_t parabolaPath_; // parabola path that goes with StateFrames, WARNING works for 1 parabola only
       }; // class RobotBuilder
     } // namespace impl
   } // namespace manipulation

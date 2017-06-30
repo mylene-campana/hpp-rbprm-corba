@@ -36,13 +36,12 @@ pp = PathPlayer (fullBody.client.basic, rr); pp.speed = 0.6
 q_0 = fullBody.getCurrentConfig(); rr(q_0)
 #plotSphere (fullBody.getCenterOfMass (), rr, "test_com_q_0", [1,0,0,1], 0.02); plotFrame (rr, 'frame_group', [0,0,0], 0.6)
 
-
 flexion_final = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, -0.3, 0.2, 0.1, -0.2, -1, -2.5, 0.0, 0.0, -0.2, -0.1, -0.2, -1, 2.5, 0.0, 0.0, 0, 0.1, -1.7, 2.5, -0.8, 0, -0.2, 0, -0.1, -1.7, 2.5, -0.8, 0, -0.2]
 flexion = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, 0.0, 0.0, -0.4, 0.2, 0.1, 0.4, -0.1, -2, 0.0, 0.0, -0.2, -0.1, 0.4, -0.1, 2, 0.0, 0.0, 0, 0.1, -1.7, 2.5, -0.8, 0, -0.2, 0, -0.1, -1.7, 2.5, -0.8, 0, -0.2]
 extending = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.6, -1, -1.5, 0.0, 0.0, -0.2, -0.1, -1.7, -1.1, 1.5, 0.0, 0.0, 0, 0.0, -1.2, 1.5, 0.0, 0, -0.0, 0, -0.0, -1.4, 1.7, 0.1, 0, -0.0]
-#q_contact_takeoff =[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.1, -1.4, -1.3, -1.5, 0.0, 0.0, -0.2, -0.1, -1.5, -1.2, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
 q_contact_takeoff = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, 0.2, 0.1, -1.8, -0.7, -1.5, 0.0, 0.0, -0.2, -0.1, -1.8, -0.7, 1.5, 0.0, 0.0, 0.0, 0.1, -1.4, 2.0, -0.6, 0.0, -0.2, 0.0, -0.1, -1.4, 2.0, -0.6, 0.0, -0.2]
 q_contact_landing = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, 0.0, -0.2, 1.4, -1, -1.2, 0.0, 0.0, -0.0, 0.2, 1.5, -1.1, 1.2, 0.0, 0.0, 0, 0.1, -1.1, 0.9, 0, 0, -0.2, 0, -0.1, -1.1, 0.9, 0, 0, -0.2]
+#q_contact_landing = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, 0.0, -0.2, 0.5, -0.4, -1.2, 0.0, 0.0, 0, 0.2, 0.5, -0.4, 1.2, 0.0, 0.0, 0, 0.1, -1.1, 0.9, 0, 0, -0.2, 0, -0.1, -1.1, 0.9, 0, 0, -0.2]
 
 fullBody.setPose (extending, "extending")
 fullBody.setPose (flexion, "flexion")
@@ -51,9 +50,8 @@ fullBody.setPose (q_contact_landing, "landingContact")
 fullBody.setPose (flexion_final, "flexionFinal")
 
 
-
-rLegId = 'RFoot'
-lLegId = 'LFoot'
+rLegId = 'RFootToe_ry'
+lLegId = 'LFootToe_ry'
 rarmId = 'RHand'
 larmId = 'LHand'
 fullBody.addLimbDatabase('./skeleton_rleg_3DOF.db',rLegId,'static')
@@ -61,7 +59,6 @@ fullBody.addLimbDatabase('./skeleton_lleg_3DOF.db',lLegId,'static')
 fullBody.addLimbDatabase('./skeleton_rarm_3DOF_light.db',rarmId,'static')
 fullBody.addLimbDatabase('./skeleton_larm_3DOF_light.db',larmId,'static')
 print("Limbs added to fullbody")
-
 
 
 confsize = len(tp.q11)
@@ -102,9 +99,9 @@ fullBody.setFullbodyV0fThetaCoefs ("Vimp", True, [0,0,0], 0)
 #plotSphere (q_goal_test[0:3], rr, "comGoalRef", [0,1,0,1], 0.02) # green = where we want the COM to be
 
 psf.setPlannerIterLimit (100)
-timeStep = 0.002 # 0.003 pas mal
-maxIter = 100
-gui.addSphere ("COM",0.02,[0,0,1,1]) # COM blue sphere for the robot animation (pathPlayer)
+timeStep = 0.0015 # 0.003 pas mal
+maxIter = 140
+plotSphere ([0,0,0], rr, "COM", [0,0,1,1], 0.02) # COM blue sphere for the robot animation (pathPlayer)
 
 print("Start ballistic-interpolation")
 fullBody.interpolateBallisticPath(entryPathId, timeStep, maxIter); pathIdBall = psf.numberPaths ()-1 # no timed-interpolation
@@ -116,25 +113,32 @@ print("ballistic-interpolation finished")
 rr(q_init_test)
 
 
-#plotComTrajectory (psf, rr, pathIdCom, 70, "test_COM", [0.3,0.3,0.3,1]) # display COM path
-#pp.plotRobotTrajectoryWithCOM (pathIdCom, "COM") # animation with COM
+"""
+print("Start projection of states to COM")
+fullBody.projectLastStatesComputedToCOM()
+statesTimeCOM = fullBody.getlastStatesComputedTime () # project states COM to their parabola positions
+numberOfStatesComputedCOM = len(statesTimeCOM)-1
+configsCOM = statesTimeCOM [:numberOfStatesComputedCOM]
+q = [0,0,0,1,0,0,0]
+for i in range (70,120):
+    rr(configsCOM[i]); q[0:3]= psf.robot.getCenterOfMass (); rr.client.gui.applyConfiguration ("COM", q[0:7]); rr.client.gui.refresh (); time.sleep(0.1);
 
-pp(2)
-rr(psf.configAtParam (2, 0.21))
-rr(psf.configAtParam (2, 0.22))
+print("Start interpolation between COM states")
+fullBody.interpolatePathFromLastStatesComputed()
+"""
 
-#samplesTrajCOM = plotSampleConfigs = ps.sampleSubPathCom(pathIdCom, 70)
-#writePathSamples (samplesTrajCOM, 'skeleton_test_ComProj_wrongCOM_path.txt')
+
+plotComTrajectory (psf, rr, pathIdBall, 70, "test_COM", [0.3,0.3,0.3,1]) # display COM path
+#pp.plotRobotTrajectoryWithCOM (3, "COM") # animation with COM
+
+
+writePathSamples (psf.sampleSubPathCom(pathIdBall, 70), 'skeleton_Com_notProj_path.txt') # write COM-path samples in file for Blender
 
 
 
 """
-
-#fullBody.interpolatePathFromLastStatesComputed() # interpolate between states       FOIRE COMPLET !!
-#PathIdWithCOM = psf.numberPaths ()-1
-
-#print("Start comRRT")
-#fullBody.comRRT(0, 1, psf.numberPaths ()-1, 0) # path = COM path (parabola ?)    NOT WORKING
+print("Start comRRT")
+fullBody.comRRT(0, 1, psf.numberPaths ()-1, 0) # path = COM path (parabola ?)    NOT WORKING
 """
 
 """
@@ -149,8 +153,9 @@ numberOfStatesComputedCOM = len(statesTimeCOM)-1
 configsCOM = statesTimeCOM [:numberOfStatesComputedCOM]
 
 
+q = [0,0,0,1,0,0,0]
 for i in range (0,numberOfStatesComputedCOM):
-    rr(configsCOM[i]); time.sleep(0.2);
+    rr(configsCOM[i]); q[0:3]= psf.robot.getCenterOfMass (); rr.client.gui.applyConfiguration ("COM", q[0:7]); rr.client.gui.refresh (); time.sleep(0.2);
 
 # without COM
 for i in range (0,numberOfStatesComputed):
@@ -171,9 +176,9 @@ for i in range (0,numberOfStatesComputedCOM):
 
 
 
-#pathToYamlFile (psf, rr, "skeleton_test_frames.yaml", "skeleton", pathIdBall, q_goal_test, 0.03) # BLENDER
+pathAndCOMToYamlFile (psf, rr, "skeleton_test_frames.yaml", "skeleton", pathIdBall, q_goal_test, 0.02) # BLENDER
 #pathToYamlFile (psf, rr, "skeleton_test_timedFrames.yaml", "skeleton", pathIdBallTimed, q_goal_test, 0.02) # BLENDER
-#pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_frames.yaml", "skeleton", pathIdCom, q_goal_test, 0.02) # BLENDER
+#pathAndCOMToYamlFile (psf, rr, "skeleton_ComProj_frames.yaml", "skeleton", 3, configsCOM[numberOfStatesComputedCOM-1], 0.02) # BLENDER
 #pathAndCOMToYamlFile (psf, rr, "skeleton_test_ComProj_timedFrames.yaml", "skeleton", pathIdComTimed, q_goal_test, 0.02) # BLENDER
 
 
@@ -255,3 +260,19 @@ plotSphere (fullBody.getCenterOfMass (), rr, "projected_com1", [1,0,0,1], 0.05)
 plotFrame (rr, 'projected_root', q[0:3], 0.3)  # ROOT HAS MOVED, IT SHOULD NOT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  idee: creer moi meme les contraintes du COM pour lockdof le root !
 #plotSphere (q[0:3], rr, "projected_root", [0,0,1,1], 0.041)
 """
+
+"""
+q = q_contact_landing [::]
+q [fullBody.rankInConfiguration ['LShoulder_J1']] = 0.0; rr(q)
+q [fullBody.rankInConfiguration ['LShoulder_J2']] = -0.2; rr(q)
+q [fullBody.rankInConfiguration ['LHumerus']] = 0.5; rr(q) # 1.4
+q [fullBody.rankInConfiguration ['LElbow_J1']] = -0.4; rr(q) # -1
+q [fullBody.rankInConfiguration ['LForearm']] = -1.2; rr(q)
+
+q [fullBody.rankInConfiguration ['RShoulder_J1']] = 0; rr(q)
+q [fullBody.rankInConfiguration ['RShoulder_J2']] = 0.2; rr(q)
+q [fullBody.rankInConfiguration ['RHumerus']] = 0.5; rr(q) # 1.5
+q [fullBody.rankInConfiguration ['RElbow_J1']] = -0.4; rr(q) # -1.1
+q [fullBody.rankInConfiguration ['RForearm']] = 1.2; rr(q)
+"""
+

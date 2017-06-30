@@ -60,7 +60,7 @@ lLegId = 'lfoot'
 rarmId = 'rhand'
 larmId = 'lhand'
 
-"""
+
 fullBody.addLimb(rLegId,'RHip_J1','RFootSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 fullBody.addLimb(lLegId,'LHip_J1','LFootSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
 fullBody.addLimb(rarmId,'RShoulder_J1','RHandSphere',[0,0,0],[0,0,1], x, y, nbSamples, "manipulability", 0.01,cType)
@@ -70,7 +70,7 @@ fullBody.addLimb(rLegId,'RHip_J1','RFootSphere',[0,0,0],[0,0,1], x, y, nbSamples
 fullBody.addLimb(lLegId,'LHip_J1','LFootSphere',[0,0,0],[0,0,1], x, y, nbSamples, "EFORT_Normal", 0.01,"_6_DOF")
 fullBody.addLimb(rarmId,'RShoulder_J1','RHandSphere',[0,0,0],[1,0,0], x, y, nbSamples, "EFORT_Normal", 0.01,"_6_DOF")
 fullBody.addLimb(larmId,'LShoulder_J1','LHandSphere',[0,0,0],[1,0,0], x, y, nbSamples, "EFORT_Normal", 0.01,"_6_DOF")
-
+"""
 
 print("Limbs added to fullbody")
 
@@ -114,7 +114,7 @@ def runallRArm(lid, dbName):
     fullBody.runLimbSampleAnalysis(lid, "RefPoseRArm", True)
     fullBody.saveLimbDatabase(lid, dbName)
 
-"""
+
 runallLLeg(lLegId, './skeleton_lleg_3DOF.db')
 runallRLeg(rLegId, './skeleton_rleg_3DOF.db')
 runallLArm(larmId, './skeleton_larm_3DOF.db')
@@ -124,7 +124,7 @@ runallLLeg(lLegId, './skeleton_lleg_EFORTN_6DOF.db')
 runallRLeg(rLegId, './skeleton_rleg_EFORTN_6DOF.db')
 runallLArm(larmId, './skeleton_larm_EFORTN_6DOF.db')
 runallRArm(rarmId, './skeleton_rarm_EFORTN_6DOF.db')
-
+"""
 
 ##plotOctreeValues(fullBody, "isotropy", lLegId)
 

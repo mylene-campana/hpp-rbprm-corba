@@ -1,0 +1,203 @@
+\documentclass[12pt]{article}
+
+\usepackage[a4paper]{geometry}
+\geometry{hscale=0.7,vscale=0.8}
+
+% The following packages can be found on http:\\www.ctan.org
+\usepackage{caption}
+\usepackage{subfigure}
+\usepackage{color}
+\usepackage{graphicx} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{mathrsfs}
+\usepackage{booktabs}
+\usepackage[numbers]{natbib}
+
+\makeatletter
+\makeatother
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!80!black},
+    citecolor={blue!80!black},
+    urlcolor={blue!80!black}
+}
+\urlstyle{same} % url font same as text font
+
+
+% Math shortcuts :
+\newcommand\e{\mathbf{e}}
+
+% L'AJOUTER COMME DOCUMENTATION SUR GITHUB (+ mention et lien dans le README du repo)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\graphicspath{{images/}}
+
+\title{Character creation: \\ From Blender to Humanoid Path Planner}
+
+\date{}
+
+\author{Myl\`{e}ne Campana \ \ (\href{mailto:mcampana@laas.fr}{mcampana@laas.fr})
+\\\vspace{6pt}
+{\em{LAAS-CNRS, Toulouse, France}}
+}
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+This paper presents the technical framework for the creation and the motion planning of an arbitrary character.
+The involved softwares for these tasks are:
+\begin{itemize}
+	\item Blender, version $\geq 2.70$
+	\item Humanoid Path Planner\footnote{\url{http://humanoid-path-planner.github.io/hpp-doc/index.html}} (abbreviated as `HPP')
+\end{itemize}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Creation of the articulated character (URDF)}
+HPP has a ROS\footnote{Robot Operating System \url{http://www.ros.org}} parser to read URDF\footnote{Unified Robot Description Format \url{http://wiki.ros.org/urdf}} files. Characters have to be defined following this formality.
+Initially, the character can be represented in two ways:
+
+\begin{enumerate}
+	\item The character contains separated bodies, such as a skeleton, a robot or an object.
+	\item The character is composed of one mesh which is deformed, e.g. a humanoid or an animal.
+\end{enumerate}
+
+\noindent
+In the case 2., it will be necessary to cut the mesh in bodies to come back to the case 1., because the URDF model handle a kinematic chain made of bodies and joints.
+
+\noindent
+Many free 3D meshes can be found on the following websites:
+\begin{itemize}
+\item \url{http://tf3dm.com}
+\item \url{http://archive3d.net}
+\end{itemize}
+Note that only some formats can be imported in Blender:
+\begin{itemize}
+	\item Collada (.dae)
+	\item Wavefront (.obj)
+	\item 3D Studio (.3ds)
+	\item Stl (.stl)
+\end{itemize}
+Otherwise, it will be necessary to use another software to convert the mesh.
+
+\subsection{Mesh cutting and body origins}
+This section presents how a mesh can be cut with Blender into mesh bodies, and how body origins can be located for the future URDF file.\\
+\textbf{Important note: the frames of the bodies will be oriented along the global frame}, this method does not handle frame re-orientation.
+
+\noindent
+These are the steps, keyboard shortcuts in Blender are indicated:
+\begin{enumerate}
+	\item Import the mesh in Blender.
+	\item If necessary, re-orient the mesh (e.g. to follow the $\e_x$ direction).
+	\item If necessary, deform the mesh so that the frame orientation fits the joint directions.
+	\item Cut the bodies in edit mode.
+	\begin{enumerate}
+		\item Use \texttt{z} for the Wireframe view (otherwise, back part of the mesh will not be cut).
+		\item Cut with the straight knife \texttt{K} + \texttt{Z}.
+		\item Select the cut vertices with \texttt{Space}.
+		\item Hide the vertices \texttt{H}.
+		\item Select the body to separe from the rest of the mesh with \texttt{L}.
+		\item Separate with \texttt{P}.
+		\item Un-hide the vertices \texttt{Alt} + \texttt{H}.
+	\end{enumerate}
+	\item Relocate the origin of the body where the joint will be (note the joint will \textit{act} on the current body).
+	\begin{enumerate}
+		\item Place the 3D cursor at the selection \texttt{Shift} + \texttt{S}.
+		\item Be in object mode with the relevant body selected.
+		\item Define the new origin \texttt{Ctrl} + \texttt{Alt} +\texttt{Shift} + \texttt{C}.
+	\end{enumerate}
+	\item One again, note that the joint will be actuated on the given origin, around axes parallel to the global axes.
+	\item When having their origin located at $(0,0,0)$ in Blender, export each mesh-body with a Stl or Collada (.dae) format in one folder.
+\end{enumerate}
+
+\subsection{URDF creation}
+When the robot geometry is expressed in bodies, its kinematic chain (with joints) will be described using an URDF file. We refer to the ROS documentation to build the URDF.
+The only specificity regarding cut meshes is the definition of the origins:
+\begin{itemize}
+	\item Set all the body origins at $(0,0,0)$.
+	\item Use the origins of the Blender mesh-bodies (set previously) for the origins of the joints. Origins must be measured according to their parent frame (i.e. the parent origin must be in $(0,0,0)$ when reading the child origin values). To move the body, use \texttt{Shift} + \texttt{S}.
+\end{itemize}
+The cut mesh-bodies can simply be inserted in the URDF as links, specifying the path of the mesh folder and the mesh filename in the \textit{mesh} xml tag.
+
+\noindent
+Note that HPP requires also a SRDF file that specifies the disable collision pairs (e.g. two following bodies that are in contact).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motion planning with HPP}
+We refer to the HPP documentation for the basics\footnote{\url{http://humanoid-path-planner.github.io/hpp-doc/tutorials.html}}.
+The trajectory is planned with and can be exported with automatic tools.
+Following the initial shape of the character, the animation process differs for each time-frame:
+\begin{enumerate}
+	\item If the character contains separated bodies, each body transformation is written in a text file.
+	\item If the character is composed of one deformable mesh, each joint value is written in a text file.
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Smooth animation with Blender}
+
+In Blender with the full model (separated bodies or one mesh), use an automatic tool to import the motions for each frame.
+
+Before this, for the deformable mesh, it is necessary to create an armature and to use it a a skeleton to deform the mesh:
+\begin{enumerate}
+	\item The armature base is located at the origin of the character root.
+	\item The bone connections are located at the joint/body origins.
+	\item The names of the bones following the bodies are not important.
+	\item For each connection with at least one joint, it is necessary to create one intermediate bone that will fix the bone frame (because by default, bone frames are oriented with the $\e_y$ direction along the bone).
+	\begin{itemize}
+		\item Set the intermediate bone name as the joint \textit{root} name in the URDF (\textit{root} because a suffix `\_ry' can be added in the URDF).
+		\item Set The \textit{Roll} value to 0.
+		\item Set the same position values for the Head and the Tail of the bone, except for the Y value which should be +0.001 or -0.001 depending on the wanted orientation for the joint (resp. $\e_y$ of the joint following the global $\e_y$ or the global $-\e_y$).
+	\end{itemize}
+	\item Link the armature to the mesh using \texttt{Crtl} + \texttt{P}.
+	\item Test the joints with the pose mode.
+	\item Additional bones can be added to the armature to correctly follow the mesh.
+\end{enumerate}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Examples - existing files - functions}
+
+Examples of cut meshes can be found in the package hpp-rbprm-corba of Mylene Campana's repository on Github\footnote{\url{https://github.com/mylene-campana}}. Refer to the most recent branch.
+\begin{itemize}
+	\item In \textbf{data/blender} folder, Blender files including the full mesh, cut meshes and armatures.
+	\item In \textbf{data/urdf} folder, URDF files for HPP.
+	\item In \textbf{data/srdf} folder, SRDF files for HPP.
+	\item In \textbf{data/meshes} folder, Cut meshes to be used by the URDF files.
+\end{itemize}
+
+\noindent
+Scripts for HPP and Blender can also be found:
+\begin{itemize}
+	\item In \textbf{scripts/test} folder, HPP scripts to launch the motion planning scenarios. Functions are:
+	\begin{itemize}
+		\item \texttt{writePathSamples} for characters containing separated bodies.
+		\item \texttt{pathJointConfigsToFile} for characters with one deformable mesh.
+	\end{itemize}
+	\item In \textbf{scripts/blender} folder, the unique script \texttt{fullAnimationSkinning.py} is a library to export motions from HPP files to Blender. Main functions are:
+	\begin{itemize}
+		\item \texttt{importYamlMotion} for characters containing separated bodies.
+		\item \texttt{importArmatureMotion} for characters with one deformable mesh.
+	\end{itemize}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\bibliographystyle{unsrt}
+%\bibliography{biblio}
+\end{document}

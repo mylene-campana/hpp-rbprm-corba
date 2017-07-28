@@ -11,6 +11,7 @@ xterm -e hpp-rbprm-server &
 sleep 1s
 # In second terminal : python script
 #xterm -e python -i skeleton_test_path.py &
+xterm -e python -i skeleton_test_interp.py &
 #xterm -e python -i skeleton_desert_path.py &
 #xterm -e python -i skeleton_parkourWalls_path.py &
 #xterm -e python -i skeleton_parkourWalls_interp.py &
@@ -23,7 +24,7 @@ sleep 1s
 #xterm -e python -i kangaroo_desert_path.py &
 #xterm -e python -i frog_test_path.py &
 #xterm -e python -i spiderman_backJump_path.py &
-xterm -e python -i spiderman_backJump_interp.py &
+#xterm -e python -i spiderman_backJump_interp.py &
 #xterm -e python -i spiderman_compute_DB.py &
 
 sleep 1200s

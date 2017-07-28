@@ -50,8 +50,8 @@ fullBody.setPose (q_contact_landing, "landingContact")
 fullBody.setPose (flexion_final, "flexionFinal")
 
 
-rLegId = 'RFootToe_ry'
-lLegId = 'LFootToe_ry'
+rLegId = 'RFootToe'
+lLegId = 'LFootToe'
 rarmId = 'RHand'
 larmId = 'LHand'
 fullBody.addLimbDatabase('./skeleton_rleg_3DOF.db',rLegId,'static')

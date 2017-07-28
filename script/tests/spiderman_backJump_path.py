@@ -51,7 +51,7 @@ addLight (r, [-10,-5,5,1,0,0,0], "li");
 from hpp.corbaserver.affordance.affordance import AffordanceTool
 afftool = AffordanceTool ()
 afftool.setAffordanceConfig('Support', [6., 0.001, 0.04]) # default (0.3,0.3,0.05) error, angle and area
-afftool.setNeighbouringTriangleMargin ('Support', 0.1)
+afftool.setNeighbouringTriangleMargin ('Support', 0.05)
 afftool.loadObstacleModel (packageName, obstacleName, obstacleName+"_affordance", r)
 afftool.visualiseAffordances('Support', r, [0.25, 0.5, 0.5])
 
@@ -59,27 +59,29 @@ ps.client.problem.selectPathValidation("RbprmPathValidation",0.05) # also config
 rbprmBuilder.setNumberFilterMatch(2)
 
 # Configs : [x, y, z, q1, q2, q3, q4, dir.x, dir.y, dir.z, theta]
-orientX = 0.707107 #math.sqrt(2)/2.0
+orientX = math.sqrt(2)/2.0
 q11 = rbprmBuilder.getCurrentConfig ()
 q11[(len(q11)-4):]=[0,0,1,0] # set normal for init / goal config
-
-#q11[0:7] = [-8.5,0,2.6, 1, 0, 0, 0]; r(q11) # edge middle
-#q11[0:7] =  [-2.7,0,3.9, 1, 0, 0, 0]; r(q11) # cube WORKING CONTACT
-#q11[0:7] =  [-2.7,-2.3,3.9, 0.9512, 0.1677, 0.0449, 0.2549]
-#q11[0:7] =  [-2.7,-2.25,4, 0.9217, 0.1022, 0.2192, 0.3034] #WORKING : SIDE
-
-
 q11[0:7] =  [-1.5,-7,2.44, orientX, 0, 0, orientX]; r(q11) # back plateform R
-#q11[0:7] = [-1.0, -2.7, 4.0,0.8866176165698721, 0.0, 0.0,0.4625031913273241]; r(q11)
-
 rbprmBuilder.isConfigValid(q11)
 
+"""q = q11 [::]
+q[0:3] = [-0.02385,-5.8729,5.37346]
+q = [-4,-5.74715,1.45093,0.707107,-0,0,-0.707107,0,0,0,0,0,0,-1.59092e-07,1,0,-2.25209]
+r(q)
+plotContactCones (rbprmBuilder.getContactCones (q), ps, r, "ContactCones", "friction_cone2")"""
 
 q22 = q11[::]
-#q22[0:7] =  [-7.2,0,2.6, 1, 0, 0, 0]; r(q22) # back plateform
-q22[0:7] =  [1.5,-7,2.44, -orientX, 0, 0, orientX]; r(q22) # back plateform L
-#q22[0:7] =   [5,0,3.8,  0.9537, 0, 0.3, 0]; r(q22) # front plateform
+q22[0:7] =  [1.5,-7,2.44, orientX, 0, 0, -orientX]; r(q22) # back plateform L
 rbprmBuilder.isConfigValid(q22)
+
+## PROBLEM: force closure wrongly working
+#q_init = [3.5,-5.79101,0.737147,0.707107,-0,0,-0.707107,0,0,0,0,0,0,-0,1,0,2.21794]
+#q_goal = [3.5,-5.79101,0.00111128,0.707107,-0,0,-0.707107,0,0,0,0,0,0,-0,1,0,-0.950146]
+#initContactCones = rbprmBuilder.getContactCones (q_init); plotContactCones (initContactCones, ps, r, "initContactCones", "friction_cone2")
+#goalContactCones = rbprmBuilder.getContactCones (q_goal); plotContactCones (goalContactCones, ps, r, "goalContactCones", "friction_cone2")
+#rbprmBuilder.convexConePlaneIntersection (len(initContactCones[0]), initContactCones[0], 0, 1.2)
+
 
 ps.selectPathPlanner("BallisticPlanner") # "PRMplanner"#rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
 rbprmBuilder.setFullOrientationMode(True) # RB-shooter follow obstacle-normal orientation
@@ -101,12 +103,13 @@ q_cube[0:7] =  [-1.2,-2.8,3.6, orientX, 0, 0, orientX]; r(q_cube); rbprmBuilder.
 #cones = rbprmBuilder.getContactCones(q_cube)
 
 
-"""waypoints = [q11,q_cube,q22]
-for i in range(0,len(waypoints)-1):
+waypoints = [q11,q_cube,q22]
+#waypoints = [q11, [-1.2543135366050766, -6.3155331083645025, 2.4360874581336973, 0.8178755645049313, 0.0, 0.0, 0.575395134655951, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.2261743783727164], [0.7477854842646261, 0.48217183555140086, 5.022464363574982, 0.8007891719472178, 0.0, 0.0, 0.5989463265536314, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.2843693329752441], [0.49146430929256757, -6.272961687042778, 2.4360874581336973, 0.6935714228383936, 0.0, 0.0, -0.7203878687359514, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, -1.6087227813210483], q22]
+"""for i in range(0,len(waypoints)-1):
     ps.setInitialConfig (waypoints[i]); ps.addGoalConfig (waypoints[i+1]); ps.solve (); ps.resetGoalConfigs()"""
 
 ps.setInitialConfig (q11); ps.addGoalConfig (q22)
-
+#ps.setInitialConfig (q_init); ps.addGoalConfig (q_goal)
 
 t = ps.solve ()
 
@@ -155,6 +158,16 @@ for i in range(1,len(pathOriBisWaypoints)-1):
 
 # Move RB-robot away in viewer
 qAway = q11 [::]; qAway[0] = -10; rbprmBuilder.setCurrentConfig (qAway); r(qAway)
+
+
+"""
+pathSamples = plotSampleSubPath (ps.client.problem, r, solutionPathId, 70, "sampledPath", [1,0,0,1])
+writePathSamples (pathSamples, 'jumperman_backJumpCubes_path.txt')
+
+q_goal = ps.configAtParam(orientedpathId,ps.pathLength(orientedpathId))
+pathToYamlFile (ps, r, "jumpermanTrunk_backJumpCubes_frames.yaml", "spiderman_trunk", orientedpathId, q_goal, 0.015)
+
+"""
 
 
 ## DEBUG tools ##
@@ -239,6 +252,9 @@ gui.refresh ()
 
 ## Export path to BLENDER ##
 """
+pathSamples = plotSampleSubPath (ps.client.problem, r, solutionPathId, 70, "sampledPath", [1,0,0,1])
+writePathSamples (pathSamples, 'jumperman_backJumpCubes_path.txt')
+
 import numpy as np
 pathId = 0; dt = 0.05; gui.setCaptureTransform ("skeleton_trunk_path.yaml", ["skeleton_trunk_flexible"])
 PL = ps.pathLength(pathId)

@@ -45,22 +45,22 @@ fullBody.setPose (flexion, "flexion")
 fullBody.setPose (q_contact_takeoff, "takeoffContact")
 
 heuristicName = 'static'
-rLegId = 'RFoot'
-lLegId = 'LFoot'
-rarmId = 'RHand'
-larmId = 'LHand'
+rLegId = 'RFootToe_ry'
+lLegId = 'LFootToe_ry'
+rarmId = 'RHand_ry'
+larmId = 'LHand_ry'
 fullBody.addLimbDatabase('./Spiderman_rleg_flexion_6DOF_EN.db',rLegId,heuristicName) # ok
 fullBody.addLimbDatabase('./Spiderman_lleg_flexion_6DOF_EN.db',lLegId,heuristicName) # ok
 #fullBody.addLimbDatabase('./Spiderman_rleg_flexion_3DOF_EN.db',rLegId,heuristicName) # 
 #fullBody.addLimbDatabase('./Spiderman_lleg_flexion_3DOF_EN.db',lLegId,heuristicName) # 
-print("Limbs added to fullbody")
+print("Legs added to fullbody")
 #x=-0.07;y=0.03;z=0.04; norm=math.sqrt(x*x+y*y+z*z); x=x/norm; y=y/norm; z=z/norm; vectorR = [x,y,z]
 #fullBody.addLimb(rarmId,'RHumerus_rx','SpidermanRHandSphere',[0,0,0],[0,0,1], 0.03, 0.08, 50000, "EFORT_Normal", 0.01,"_6_DOF")
 #x=0.08541;y=0.03916;z=0.04994; norm=math.sqrt(x*x+y*y+z*z); x=x/norm; y=y/norm; z=z/norm; vectorL = [-x,-y,-z]
 #fullBody.addLimb(larmId,'LHumerus_rx','SpidermanLHandSphere',[0,0,0],[0,0,1], 0.03, 0.08, 50000, "EFORT_Normal", 0.01,"_6_DOF")
 fullBody.addLimbDatabase('./Spiderman_larm_contact_6DOF_EN.db',larmId,heuristicName) # ok
 fullBody.addLimbDatabase('./Spiderman_rarm_contact_6DOF_EN.db',rarmId,heuristicName) # ok
-print("Limbs added to fullbody")
+print("Arms added to fullbody")
 
 
 confsize = len(tp.q11)
@@ -123,13 +123,18 @@ print("ballistic-interpolation finished")
 
 rr(q_init_test)
 
+#pathJointConfigsToFile (psf, rr, "jumperman_backJumpCubes_jointConfigs.txt", psf.numberPaths()-1, q_goal_test, 0.005)
+
 
 ## Save data
+
 
 nbWaypoints = len (trunkPathwaypoints)
 nbParabolas = nbWaypoints - 1
 nbCentroidalFails = fullBody.getcentroidalConeFails ()
 nbFailsLimbRRT = fullBody.getPathPlannerFails ()
+
+
 
 # Write important results #
 f = open('results_jumperman_runs.txt','a')

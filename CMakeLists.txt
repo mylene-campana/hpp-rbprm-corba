@@ -110,6 +110,7 @@ install(FILES
   data/urdf/skeleton/LHandSphere.urdf
   data/urdf/skeleton/RFootSphere.urdf
   data/urdf/skeleton/LFootSphere.urdf
+  data/urdf/skeleton/skeleton_reducedDOFlimits.urdf
   data/urdf/spiderman/spiderman.urdf
   data/urdf/spiderman/spiderman_FootSphere.urdf
   data/urdf/spiderman/spiderman_trunk.urdf
@@ -154,6 +155,8 @@ install(FILES
   data/urdf/cones/friction_cone06.urdf
   data/urdf/cones/friction_cone1.urdf
   data/urdf/cones/friction_cone2.urdf
+  data/urdf/parkour_smallWallsExample.urdf
+  data/urdf/parkour_theFloorIsLava.urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
   )
 install(FILES
@@ -201,6 +204,7 @@ install(FILES
   data/srdf/skeleton/LHandSphere.srdf
   data/srdf/skeleton/RFootSphere.srdf
   data/srdf/skeleton/LFootSphere.srdf
+  data/srdf/skeleton/skeleton_reducedDOFlimits.srdf
   data/srdf/spiderman/spiderman.srdf
   data/srdf/spiderman/spiderman_FootSphere.srdf
   data/srdf/spiderman/spiderman_trunk.srdf
@@ -300,6 +304,8 @@ install(FILES
 	data/meshes/parkour_walls_reduced.stl
 	data/meshes/desert_for_kangaroo.dae
 	data/meshes/desert_for_kangaroo.stl
+	data/meshes/parkour_smallWallsExample.stl
+	data/meshes/parkour_theFloorIsLava.stl
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
   )
   

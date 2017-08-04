@@ -151,6 +151,7 @@ f.write("path length= " + str(psf.pathLength(psf.numberPaths ()-1))+'\n') # to v
 
 f.close()
 
+# seed with one limbRRT fail 1501767805   length 11.571752   right hand of second path entering in collision with wall
 
 """
 from parseRuns import main
